@@ -1,0 +1,85 @@
+{
+  "name": "single_source_extension",
+  "version": "1.0.0",
+  "scripts": {
+    "run-on-browser": "webpack-dev-server --env.DEV --mode development",
+    "start": "webpack --watch --progress --env.DEV --mode development",
+    "build": "webpack --mode production --progress",
+    "test": "jest --watch"
+  },
+  "targets": {
+    "chrome": "66",
+    "firefox": "63"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/crypto-js": "^3.1.43",
+    "@types/jest": "^24.0.9",
+    "@types/lodash": "^4.14.119",
+    "@types/react": "^16.7.18",
+    "@types/react-dom": "^16.0.11",
+    "@types/react-redux": "^7.0.6",
+    "@types/redux": "^3.6.0",
+    "@types/safe-json-stringify": "^1.0.1",
+    "@types/styled-components": "^4.1.4",
+    "@types/uuid": "^3.4.4",
+    "clean-webpack-plugin": "^1.0.0",
+    "copy-webpack-plugin": "^4.6.0",
+    "http-server": "^0.11.1",
+    "jest": "^24.1.0",
+    "prettier": "^1.17.0",
+    "remote-redux-devtools": "^0.5.16",
+    "ts-jest": "^24.0.0",
+    "ts-loader": "^5.3.2",
+    "typescript": "^3.2.2",
+    "webextension-polyfill-ts": "^0.9.0",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10",
+    "webpack-extension-manifest-plugin": "^0.4.3"
+  },
+  "dependencies": {
+    "@cennznet/api": "^0.10.2",
+    "@cennznet/generic-asset": "^0.4.0",
+    "@cennznet/types": "^0.10.2",
+    "@cennznet/util": "^0.10.2",
+    "@material-ui/core": "^3.8.1",
+    "@material-ui/icons": "^3.0.1",
+    "@types/lz-string": "^1.3.33",
+    "@types/peerjs": "^0.0.30",
+    "@types/qrcode.react": "^0.8.2",
+    "@types/remote-redux-devtools": "^0.5.3",
+    "@types/reselect": "^2.2.0",
+    "bignumber.js": "^8.1.1",
+    "bn.js": "^4.11.8",
+    "crypto-js": "^3.1.9-1",
+    "lodash": "^4.17.11",
+    "lz-string": "^1.4.4",
+    "peerjs": "^0.3.24",
+    "qrcode.react": "^0.9.3",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-redux": "^7.0.2",
+    "redux": "^4.0.1",
+    "redux-observable": "^1.0.0",
+    "redux-persist": "^5.10.0",
+    "reselect": "^4.0.0",
+    "rxjs": "^6.3.3",
+    "safe-json-stringify": "^1.2.0",
+    "styled-components": "^4.1.2",
+    "tweetnacl": "^1.0.1",
+    "uuid": "^3.3.2"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "jest-environment-node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  }
+}
