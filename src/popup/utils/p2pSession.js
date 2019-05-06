@@ -20,6 +20,12 @@ import CryptoJS from 'crypto-js';
 import { v4 } from 'uuid';
 import { switchMap } from 'rxjs/operators';
 
+const peerJS = {
+  host: 'service.centrality.me',
+  path: '/peerjs-server/',
+  secure: true
+};
+
 const config = {
   iceServers: [
     { url: 'stun:stun01.sipphone.com' },
@@ -85,7 +91,7 @@ class P2PSession {
     // Use provided secretKey or generate a random one.
     this.secretKey = secretKey || CryptoJS.lib.WordArray.random(12).toString();
 
-    this.peer = new Peer({ config });
+    this.peer = new Peer({ ...peerJS, config });
     this.peer.on('open', id => {
       this.peerId$.next(id);
       this.peerId$.complete();
