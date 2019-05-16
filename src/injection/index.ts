@@ -17,7 +17,7 @@
 import { ReplaySubject, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { isEqual } from 'lodash';
-import { Signer } from '@polkadot/api/types';
+import { Signer } from '@cennznet/api/polkadot.types';
 import signer from './signer';
 import messenger$ from './messenger';
 
@@ -36,6 +36,7 @@ messenger$.subscribe(event => {
 });
 
 const SingleSource = {
+
   get signer(): Signer {
     return signer;
   },
@@ -50,3 +51,10 @@ const SingleSource = {
 };
 
 export default SingleSource;
+
+// reset globals so injected script won't fails while @plugnet
+// checks for duplicated packages
+// @ts-ignore
+__plugnetjs = {};
+// @ts-ignore
+__polkadotjs = {};

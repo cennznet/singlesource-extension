@@ -36,4 +36,12 @@ export const networks: Dictionary<Network> = {
     nodeUrl: 'wss://cennznet-node-0.centrality.me:9944',
     color: '#FFCA2D'
   }
+  // TODO: update me
+  // MAINNET_CENNZENT: {
+  //   environment: 'MAINNET',
+  //   name: 'Mainnet - CENNZnet',
+  //   nodeUrl:
+  //     'wss://cennznet-node-0.centrality.cloud:9944',
+  //   color: '#0087fa'
+  // }
 };

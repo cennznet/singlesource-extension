@@ -26,7 +26,7 @@ import {
 import { ofType, ActionsObservable } from 'redux-observable';
 import _ from 'lodash';
 import { Api } from '@cennznet/api';
-import { GenericAsset } from '@cennznet/generic-asset';
+import { GenericAsset } from '@cennznet/crml-generic-asset';
 import types from '../../types';
 import { Asset } from '../../types/asset';
 import api$ from '../../utils/api';

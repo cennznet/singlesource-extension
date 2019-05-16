@@ -7,10 +7,14 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import send from './utils/send';
 import { configureApi } from './utils/api';
-import { decodeAddress } from '@polkadot/keyring';
+import { Address } from '@cennznet/types/polkadot';
 import BigNumber from 'bignumber.js';
 import Transactions from './transactions';
 import './index.css';
+
+const decodeAddress = (addr: string) => {
+  Address.decodeAddress(addr);
+};
 
 const getSingleSource = () => {
   return new Promise((resolve, reject) => {

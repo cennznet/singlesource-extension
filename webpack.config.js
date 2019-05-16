@@ -70,9 +70,11 @@ module.exports = ({ DEV = false } = {}) => {
       }
     },
     {
-      entry: './src/injection/index.ts',
+      entry: {
+        singleSource:'./src/injection/index.ts'
+      },
       output: {
-        filename: 'singleSource.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
         library: 'SingleSource',
         libraryExport: 'default',

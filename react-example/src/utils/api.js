@@ -4,8 +4,8 @@ import { WsProvider } from '@cennznet/api/polkadot';
 const getUrl = environment => {
   switch (environment) {
     case 'RIMU': return 'wss://cennznet-node-0.centrality.cloud:9944';
-    case 'KAURI': return 'wss://cennznet-node-0.centrality.me:9944';
-    default: return 'wss://cennznet-node-0.centrality.cloud:9944';
+    case 'KAURI': return 'wss://cennznet-node-0.centrality.cloud:9944';
+    default: return 'wss://cennznet-node-0.centrality.cloud:9944'; // TODO: update me
   }
 }
 
