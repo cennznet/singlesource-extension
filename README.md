@@ -1,5 +1,13 @@
 # SingleSourceExtension
 
+### Environment setting
+
+This project requires you local node version as `^10.13.0`. You can use `nvm` to install and select the specific node version.
+
+1. `brew install nvm`
+2. `nvm install 10.13.0`
+3. `nvm use 10.13.0`
+
 ### Start development
 
 1. Git Clone or download source code as zip file
