@@ -21,7 +21,7 @@ import { v4 } from 'uuid';
 import { switchMap } from 'rxjs/operators';
 
 const peerJS = {
-  host: 'service.centrality.me',
+  host: 'service.centralityapp.com',
   path: '/peerjs-server/',
   secure: true
 };
