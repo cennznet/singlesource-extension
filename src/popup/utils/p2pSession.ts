@@ -1,12 +1,12 @@
 /**
  * Copyright 2019 Centrality Investments Limited
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,7 @@ const peerJS = {
   secure: true
 };
 
-const config = {
+const config: any = {
   iceServers: [
     { url: 'stun:stun01.sipphone.com' },
     { url: 'stun:stun.ekiga.net' },
@@ -65,7 +65,9 @@ const config = {
   ]
 };
 
+
 class P2PSession {
+  peer: Peer;
   // Session uniq identifier
   uuid = v4();
 
@@ -82,10 +84,10 @@ class P2PSession {
   connectionClosed$: Subject<Peer.DataConnection> = new Subject();
 
   // Data stream
-  data$ = new ReplaySubject(1);
+  data$ = new ReplaySubject<any>(1);
 
   // Error stream
-  error$ = new Subject();
+  error$ = new Subject<Error>();
 
   constructor(secretKey?: string) {
     // Use provided secretKey or generate a random one.
@@ -100,7 +102,7 @@ class P2PSession {
       this.subscribeConnection(conn);
     });
     this.peer.on('close', () => this.error$.next(new Error('Peer closed!')));
-    this.peer.on('error', this.error$.next);
+    this.peer.on('error', (err) => this.error$.next(err));
   }
 
   subscribeConnection(conn) {
