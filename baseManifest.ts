@@ -38,7 +38,7 @@ module.exports = {
   ],
   web_accessible_resources: ['singleSource.js'],
 
-  content_security_policy: "object-src 'self'",
+  content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
   background: {
     scripts: ['background.js'],

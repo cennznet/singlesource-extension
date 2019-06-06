@@ -15,15 +15,13 @@
  */
 
 import { Signer } from '@cennznet/api/polkadot.types';
-import { Extrinsic, ExtrinsicSignature } from '@cennznet/types/polkadot';
+import { Extrinsic } from '@cennznet/types/extrinsic';
 import { SignatureOptions } from '@cennznet/types/polkadot.types';
-import { hexToU8a } from '@cennznet/util';
 import signOnSingleSource, { Payload } from './signOnSingleSource';
 
 let id = 0;
 
 const signer: Signer = {
-  // @ts-ignore
   sign: async (
     extrinsic: Extrinsic,
     address: string,
@@ -43,12 +41,10 @@ const signer: Signer = {
     // send payload to singelsource
     const hexSignature = await signOnSingleSource(payload);
 
-    const sig = new ExtrinsicSignature(hexToU8a(hexSignature));
-
     extrinsic.addSignature(
       // @ts-ignore
       address,
-      sig.signature.toU8a(),
+      hexSignature,
       options.nonce,
       options.era
     );

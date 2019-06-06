@@ -56,5 +56,3 @@ export default SingleSource;
 // checks for duplicated packages
 // @ts-ignore
 __plugnetjs = {};
-// @ts-ignore
-__polkadotjs = {};

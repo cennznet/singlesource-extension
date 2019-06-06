@@ -7,12 +7,12 @@ const pkg = require('./package.json');
 
 const webpack = require('webpack');
 
-module.exports = ({ DEV = false } = {}) => {
+module.exports = ({DEV = false} = {}) => {
   const devExtend = DEV
     ? {
-        // unsafe-eval will allow us to dispatch action from redux-devtool
-        content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self'"
-      }
+      // unsafe-eval will allow us to dispatch action from redux-devtool
+      content_security_policy: 'script-src \'self\' \'unsafe-eval\'; object-src \'self\''
+    }
     : {};
 
   const extend = {
@@ -35,7 +35,10 @@ module.exports = ({ DEV = false } = {}) => {
         rules: [
           {
             test: /\.(ts|tsx|js|jsx)$/,
-            use: ['ts-loader'],
+            use: {
+              loader: require.resolve('babel-loader'),
+              options: require('@plugnet/dev-react/config/babel')
+            },
             exclude: /node_modules/
           }
         ]
@@ -52,14 +55,19 @@ module.exports = ({ DEV = false } = {}) => {
       stats: {
         colors: true
       },
+      // mode: 'development',
+      // optimization: {
+      //   usedExports: true,
+      //   minimize: false
+      // },
       devtool: 'source-map',
       plugins: [
         new CleanWebpackPlugin(['dist']),
         new CopyWebpackPlugin([
-          { from: './public' },
+          {from: './public'}
         ]),
         new WebpackExtensionManifestPlugin({
-          config: { base: baseManifest, extend }
+          config: {base: baseManifest, extend}
         }),
         new webpack.HotModuleReplacementPlugin()
       ],
@@ -71,7 +79,7 @@ module.exports = ({ DEV = false } = {}) => {
     },
     {
       entry: {
-        singleSource:'./src/injection/index.ts'
+        singleSource: './src/injection/index.ts'
       },
       output: {
         filename: '[name].js',
@@ -84,18 +92,26 @@ module.exports = ({ DEV = false } = {}) => {
         rules: [
           {
             test: /\.(ts|js)$/,
-            use: 'ts-loader',
+            use: {
+              loader: require.resolve('babel-loader'),
+              options: require('@plugnet/dev-react/config/babel')
+            },
             exclude: /node_modules/
           }
         ]
       },
+      // mode: 'development',
+      // optimization: {
+      //   usedExports: true,
+      //   minimize: false
+      // },
       resolve: {
         extensions: ['.js', '.ts']
       },
       stats: {
         colors: true
       },
-      devtool: 'source-map',
+      devtool: 'source-map'
     }
   ];
 };
