@@ -21,7 +21,7 @@ import { v4 } from 'uuid';
 import { switchMap } from 'rxjs/operators';
 
 const peerJS = {
-  host: 'service.centrality.me',
+  host: 'service.centralityapp.com',
   path: '/peerjs-server/',
   secure: true
 };
@@ -100,7 +100,7 @@ class P2PSession {
       this.subscribeConnection(conn);
     });
     this.peer.on('close', () => this.error$.next(new Error('Peer closed!')));
-    this.peer.on('error', this.error$.next);
+    this.peer.on('error', err => this.error$.next(err));
   }
 
   subscribeConnection(conn) {
@@ -125,7 +125,7 @@ class P2PSession {
       this.connectionClosed$.next(conn);
     });
 
-    conn.on('error', this.error$.next);
+    conn.on('error', err => this.error$.next(err));
   }
 
   connect(peerId): Promise<void> {
