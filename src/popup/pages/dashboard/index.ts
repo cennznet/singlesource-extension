@@ -20,7 +20,6 @@ import DashboardPage from './dashboardPage';
 import types from '../../types';
 import { Account } from '../../types/account';
 import { State } from '../../types/state';
-import { debug } from 'util';
 
 const mapStateToProps = ({ accounts }: State) => ({
   accounts
