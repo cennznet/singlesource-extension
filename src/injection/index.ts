@@ -51,8 +51,3 @@ const SingleSource = {
 };
 
 export default SingleSource;
-
-// reset globals so injected script won't fails while @plugnet
-// checks for duplicated packages
-// @ts-ignore
-__plugnetjs = {};

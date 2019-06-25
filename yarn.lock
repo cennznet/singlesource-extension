@@ -845,12 +845,12 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@cennznet/api@^0.14.1-beta.3":
-  version "0.14.1-beta.3"
-  resolved "https://registry.yarnpkg.com/@cennznet/api/-/api-0.14.1-beta.3.tgz#9b44cb0512a29715fe9ab0f5743fd2058381639e"
-  integrity sha512-HXtJAawwKVWv3CR1v4S+pDR12enz/P5lr7XbBinClOSFJYadHM3s2sKt1sps8PJrkk5a+vN9QaZVA/P7fMNdgQ==
+"@cennznet/api@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@cennznet/api/-/api-0.14.1.tgz#f87cc1c3ae74f1b7d7d3d3a804237033d317b274"
+  integrity sha512-Pip7TIS2JZkkWtHAbSxaelPxSUnwaaBk86r5DsTBSsHCvPqB66+3RrmgLeJhlH2IQuifidZK7poyhVG741Xd7g==
   dependencies:
-    "@cennznet/types" "^0.14.1-beta.3"
+    "@cennznet/types" "^0.14.1"
     "@plugnet/api" "^0.81.100"
     "@plugnet/extrinsics" "^0.81.100"
     "@plugnet/rpc-core" "^0.81.100"
@@ -869,19 +869,19 @@
   resolved "https://registry.yarnpkg.com/@cennznet/crml-generic-asset/-/crml-generic-asset-0.9.0.tgz#88cde96edba40ec6b10213b09b4482eac3bf8ed2"
   integrity sha512-y0TvY5o+t/h52bVgR3zT5JOX5oa0+tC5pGOXkTA5Bo1BnSaeAmlItb0jMJbZg8zrb4iS+HPD6yIUyuudgdTDdw==
 
-"@cennznet/types@^0.14.1-beta.3":
-  version "0.14.1-beta.3"
-  resolved "https://registry.yarnpkg.com/@cennznet/types/-/types-0.14.1-beta.3.tgz#9588e54cd66d88276e6cf1031ec6aa1101ecf778"
-  integrity sha512-gwChKgjiSPdhBmAy563jj+IUrr+iJwre/WyT05oZEkgFgUnrpDU+KWVQc0NF9Baf/33Q3FcbsE6Pw+Fe5FyLNw==
+"@cennznet/types@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@cennznet/types/-/types-0.14.1.tgz#55cf59e8a3041b12a8dd71f4a539dda0b4b7b56c"
+  integrity sha512-NpwO+NuboHbXAlp2yVSVb0gPAIUrgkUY4e4NpEfw92HrF3A3okX9xGyFIrC9bJ5cDcjP0qXXR0GPLheiJuSdBg==
   dependencies:
-    "@cennznet/util" "^0.14.1-beta.3"
+    "@cennznet/util" "^0.14.1"
     "@plugnet/types" "^0.81.100"
     "@plugnet/util" "^0.93.101"
 
-"@cennznet/util@^0.14.1-beta.3":
-  version "0.14.1-beta.3"
-  resolved "https://registry.yarnpkg.com/@cennznet/util/-/util-0.14.1-beta.3.tgz#e9da6ab4e52e9dfc24dc6f9abf82c1943137df6d"
-  integrity sha512-OwPHUabsvcOh2gorEIlLyWzMgGVB69tvjQeCyKCTFS8UnFCU0eJOwhsNHqr0gkvK2VwFnXa+8daBG9ne8WCLEQ==
+"@cennznet/util@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@cennznet/util/-/util-0.14.1.tgz#f00970156a848b0a8ad282b36f1cab4274508ad1"
+  integrity sha512-cEMxpYFR1vQlqvqoGibbq5aAABEpa7WwZzp9fU0LdlC/7zoFOW/n8mFPlOBrRdoZkPWr9SmnIsUNEbKuphAkiw==
   dependencies:
     "@plugnet/util" "^0.93.101"
     "@plugnet/util-crypto" "^0.93.101"
