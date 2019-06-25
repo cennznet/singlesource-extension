@@ -28,12 +28,11 @@ const signer: Signer = {
     options: SignatureOptions
   ): Promise<number> => {
     const payload: Payload = {
-      extrinsic: extrinsic.method.toString(),
+      extrinsic: extrinsic.toString(),
       address,
       blockHash: options.blockHash.toString(),
       era: options.era && options.era.toString(),
       nonce: options.nonce.toString(),
-      meta: extrinsic.meta.toString(),
       // @ts-ignore
       version: options.version && JSON.stringify(options.version.toJSON())
     };
