@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
+    "@cennznet/wallet": "^0.14.1",
     "@plugnet/dev-react": "^0.30.6",
     "@types/crypto-js": "^3.1.43",
     "@types/jest": "^24.0.9",

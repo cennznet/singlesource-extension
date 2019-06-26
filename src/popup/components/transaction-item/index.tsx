@@ -47,7 +47,7 @@ const getAddress = (transaction: Transaction): string => {
 };
 
 const TransactionItem = ({ transaction }: { transaction: Transaction }) => (
-  <Container onClick={this.onBalances}>
+  <Container>
     <Content>
       <Row style={{ flex: 1, justifyContent: 'space-between' }}>
         <Row>
@@ -77,9 +77,7 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => (
             <Tooltip title="View on UNcover">
               <a
                 target="_blank"
-                href={`https://cennzscan.centrality.cloud/tx/${
-                  transaction.hash
-                }`}
+                href={`https://cennzscan.centrality.cloud/tx/${transaction.hash}`}
               >
                 <Icon>link</Icon>
               </a>
@@ -89,7 +87,9 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => (
                 check
               </Icon>
             ) : (
-              <CircularProgress color="primary" size={14} />
+              <Icon color="secondary" fontSize="small">
+                clear
+              </Icon>
             )}
           </Column>
         </Row>
