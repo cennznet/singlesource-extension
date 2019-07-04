@@ -28,7 +28,9 @@ const signer: Signer = {
     options: SignatureOptions
   ): Promise<number> => {
     const payload: Payload = {
-      extrinsic: extrinsic.toString(),
+      extrinsic: extrinsic.toHex(),
+      method: extrinsic.method.toString(),
+      meta: extrinsic.meta.toString(),
       address,
       blockHash: options.blockHash.toString(),
       era: options.era && options.era.toString(),
@@ -40,13 +42,7 @@ const signer: Signer = {
     // send payload to singelsource
     const hexSignature = await signOnSingleSource(payload);
 
-    extrinsic.addSignature(
-      // @ts-ignore
-      address,
-      hexSignature,
-      options.nonce,
-      options.era
-    );
+    extrinsic.addSignature(address, hexSignature, options.nonce, options.era);
 
     return ++id;
   }

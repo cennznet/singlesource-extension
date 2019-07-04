@@ -5,7 +5,8 @@
     "run-on-browser": "webpack-dev-server --env.DEV --mode development",
     "start": "webpack --watch --progress --env.DEV --mode development",
     "build": "webpack --mode production --progress",
-    "test": "jest --watch"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "targets": {
     "chrome": "66",
@@ -13,6 +14,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
+    "@cennznet/wallet": "^0.14.1",
     "@plugnet/dev-react": "^0.30.6",
     "@types/crypto-js": "^3.1.43",
     "@types/jest": "^24.0.9",

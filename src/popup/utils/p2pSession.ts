@@ -65,7 +65,6 @@ const config: any = {
   ]
 };
 
-
 class P2PSession {
   peer: Peer;
   // Session uniq identifier
@@ -102,7 +101,7 @@ class P2PSession {
       this.subscribeConnection(conn);
     });
     this.peer.on('close', () => this.error$.next(new Error('Peer closed!')));
-    this.peer.on('error', (err) => this.error$.next(err));
+    this.peer.on('error', err => this.error$.next(err));
   }
 
   subscribeConnection(conn) {
@@ -112,10 +111,9 @@ class P2PSession {
 
     conn.on('data', data => {
       try {
-        const decrypted = CryptoJS.AES.decrypt(
-          data,
-          this.secretKey
-        ).toString(CryptoJS.enc.Utf8);
+        const decrypted = CryptoJS.AES.decrypt(data, this.secretKey).toString(
+          CryptoJS.enc.Utf8
+        );
         const message = JSON.parse(decrypted);
         this.data$.next(message);
       } catch (error) {
