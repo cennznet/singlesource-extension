@@ -28,7 +28,8 @@ const signer: Signer = {
     options: SignatureOptions
   ): Promise<number> => {
     const payload: Payload = {
-      extrinsic: extrinsic.method.toString(),
+      extrinsic: extrinsic.toHex(),
+      method: extrinsic.method.toString(),
       meta: extrinsic.meta.toString(),
       address,
       blockHash: options.blockHash.toString(),

@@ -20,7 +20,7 @@ const vault =
 
 // @ts-ignore
 signOnSingleSource = async (payload: Payload) => {
-  const { extrinsic, meta, address, blockHash, nonce, era, version } = payload;
+  const { method, meta, address, blockHash, nonce, era, version } = payload;
 
   const options = {
     blockHash: new U8a(blockHash),
@@ -30,12 +30,12 @@ signOnSingleSource = async (payload: Payload) => {
   };
 
   const metadata = new FunctionMetadata(JSON.parse(meta));
-  const method = new Method(JSON.parse(extrinsic), metadata);
+  const meth = new Method(JSON.parse(method), metadata);
 
   const wallet = new Wallet({ vault, keyringTypes: [HDKeyring] });
   await wallet.unlock('aaaaaa');
 
-  const ext = new Extrinsic(method);
+  const ext = new Extrinsic(meth);
 
   await wallet.sign(ext, address, options);
 

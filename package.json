@@ -5,7 +5,8 @@
     "run-on-browser": "webpack-dev-server --env.DEV --mode development",
     "start": "webpack --watch --progress --env.DEV --mode development",
     "build": "webpack --mode production --progress",
-    "test": "jest --watch"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "targets": {
     "chrome": "66",

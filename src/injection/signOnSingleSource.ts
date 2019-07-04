@@ -20,6 +20,7 @@ import messenger$ from './messenger';
 
 export type Payload = {
   extrinsic: string;
+  method: string;
   meta: string;
   address: string;
   blockHash: string;
