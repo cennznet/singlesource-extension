@@ -15,14 +15,14 @@
  */
 
 import { ReplaySubject } from 'rxjs';
-import { Api } from '@cennznet/api';
+import { ApiRx } from '@cennznet/api';
 import { WsProvider } from '@cennznet/api/polkadot';
 
-const api$ = new ReplaySubject<Api>(1);
+const apiRx$ = new ReplaySubject<ApiRx>(1);
 
 export const configure = (nodeUrl: string) => {
   let provider = new WsProvider(nodeUrl);
-  Api.create({ provider }).then(api => api$.next(api));
+  ApiRx.create({ provider }).subscribe(apiRx$);
 };
 
-export default api$;
+export default apiRx$;

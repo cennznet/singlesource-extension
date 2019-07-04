@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { of, from } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import {
   mergeMap,
   map,
@@ -25,24 +25,31 @@ import {
 } from 'rxjs/operators';
 import { ofType, ActionsObservable } from 'redux-observable';
 import _ from 'lodash';
-import { Api } from '@cennznet/api';
-import { GenericAsset } from '@cennznet/crml-generic-asset';
+import {ApiRx} from '@cennznet/api';
 import types from '../../types';
 import { Asset } from '../../types/asset';
-import api$ from '../../utils/api';
+import apiRx$ from '../../utils/api';
 import { weiToAmount } from '../../utils/amount';
 
 type Action = { type: string; payload: { asset: Asset } };
 
-const fetchBalance = async (
-  api: Api,
+const fetchBalance = (
+  apiRx: ApiRx,
   assetId: number,
   address: string
-): Promise<Asset> => {
-  const ga = await GenericAsset.create(api);
-  const balanceWei = await ga.getFreeBalance(assetId, address);
-  const balance = weiToAmount(balanceWei);
-  return { address, assetId, balance };
+): Observable<Asset> => {
+  return apiRx.genericAsset
+    .getFreeBalance(assetId, address)
+    .pipe(
+      map(
+        balanceWei => { 
+          return {
+            address,
+            assetId,
+            balance: weiToAmount(balanceWei)
+          }
+        }
+      ));
 };
 
 const fetchBalanceEpic = (action$: ActionsObservable<Action>) =>
@@ -52,10 +59,10 @@ const fetchBalanceEpic = (action$: ActionsObservable<Action>) =>
       const { asset } = action.payload;
       const { assetId, address } = asset;
 
-      return api$.pipe(
-        switchMap(api => {
+      return apiRx$.pipe(
+        switchMap(apiRx => {
           // get balance stream
-          const getBalance$ = from(fetchBalance(api, assetId, address));
+          const getBalance$ = fetchBalance(apiRx, assetId, address);
 
           // map balance to actions observable
           return getBalance$.pipe(
