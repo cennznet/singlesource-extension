@@ -82,6 +82,8 @@ class P2PSession {
 
   connectionClosed$: Subject<Peer.DataConnection> = new Subject();
 
+  rtcConnProtocol$: Subject<any> = new Subject();
+
   // Data stream
   data$ = new ReplaySubject<any>(1);
 
@@ -106,6 +108,7 @@ class P2PSession {
 
   subscribeConnection(conn) {
     conn.on('open', () => {
+      console.log('open');
       this.connection$.next(conn);
     });
 
@@ -115,6 +118,7 @@ class P2PSession {
           CryptoJS.enc.Utf8
         );
         const message = JSON.parse(decrypted);
+        console.log('M:', JSON.stringify(message));
         this.data$.next(message);
       } catch (error) {
         this.error$.next(error);
@@ -122,6 +126,7 @@ class P2PSession {
     });
 
     conn.on('close', () => {
+      console.log('close');
       this.connectionClosed$.next(conn);
     });
 
