@@ -1,3 +1,5 @@
+// Slience `DeprecationWarning: Tapable.plugin is deprecated` caused by webpack-extension-manifest-plugin
+process.noDeprecation = true;
 const path = require('path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
