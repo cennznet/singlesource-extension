@@ -37,11 +37,19 @@ type State = {
 };
 
 class ConnectPage extends PureComponent<Props, State> {
-  peer = new P2PSession();
+  private peer: P2PSession;
 
   constructor(props: Props) {
     super(props);
     this.state = { peerId: null, error: null, opened: false };
+    this.connect();
+  }
+
+  connect(){
+    if(this.peer){
+      this.peer.destroy();
+    }
+    this.peer = new P2PSession();
     this.peer.peerId$.subscribe(peerId => this.setState({ peerId }));
     this.peer.connection$.subscribe(() => this.setState({ opened: true }));
     this.peer.data$.subscribe(response => {
@@ -49,7 +57,8 @@ class ConnectPage extends PureComponent<Props, State> {
       this.props.onConnect(accounts);
     });
     this.peer.error$.subscribe(error => {
-      this.setState({ error });
+      console.log(error);
+      this.connect();
     });
   }
 
