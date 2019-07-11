@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import copy from 'copy-to-clipboard';
 import React, { PureComponent } from 'react';
 import QRCode from 'qrcode.react';
 import stringify from 'safe-json-stringify';
@@ -36,12 +37,24 @@ type State = {
   opened: boolean;
 };
 
+function cliConnectCmd(encoded: string) {
+  return `cennz-cli ext:connect ${encoded}`;
+}
+
 class ConnectPage extends PureComponent<Props, State> {
-  peer = new P2PSession();
+  private peer: P2PSession;
 
   constructor(props: Props) {
     super(props);
     this.state = { peerId: null, error: null, opened: false };
+    this.connect();
+  }
+
+  connect() {
+    if (this.peer) {
+      this.peer.destroy();
+    }
+    this.peer = new P2PSession();
     this.peer.peerId$.subscribe(peerId => this.setState({ peerId }));
     this.peer.connection$.subscribe(() => this.setState({ opened: true }));
     this.peer.data$.subscribe(response => {
@@ -49,7 +62,8 @@ class ConnectPage extends PureComponent<Props, State> {
       this.props.onConnect(accounts);
     });
     this.peer.error$.subscribe(error => {
-      this.setState({ error });
+      console.log(error);
+      this.connect();
     });
   }
 
@@ -74,10 +88,10 @@ class ConnectPage extends PureComponent<Props, State> {
     });
 
     const encoded = LZString.compressToEncodedURIComponent(request);
-    const link = `singlesource-${environment.toLowerCase()}://?request=${encoded}`;
-    if (peerId) {
-      console.log(link);
-    }
+    // const link = `singlesource-${environment.toLowerCase()}://?request=${encoded}`;
+    // if (peerId) {
+    //   console.log(link);
+    // }
 
     return (
       <Content>
@@ -87,13 +101,17 @@ class ConnectPage extends PureComponent<Props, State> {
           mySingleSource app
         </Subtitle>
         {peerId ? (
-          <QRCode size={365} level="H" value={encoded} />
+          <div onClick={(evt) => {
+            if ((evt as unknown as UIEvent).detail === 4) {
+              copy(cliConnectCmd(encoded));
+            }
+          }}><QRCode size={365} level="H" value={encoded}/></div>
         ) : (
           <div style={{ alignSelf: 'center' }}>
-            <CircularProgress />
+            <CircularProgress/>
           </div>
         )}
-        <Splash />
+        <Splash/>
       </Content>
     );
   }

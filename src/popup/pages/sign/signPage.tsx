@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import copy from 'copy-to-clipboard';
 import React, { PureComponent } from 'react';
 import QRCode from 'qrcode.react';
 import stringify from 'safe-json-stringify';
@@ -34,6 +35,10 @@ type State = {
   sent: boolean;
   error?: Error;
 };
+
+function cliSignCmd(encoded: string) {
+  return `cennz-cli ext:sign ${encoded}`;
+}
 
 class SignPage extends PureComponent<Props, State> {
   peer = new P2PSession();
@@ -104,7 +109,11 @@ class SignPage extends PureComponent<Props, State> {
           Authorise this request by scanning the QR code on mySingleSource app
         </Subtitle>
         {peerId ? (
-          <QRCode size={365} level="H" value={encoded} />
+          <div onClick={(evt) => {
+            if ((evt as unknown as UIEvent).detail === 4) {
+              copy(cliSignCmd(encoded));
+            }
+          }}><QRCode size={365} level="H" value={encoded} /></div>
         ) : (
           <CircularProgress />
         )}
