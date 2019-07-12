@@ -41,7 +41,7 @@ const signer: Signer = {
     };
 
     // send payload to singelsource
-    const hexSignature = await signOnSingleSource(payload);
+    const hexSignature = await signOnSingleSource(payload).toPromise();
 
     extrinsic.addSignature(address, hexSignature, options.nonce, options.era);
 

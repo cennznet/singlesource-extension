@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-import { AsyncSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { v4 } from 'uuid';
-import messenger$ from './messenger';
-import { IncomingMsgTypes, SignCommand, SignPayload } from '../types';
+import messenger$, { filterResponse } from './messenger';
+import {
+  ExtrinsicSignResponse,
+  IncomingMsgTypes,
+  OutgoingMsgTypes,
+  SignCommand,
+  SignPayload
+} from '../types';
+import { map, filter, first } from 'rxjs/operators';
 
-const streams: { [key: string]: AsyncSubject<string> } = {};
-
-messenger$.subscribe(event => {
-  const { type, hexSignature, requestUUID, error } = event.data;
-  if (type === 'signed' && requestUUID) {
-    const stream$ = streams[requestUUID];
-    if (stream$) {
-      if (hexSignature) {
-        stream$.next(hexSignature);
-        stream$.complete();
-      } else {
-        stream$.error(error);
-      }
-    }
-  }
-});
-
-const signOnSingleSource = (payload: SignPayload): Promise<string> => {
+const signOnSingleSource = (payload: SignPayload): Observable<string> => {
   const uuid = v4();
   const message: SignCommand = {
     payload,
@@ -45,10 +35,17 @@ const signOnSingleSource = (payload: SignPayload): Promise<string> => {
   };
 
   window.postMessage(message, window.origin);
-
-  const stream$ = new AsyncSubject<string>();
-  streams[uuid] = stream$;
-  return stream$.asObservable().toPromise();
+  return messenger$.pipe(
+    filter(res => filterResponse(res, uuid)),
+    map( (res: ExtrinsicSignResponse) => {
+      if (res.type === OutgoingMsgTypes.SIGNED) {
+        return res.hexSignature;
+      } else {
+        throw res.error;
+      }
+    }),
+    first()
+  );
 };
 
 export default signOnSingleSource;

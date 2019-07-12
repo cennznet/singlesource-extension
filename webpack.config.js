@@ -23,12 +23,12 @@ module.exports = (env, {mode = 'development'}) => {
     ...devExtend
   };
 
-  return [
-    {
+  return {
       entry: {
         popup: './src/popup/index.tsx',
         background: './src/background/index.ts',
-        contentScript: './src/content_script/index.ts'
+        contentScript: './src/content_script/index.ts',
+        singleSource: './src/injection/index.ts'
       },
       output: {
         filename: '[name].js',
@@ -77,37 +77,6 @@ module.exports = (env, {mode = 'development'}) => {
         hot: true,
         port: 9000
       }
-    },
-    {
-      entry: {
-        singleSource: './src/injection/index.ts'
-      },
-      output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist'),
-        library: 'SingleSource',
-        libraryExport: 'default',
-        libraryTarget: 'var'
-      },
-      module: {
-        rules: [
-          {
-            test: /\.(ts|js)$/,
-            use: {
-              loader: require.resolve('babel-loader'),
-              options: require('@plugnet/dev-react/config/babel')
-            },
-            exclude: /node_modules/
-          }
-        ]
-      },
-      resolve: {
-        extensions: ['.js', '.ts']
-      },
-      stats: {
-        colors: true
-      },
-      devtool: 'source-map'
     }
-  ];
+  ;
 };

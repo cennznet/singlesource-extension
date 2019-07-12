@@ -17,23 +17,27 @@
 import { of, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ofType, ActionsObservable } from 'redux-observable';
-import { AnyAction } from 'redux';
 import types from '../../types';
+import { ExtrinsicSignSuccess, OutgoingMsgTypes } from '../../../types';
+import { Action } from 'redux-actions';
+import { SignSuccessPayload } from '../../types/actions';
 
 const signSuccessEpic = (
-  action$: ActionsObservable<AnyAction>
-): Observable<AnyAction> =>
+  action$: ActionsObservable<Action<any>>
+): Observable<Action<ExtrinsicSignSuccess>> =>
   action$.pipe(
-    ofType(types.SIGN.SUCCESS),
-    switchMap(({ payload: { requestUUID, hexSignature } }) =>
-      of({
-        type: types.POST_MESSAGE,
-        payload: {
-          type: 'signed',
-          hexSignature,
-          requestUUID
-        }
-      })
+    ofType<Action<SignSuccessPayload>>(types.SIGN.SUCCESS),
+    switchMap(({ payload: { requestUUID, hexSignature } }) => {
+      const payload: ExtrinsicSignSuccess = {
+        type: OutgoingMsgTypes.SIGNED,
+        hexSignature,
+        requestUUID
+      };
+      return of({
+          type: types.POST_MESSAGE,
+          payload
+        })
+      }
     )
   );
 
