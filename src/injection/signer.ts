@@ -17,7 +17,8 @@
 import { Signer } from '@cennznet/api/polkadot.types';
 import { Extrinsic } from '@cennznet/types/extrinsic';
 import { SignatureOptions } from '@cennznet/types/polkadot.types';
-import signOnSingleSource, { Payload } from './signOnSingleSource';
+import signOnSingleSource from './signOnSingleSource';
+import { SignPayload } from '../types';
 
 let id = 0;
 
@@ -27,7 +28,7 @@ const signer: Signer = {
     address: string,
     options: SignatureOptions
   ): Promise<number> => {
-    const payload: Payload = {
+    const payload: SignPayload = {
       extrinsic: extrinsic.toHex(),
       method: extrinsic.method.toString(),
       meta: extrinsic.meta.toString(),

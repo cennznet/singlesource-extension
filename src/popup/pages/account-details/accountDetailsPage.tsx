@@ -19,7 +19,7 @@ import { Container, Content, Title, Row, Items } from './style';
 import AssetItem from '../../components/asset-item';
 import { Tooltip, IconButton } from '@material-ui/core';
 import GradientIcon from '@material-ui/icons/Gradient';
-import { Account } from '../../types/account';
+import { Account } from '../../../types';
 import QRModal from '../../components/qr-modal';
 import Address from '../../components/address';
 

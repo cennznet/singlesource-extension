@@ -33,9 +33,9 @@ import {
 } from './style';
 import { weiToAmount } from '../../utils/amount';
 import { getAssetName } from '../../utils/asset';
-import { Transaction } from '../../types/transactions';
+import { AssetTransferTx } from '../../types/transactions';
 
-const getAddress = (transaction: Transaction): string => {
+const getAddress = (transaction: AssetTransferTx): string => {
   const address =
     transaction.transactionFlow === 'Incoming'
       ? transaction.fromAddress
@@ -46,7 +46,7 @@ const getAddress = (transaction: Transaction): string => {
   )}`;
 };
 
-const TransactionItem = ({ transaction }: { transaction: Transaction }) => (
+const TransactionItem = ({ transaction }: { transaction: AssetTransferTx }) => (
   <Container>
     <Content>
       <Row style={{ flex: 1, justifyContent: 'space-between' }}>
@@ -77,7 +77,7 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => (
             <Tooltip title="View on UNcover">
               <a
                 target="_blank"
-                href={`https://cennzscan.centrality.cloud/tx/${transaction.hash}`}
+                href={`https://uncoverexplorer.com/tx/${transaction.hash}`}
               >
                 <Icon>link</Icon>
               </a>

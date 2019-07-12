@@ -36,7 +36,6 @@ messenger$.subscribe(event => {
 });
 
 const SingleSource = {
-
   get signer(): Signer {
     return signer;
   },

@@ -18,7 +18,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import ConnectPage from './connectPage';
 import types from '../../types';
-import { Account } from '../../types/account';
+import { Account } from '../../../types';
 import { State } from '../../types/state';
 
 const mapStateToProps = ({ environment }: State) => ({

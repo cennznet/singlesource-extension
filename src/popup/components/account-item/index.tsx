@@ -17,7 +17,7 @@
 import React, { PureComponent } from 'react';
 import { Tooltip } from '@material-ui/core';
 import { Container, Content, Name, Address, Assets } from './style';
-import { Account } from '../../types/account';
+import { Account } from '../../../types';
 import { getAssetName } from '../../utils/asset';
 
 type Props = {

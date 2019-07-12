@@ -27,7 +27,7 @@ import { ofType, ActionsObservable } from 'redux-observable';
 import _ from 'lodash';
 import {ApiRx} from '@cennznet/api';
 import types from '../../types';
-import { Asset } from '../../types/asset';
+import { Asset } from '../../../types';
 import apiRx$ from '../../utils/api';
 import { weiToAmount } from '../../utils/amount';
 
@@ -42,7 +42,7 @@ const fetchBalance = (
     .getFreeBalance(assetId, address)
     .pipe(
       map(
-        balanceWei => { 
+        balanceWei => {
           return {
             address,
             assetId,

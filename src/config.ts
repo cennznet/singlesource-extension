@@ -27,7 +27,7 @@ export const networks: Dictionary<Network> = {
   RIMU_CENNZENT: {
     environment: 'RIMU',
     name: 'Rimu - CENNZnet',
-    nodeUrl: 'wss://cennznet-node-0.centrality.cloud:9944',
+    nodeUrl: 'wss://rimu.unfrastructure.io/public/ws',
     color: '#F45BFF'
   },
   KAURI_CENNZNET: {

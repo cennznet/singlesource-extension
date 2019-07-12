@@ -15,8 +15,9 @@
  */
 
 import { browser } from 'webextension-polyfill-ts';
+import { SignCommand } from '../types';
 
-export default (params: { [key: string]: any }) => {
+export default (params: { noheader: boolean; sign: SignCommand }) => {
   const paramQuery = Object.keys(params)
     .map(key => `${key}=${encodeURIComponent(JSON.stringify(params[key]))}`)
     .join('&');

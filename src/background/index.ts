@@ -19,56 +19,65 @@ import { Runtime } from 'webextension-polyfill-ts/dist/generated/runtime';
 import State from './state';
 import openPanel from './openPanel';
 import { CONTENT_SCRIPT_PORT_NAME, POPUP_PORT_NAME } from '../config';
+import logger from '../logger';
+import {
+  IncomingMsgTypes,
+  IncomingMessages,
+  OutgoingMessages,
+  OutgoingMsgTypes
+} from '../types';
 
 let ports: Runtime.Port[] = [];
 
 browser.runtime.onConnect.addListener(port => {
-  if (port.name === CONTENT_SCRIPT_PORT_NAME) {
-    ports.push(port);
-    port.onDisconnect.addListener(() => {
-      ports = ports.filter(i => i !== port);
-    });
-    port.onMessage.addListener(pageListener);
-  }
+  logger.debug('browser.runtime.onConnect', port);
 
-  if (port.name === POPUP_PORT_NAME) {
-    ports.push(port);
-    port.onDisconnect.addListener(() => {
-      ports = ports.filter(i => i !== port);
-    });
-    port.onMessage.addListener(popupListener);
-  }
+  ports.push(port);
+  port.onDisconnect.addListener(() => {
+    logger.debug('port.onDisconnect', port);
+    ports = ports.filter(i => i !== port);
+  });
+
+  port.onMessage.addListener(
+    port.name === POPUP_PORT_NAME ? popupListener : pageListener
+  );
 });
 
-const pageListener = (data: any) => {
-  if (data.type === 'sign') {
+const pageListener = (data: IncomingMessages) => {
+  logger.debug('pageListener:', data);
+  if (data.type === IncomingMsgTypes.SIGN) {
     openPanel({ noheader: true, sign: data });
   }
-  if (data.type === 'init') {
+  if (data.type === IncomingMsgTypes.INIT) {
     getEnvironment().then(environment => {
-      contentScriptPostMessage({ type: 'environment', environment });
+      contentScriptPostMessage({
+        type: OutgoingMsgTypes.ENVIRONMENT,
+        environment
+      });
     });
     getAccounts().then(accounts => {
       contentScriptPostMessage({
-        type: 'accounts',
+        type: OutgoingMsgTypes.ACCOUNTS,
         accounts
       });
     });
   }
 };
 
-const popupListener = (data: any) => {
+const popupListener = (data: OutgoingMessages) => {
+  logger.debug('popupListener:', data);
   // forward data to contentScript
   contentScriptPostMessage(data);
 };
 
-const contentScriptPostMessage = (data: any) => {
+const contentScriptPostMessage = (data: OutgoingMessages) => {
   ports
+    // TODO: add auth control based on domain name
     .filter(i => i.name === CONTENT_SCRIPT_PORT_NAME)
     .forEach(p => p.postMessage(data));
 };
 
-const popupPostMessage = (data: any) => {
+const popupPostMessage = (data: OutgoingMessages) => {
   ports
     .filter(i => i.name === POPUP_PORT_NAME)
     .forEach(p => p.postMessage(data));

@@ -17,17 +17,7 @@
 import { AsyncSubject } from 'rxjs';
 import { v4 } from 'uuid';
 import messenger$ from './messenger';
-
-export type Payload = {
-  extrinsic: string;
-  method: string;
-  meta: string;
-  address: string;
-  blockHash: string;
-  era?: string;
-  nonce: string;
-  version?: string;
-};
+import { IncomingMsgTypes, SignCommand, SignPayload } from '../types';
 
 const streams: { [key: string]: AsyncSubject<string> } = {};
 
@@ -46,11 +36,11 @@ messenger$.subscribe(event => {
   }
 });
 
-const signOnSingleSource = (payload: Payload): Promise<string> => {
+const signOnSingleSource = (payload: SignPayload): Promise<string> => {
   const uuid = v4();
-  const message = {
+  const message: SignCommand = {
     payload,
-    type: 'sign',
+    type: IncomingMsgTypes.SIGN,
     requestUUID: uuid
   };
 

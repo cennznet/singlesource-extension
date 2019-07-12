@@ -22,7 +22,7 @@ import { CircularProgress } from '@material-ui/core';
 import LZString from 'lz-string';
 import Splash from '../../components/splash';
 import { Content, Title, Subtitle } from './style';
-import { Account } from '../../types/account';
+import { Account } from '../../../types';
 import { Environment } from '../../types/environment';
 import P2PSession from '../../utils/p2pSession';
 

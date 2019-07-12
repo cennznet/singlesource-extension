@@ -9,7 +9,8 @@ const pkg = require('./package.json');
 
 const webpack = require('webpack');
 
-module.exports = ({DEV = false} = {}) => {
+module.exports = (env, {mode = 'development'}) => {
+  const DEV = mode ==='development';
   const devExtend = DEV
     ? {
       // unsafe-eval will allow us to dispatch action from redux-devtool
@@ -60,6 +61,9 @@ module.exports = ({DEV = false} = {}) => {
       devtool: 'source-map',
       plugins: [
         new CleanWebpackPlugin({cleanStaleWebpackAssets: false}),
+        new webpack.DefinePlugin({
+          'process.env.mode': JSON.stringify(mode)
+        }),
         new CopyWebpackPlugin([
           {from: './public'}
         ]),

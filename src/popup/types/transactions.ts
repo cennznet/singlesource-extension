@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export type Transaction = {
+export type AssetTransferTx = {
   hash: string;
   blockNumber: number;
   blockHash: string;
@@ -33,10 +33,10 @@ export type Transaction = {
   assetSymbol: string;
 };
 
-export type TransactionsState = {
+export type AssetTransactionsState = {
   [address: string]: {
     [assetId: number]: {
-      transactions: { [txHash: string]: Transaction };
+      transactions: { [txHash: string]: AssetTransferTx };
       loading: boolean;
       error?: Error;
     };

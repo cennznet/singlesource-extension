@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -30,14 +30,15 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
-// @ts-ignore
 const composeEnhancers = composeWithDevTools({
   realtime: process.env.NODE_ENV === 'development'
 });
 
 const epicMiddleware = createEpicMiddleware({ dependencies: {} });
 const middleware = applyMiddleware(epicMiddleware);
-const store = createStore(persistedReducer, composeEnhancers(middleware));
+const store = createStore(persistedReducer, composeEnhancers(
+  middleware
+) as any);
 
 persistStore(store);
 
