@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Account } from './account';
+import { Account } from '../../types';
 import { Environment } from './environment';
 import { Network } from './network';
 import { BalancesState } from './balancesState';
-import { TransactionsState } from './transactions';
+import { AssetTransactionsState } from './transactions';
 import { Route } from './route';
 
 export type State = {
@@ -31,5 +31,5 @@ export type State = {
   loadingStatus: { [key: string]: boolean };
   environment: Environment;
   balances: BalancesState;
-  transactions: TransactionsState;
+  transactions: AssetTransactionsState;
 };

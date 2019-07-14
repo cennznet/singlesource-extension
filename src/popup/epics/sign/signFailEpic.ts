@@ -14,26 +14,30 @@
  * limitations under the License.
  */
 
-import { of, Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ofType, ActionsObservable } from 'redux-observable';
-import { AnyAction } from 'redux';
+import { ActionsObservable, ofType } from 'redux-observable';
 import types from '../../types';
+import { Action } from 'redux-actions';
+import { ExtrinsicSignFailed, OutgoingMsgTypes } from '../../../types';
+import { SignFailPayload } from '../../types/actions';
 
 const signFailEpic = (
-  action$: ActionsObservable<AnyAction>
-): Observable<AnyAction> =>
+  action$: ActionsObservable<Action<any>>
+): Observable<Action<ExtrinsicSignFailed>> =>
   action$.pipe(
-    ofType(types.SIGN.FAIL),
-    switchMap(({ payload: { requestUUID, error } }) =>
-      of({
-        type: types.POST_MESSAGE,
-        payload: {
-          type: 'signed',
+    ofType<Action<SignFailPayload>>(types.SIGN.FAIL),
+    switchMap(({ payload: { requestUUID, error } }) => {
+        const payload: ExtrinsicSignFailed = {
+          type: OutgoingMsgTypes.SIGNED_FAILED,
           error,
           requestUUID
-        }
-      })
+        };
+        return of({
+          type: types.POST_MESSAGE,
+          payload
+        });
+      }
     )
   );
 

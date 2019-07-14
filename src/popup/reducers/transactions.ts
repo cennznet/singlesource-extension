@@ -16,7 +16,7 @@
 
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { TransactionsState, Transaction } from '../types/transactions';
+import { AssetTransactionsState, AssetTransferTx } from '../types/transactions';
 import { State } from '../types/state';
 import types from '../types';
 
@@ -25,17 +25,17 @@ type FetchTransactionAction = {
   payload: {
     address: string;
     assetId: number;
-    transactions: Transaction[];
+    transactions: AssetTransferTx[];
   };
   error?: Error;
 };
 
-const initialState: TransactionsState = {};
+const initialState: AssetTransactionsState = {};
 
 export default (
   state = initialState,
   action: FetchTransactionAction
-): TransactionsState => {
+): AssetTransactionsState => {
   switch (action.type) {
     case types.FETCH_TRANSACTIONS.REQUEST: {
       const { address, assetId } = action.payload;
@@ -94,7 +94,7 @@ export default (
   }
 };
 
-const getTransactionsState = (state: State): TransactionsState =>
+const getTransactionsState = (state: State): AssetTransactionsState =>
   state.transactions;
 
 export const getTransactionsSelector = createSelector(
@@ -103,7 +103,7 @@ export const getTransactionsSelector = createSelector(
     (__: any, address: string) => address,
     (__: any, ___: any, assetId: number) => assetId
   ],
-  (state, address, assetId): Transaction[] => {
+  (state, address, assetId): AssetTransferTx[] => {
     const path = `${address}.${assetId}.transactions`;
     const transactions = _.get(state, path, {});
     // @ts-ignore

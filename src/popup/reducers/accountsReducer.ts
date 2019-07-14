@@ -17,7 +17,7 @@
 import { AnyAction } from 'redux';
 import _ from 'lodash';
 import types from '../types';
-import { Account } from '../types/account';
+import { Account } from '../../types';
 
 const initialState: Account[] = [];
 

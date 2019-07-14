@@ -18,6 +18,7 @@ import { browser } from 'webextension-polyfill-ts';
 import { fromEvent } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CONTENT_SCRIPT_PORT_NAME } from '../config';
+import logger from '../logger';
 
 const injectScript = () => {
   try {
@@ -34,10 +35,12 @@ const injectScript = () => {
 
 const setupCommunication = () => {
   const port = browser.runtime.connect(null, {
+    // TODO: change name to window.location.hostname
     name: CONTENT_SCRIPT_PORT_NAME
   });
 
   port.onMessage.addListener(data => {
+    logger.debug('message from ext', data);
     window.postMessage(data, window.origin);
   });
 

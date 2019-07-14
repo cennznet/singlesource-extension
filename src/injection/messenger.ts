@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-import { fromEvent } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { fromEvent, Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { OutgoingMessages } from '../types';
 
-const messenger$ = fromEvent<MessageEvent>(window, 'message').pipe(
-  filter(event => event.source === window)
+const messenger$: Observable<OutgoingMessages> = fromEvent<MessageEvent>(window, 'message').pipe(
+  filter(event => event.source === window),
+  map(event => event.data)
 );
+
+export function filterResponse(message: OutgoingMessages, uuid: string) {
+  return message['requestUUID'] && message['requestUUID'] === uuid;
+}
 
 export default messenger$;

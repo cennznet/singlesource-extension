@@ -15,39 +15,44 @@
  */
 
 import { ReplaySubject, Observable } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { Signer } from '@cennznet/api/polkadot.types';
 import signer from './signer';
 import messenger$ from './messenger';
+import { Account, EnvironmentUpdate } from '../types';
+import { ofType } from 'redux-observable';
+import { AccountsUpdate, OutgoingMsgTypes } from '../types';
 
-const accounts$ = new ReplaySubject<any>(1);
+const accounts$ = new ReplaySubject<Account[]>(1);
 const environment$ = new ReplaySubject<string>(1);
 
-messenger$.subscribe(event => {
-  const { type, accounts = [], environment = 'PRODUCTION' } = event.data;
+messenger$.pipe(
+  ofType<AccountsUpdate>(OutgoingMsgTypes.ACCOUNTS),
+  map(msg => msg.accounts),
+  distinctUntilChanged((x, y) => isEqual(x, y))
+).subscribe(accounts$);
 
-  if (type === 'accounts') {
-    accounts$.next(accounts);
-  }
-  if (type === 'environment') {
-    environment$.next(environment);
-  }
-});
+messenger$.pipe(
+  ofType<EnvironmentUpdate>(OutgoingMsgTypes.ENVIRONMENT),
+  map(msg => msg.environment),
+  distinctUntilChanged()
+).subscribe(environment$);
 
 const SingleSource = {
-
   get signer(): Signer {
     return signer;
   },
 
-  get accounts$(): Observable<Array<Object>> {
-    return accounts$.pipe(distinctUntilChanged((x, y) => isEqual(x, y)));
+  get accounts$(): Observable<Account[]> {
+    return accounts$;
   },
 
   get environment$(): Observable<string> {
-    return environment$.pipe(distinctUntilChanged());
+    return environment$;
   }
 };
+
+window['SingleSource'] = SingleSource;
 
 export default SingleSource;

@@ -18,13 +18,13 @@ import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { CircularProgress, Icon, IconButton } from '@material-ui/core';
 import { Container, Content, Title, Items, Row } from './style';
-import { Transaction } from '../../types/transactions';
+import { AssetTransferTx } from '../../types/transactions';
 import TransactionItem from '../../components/transaction-item';
 
 type Props = {
   params: { address: string; assetId: number };
   fetching: boolean;
-  transactions: Transaction[];
+  transactions: AssetTransferTx[];
   onRefresh: (address: string, assetId: number) => any;
 };
 

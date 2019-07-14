@@ -52,7 +52,7 @@ class Transactions extends PureComponent {
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={`https://cennzscan.centrality.cloud/tx/${i.hash}`}
+                    href={`https://uncoverexplorer.com/tx/${i.hash}`}
                   >
                     View on UNcover
                   </a>

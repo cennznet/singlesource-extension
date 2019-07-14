@@ -9,7 +9,8 @@ const pkg = require('./package.json');
 
 const webpack = require('webpack');
 
-module.exports = ({DEV = false} = {}) => {
+module.exports = (env, {mode = 'development'}) => {
+  const DEV = mode ==='development';
   const devExtend = DEV
     ? {
       // unsafe-eval will allow us to dispatch action from redux-devtool
@@ -22,12 +23,12 @@ module.exports = ({DEV = false} = {}) => {
     ...devExtend
   };
 
-  return [
-    {
+  return {
       entry: {
         popup: './src/popup/index.tsx',
         background: './src/background/index.ts',
-        contentScript: './src/content_script/index.ts'
+        contentScript: './src/content_script/index.ts',
+        singleSource: './src/injection/index.ts'
       },
       output: {
         filename: '[name].js',
@@ -60,6 +61,9 @@ module.exports = ({DEV = false} = {}) => {
       devtool: 'source-map',
       plugins: [
         new CleanWebpackPlugin({cleanStaleWebpackAssets: false}),
+        new webpack.DefinePlugin({
+          'process.env.mode': JSON.stringify(mode)
+        }),
         new CopyWebpackPlugin([
           {from: './public'}
         ]),
@@ -73,37 +77,6 @@ module.exports = ({DEV = false} = {}) => {
         hot: true,
         port: 9000
       }
-    },
-    {
-      entry: {
-        singleSource: './src/injection/index.ts'
-      },
-      output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist'),
-        library: 'SingleSource',
-        libraryExport: 'default',
-        libraryTarget: 'var'
-      },
-      module: {
-        rules: [
-          {
-            test: /\.(ts|js)$/,
-            use: {
-              loader: require.resolve('babel-loader'),
-              options: require('@plugnet/dev-react/config/babel')
-            },
-            exclude: /node_modules/
-          }
-        ]
-      },
-      resolve: {
-        extensions: ['.js', '.ts']
-      },
-      stats: {
-        colors: true
-      },
-      devtool: 'source-map'
     }
-  ];
+  ;
 };
