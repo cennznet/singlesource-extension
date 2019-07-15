@@ -125,7 +125,7 @@ class P2PSession {
       this.connectionClosed$.next(conn);
     });
 
-    conn.on('error', this.error$.next);
+    conn.on('error', e => {this.error$.next(e);});
   }
 
   connect(peerId): Promise<void> {
