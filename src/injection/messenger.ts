@@ -15,11 +15,12 @@
  */
 
 import { fromEvent, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { OutgoingMessages } from '../types';
 
 const messenger$: Observable<OutgoingMessages> = fromEvent<MessageEvent>(window, 'message').pipe(
-  filter(event => event.source === window),
+  filter(event => event.source === window && event.data.origin === 'bg'),
+  tap(console.log),
   map(event => event.data)
 );
 

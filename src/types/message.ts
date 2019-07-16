@@ -12,13 +12,22 @@ export enum OutgoingMsgTypes {
   SIGNED_FAILED = 'signed_failed'
 }
 
+export interface Message {
+  type: IncomingMsgTypes | OutgoingMsgTypes;
+  origin: 'page' | 'content' | 'bg';
+}
+
+export interface IncomingMessage extends Message {
+  origin: 'page';
+}
+
 export type IncomingMessages = InitCommand | SignCommand;
 
-export interface IncomingRequest {
+export interface IncomingRequest extends IncomingMessage {
   requestUUID: string;
 }
 
-export interface InitCommand {
+export interface InitCommand extends IncomingMessage {
   type: IncomingMsgTypes.INIT;
 }
 
@@ -33,33 +42,37 @@ export interface SignPayload {
   version?: string;
 }
 
-export interface SignCommand extends IncomingRequest{
+export interface SignCommand extends IncomingRequest {
   type: IncomingMsgTypes.SIGN;
   payload: SignPayload;
 }
 
 export type OutgoingMessages = AccountsUpdate | EnvironmentUpdate | ExtrinsicSignResponse;
 
-export interface OutgoingResponse {
+export interface OutgoingResponse extends OutgoingMessage {
   requestUUID: string;
 }
 
-export interface AccountsUpdate {
+export interface OutgoingMessage extends Message {
+  origin: 'bg';
+}
+
+export interface AccountsUpdate extends OutgoingMessage {
   type: OutgoingMsgTypes.ACCOUNTS;
   accounts: Account[];
 }
 
-export interface EnvironmentUpdate {
+export interface EnvironmentUpdate extends OutgoingMessage {
   type: OutgoingMsgTypes.ENVIRONMENT;
   environment: string;
 }
 
-export interface ExtrinsicSignSuccess extends OutgoingResponse{
+export interface ExtrinsicSignSuccess extends OutgoingResponse {
   type: OutgoingMsgTypes.SIGNED;
   hexSignature: string;
 }
 
-export interface ExtrinsicSignFailed extends OutgoingResponse{
+export interface ExtrinsicSignFailed extends OutgoingResponse {
   type: OutgoingMsgTypes.SIGNED_FAILED;
   error: Error;
 }
