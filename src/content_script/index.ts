@@ -27,7 +27,8 @@ const injectScript = () => {
     inject.setAttribute('type', 'text/javascript');
     inject.setAttribute('src', path);
     const head = window.document.head || window.document.documentElement;
-    head.appendChild(inject);
+    head.insertBefore(inject, head.children[0]);
+    head.removeChild(inject);
   } catch (e) {
     console.error('SingleSource script injection failed >>> ', e);
   }

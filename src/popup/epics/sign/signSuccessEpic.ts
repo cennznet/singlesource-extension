@@ -31,7 +31,8 @@ const signSuccessEpic = (
       const payload: ExtrinsicSignSuccess = {
         type: OutgoingMsgTypes.SIGNED,
         hexSignature,
-        requestUUID
+        requestUUID,
+        origin: 'bg'
       };
       return of({
           type: types.POST_MESSAGE,

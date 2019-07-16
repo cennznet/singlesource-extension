@@ -31,7 +31,8 @@ const signFailEpic = (
         const payload: ExtrinsicSignFailed = {
           type: OutgoingMsgTypes.SIGNED_FAILED,
           error,
-          requestUUID
+          requestUUID,
+          origin: 'bg'
         };
         return of({
           type: types.POST_MESSAGE,

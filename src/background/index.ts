@@ -52,13 +52,15 @@ const pageListener = (data: IncomingMessages) => {
     getEnvironment().then(environment => {
       contentScriptPostMessage({
         type: OutgoingMsgTypes.ENVIRONMENT,
-        environment
+        environment,
+        origin: 'bg'
       });
     });
     getAccounts().then(accounts => {
       contentScriptPostMessage({
         type: OutgoingMsgTypes.ACCOUNTS,
-        accounts
+        accounts,
+        origin: 'bg'
       });
     });
   }

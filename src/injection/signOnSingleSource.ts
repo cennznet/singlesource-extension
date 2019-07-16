@@ -31,7 +31,8 @@ const signOnSingleSource = (payload: SignPayload): Observable<string> => {
   const message: SignCommand = {
     payload,
     type: IncomingMsgTypes.SIGN,
-    requestUUID: uuid
+    requestUUID: uuid,
+    origin: 'page'
   };
 
   window.postMessage(message, window.origin);

@@ -87,12 +87,12 @@ class App extends Component {
     this.setState({ sender: e.target.value });
   };
 
-  send = () => {
+  send = async () => {
     const { receiver, amount, sender } = this.state;
     try {
-      send(sender, receiver, amount, status => {});
+      await send(sender, receiver, amount, status => {});
     } catch (error) {
-      alert(error.message);
+      console.error(error);
     }
 
     this.setState({
