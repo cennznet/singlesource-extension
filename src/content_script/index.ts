@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { Writable } from 'stream';
 import { browser } from 'webextension-polyfill-ts';
-import { fromEvent } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { CONTENT_SCRIPT_PORT_NAME } from '../config';
 import logger from '../logger';
+import { MessageDuplex } from '../utils/MessageDuplex';
+import { RuntimePortDuplex } from '../utils/RuntimePortDuplex';
+import { tag, TaggedDuplex, untag } from '../utils/tagUntag';
 
 const injectScript = () => {
   try {
@@ -40,20 +42,25 @@ const setupCommunication = () => {
     name: CONTENT_SCRIPT_PORT_NAME
   });
 
+  const portStream = new RuntimePortDuplex(port);
+  const msgStream = new MessageDuplex(window);
+  portStream.pipe(tag('ss:content')).pipe(msgStream)
+    .pipe(untag('ss:inpage')).pipe(portStream);
+
   port.onMessage.addListener(data => {
     logger.debug('message from ext', data);
     window.postMessage(data, window.origin);
   });
 
-  fromEvent<MessageEvent>(window, 'message')
-    .pipe(filter(e => e.source === window))
-    .subscribe(e => port.postMessage(e.data));
+  return {
+    inpageWriteStream: new TaggedDuplex('ss:content').pipe(msgStream)
+  };
 };
 
-const init = () => {
-  window.postMessage({ type: 'init' }, window.origin);
+const init = (inpageWriteStream: Writable) => {
+  inpageWriteStream.write({ type: 'init' });
 };
 
 injectScript();
-setupCommunication();
-window.onload = () => init();
+const { inpageWriteStream } = setupCommunication();
+window.onload = () => init(inpageWriteStream);

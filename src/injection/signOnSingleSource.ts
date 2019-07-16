@@ -16,7 +16,7 @@
 
 import { Observable } from 'rxjs';
 import { v4 } from 'uuid';
-import messenger$, { filterResponse } from './messenger';
+import messenger$, { filterResponse, inpageBgDuplexStream } from './messenger';
 import {
   ExtrinsicSignResponse,
   IncomingMsgTypes,
@@ -34,8 +34,7 @@ const signOnSingleSource = (payload: SignPayload): Observable<string> => {
     requestUUID: uuid,
     origin: 'page'
   };
-
-  window.postMessage(message, window.origin);
+  inpageBgDuplexStream.write(message);
   return messenger$.pipe(
     filter(res => filterResponse(res, uuid)),
     map( (res: ExtrinsicSignResponse) => {

@@ -15,12 +15,16 @@
  */
 
 import { fromEvent, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { OutgoingMessages } from '../types';
+import { TaggedDuplex, untag } from '../utils/tagUntag';
+import { MessageDuplex } from '../utils/MessageDuplex';
 
-const messenger$: Observable<OutgoingMessages> = fromEvent<MessageEvent>(window, 'message').pipe(
-  filter(event => event.source === window && event.data.origin === 'bg'),
-  map(event => event.data)
+const _taggedStream = new TaggedDuplex('ss:inpage');
+export const inpageBgDuplexStream = _taggedStream.pipe(new MessageDuplex(window)).pipe(untag('ss:content')).pipe(_taggedStream)
+
+const messenger$: Observable<OutgoingMessages> = fromEvent(inpageBgDuplexStream, 'data').pipe(
+  map(event => event as any)
 );
 
 export function filterResponse(message: OutgoingMessages, uuid: string) {

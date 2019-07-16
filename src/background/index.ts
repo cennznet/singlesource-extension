@@ -26,6 +26,7 @@ import {
   OutgoingMessages,
   OutgoingMsgTypes
 } from '../types';
+import { RuntimePortDuplex } from '../utils/RuntimePortDuplex';
 
 let ports: Runtime.Port[] = [];
 
@@ -33,6 +34,8 @@ browser.runtime.onConnect.addListener(port => {
   logger.debug('browser.runtime.onConnect', port);
 
   ports.push(port);
+  // const stream = new RuntimePortDuplex(port);
+  // stream.on('data', (evt) => console.log('RuntimePortDuplex: <-', evt));
   port.onDisconnect.addListener(() => {
     logger.debug('port.onDisconnect', port);
     ports = ports.filter(i => i !== port);
