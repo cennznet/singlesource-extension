@@ -19,7 +19,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { Signer } from '@cennznet/api/polkadot.types';
 import signer from './signer';
-import messenger$, { inpageBgDuplexStream } from './messenger';
+import messenger$  from './messenger';
 import { Account, EnvironmentUpdate } from '../types';
 import { ofType } from 'redux-observable';
 import { AccountsUpdate, BgMsgTypes } from '../types';
@@ -51,10 +51,6 @@ const SingleSource = {
   get environment$(): Observable<string> {
     return environment$;
   },
-
-  get stream() {
-    return inpageBgDuplexStream;
-  }
 };
 
 window['SingleSource'] = SingleSource;

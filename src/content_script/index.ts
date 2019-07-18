@@ -16,9 +16,8 @@
 
 import { v4 } from 'uuid';
 import { browser } from 'webextension-polyfill-ts';
-import logger from '../logger';
 import { RuntimePortDuplex } from '../utils/RuntimePortDuplex';
-import { TagUntagMessageDuplex, untag } from '../utils/tagUntag';
+import { TagUntagMessageDuplex} from '../utils/tagUntag';
 import { InPageMsgTypes, MessageOrigin } from '../types';
 import { addOrigin } from '../utils/addOrigin';
 
@@ -46,10 +45,6 @@ const setupCommunication = () => {
   const inpageWriteStream = new TagUntagMessageDuplex(window,MessageOrigin.CONTENT, MessageOrigin.PAGE);
   portStream.pipe(inpageWriteStream).pipe(addOrigin(port.name)).pipe(portStream);
 
-  // port.onMessage.addListener(data => {
-  //   logger.debug('message from ext', data);
-  //   window.postMessage(data, window.origin);
-  // });
   return {
     inpageWriteStream,
     portStream
@@ -61,5 +56,5 @@ const init = (inpageWriteStream: RuntimePortDuplex) => {
 };
 
 injectScript();
-const { inpageWriteStream, portStream } = setupCommunication();
+const { portStream } = setupCommunication();
 window.onload = () => init(portStream);

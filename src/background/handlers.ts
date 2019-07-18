@@ -1,7 +1,6 @@
 import {
   InitCommand,
   InPageMsgTypes,
-  MessageOrigin,
   BgMsgTypes,
   RuntimeMessageWith,
   SignCommand

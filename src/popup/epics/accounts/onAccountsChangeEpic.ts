@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EMPTY, of } from 'rxjs';
+import { EMPTY} from 'rxjs';
 import { withLatestFrom, switchMap } from 'rxjs/operators';
 import { ofType, ActionsObservable, StateObservable } from 'redux-observable';
 import { AnyAction } from 'redux';

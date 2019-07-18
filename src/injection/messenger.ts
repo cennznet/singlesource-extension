@@ -17,7 +17,7 @@
 import { fromEvent, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { MessageOrigin, RuntimeMessageWith, ToPageMessages } from '../types';
-import { TagUntagMessageDuplex, untag } from '../utils/tagUntag';
+import { TagUntagMessageDuplex } from '../utils/tagUntag';
 import logger from '../logger';
 
 export const inpageBgDuplexStream = new TagUntagMessageDuplex(window, MessageOrigin.PAGE, MessageOrigin.CONTENT);

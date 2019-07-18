@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { of, Observable, EMPTY } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ofType, ActionsObservable } from 'redux-observable';
 import types from '../../types';
-import { ExtrinsicSignSuccess, BgMsgTypes, PopupMsgTypes, MessageOrigin } from '../../../types';
+import { ExtrinsicSignSuccess, PopupMsgTypes, MessageOrigin } from '../../../types';
 import { Action } from 'redux-actions';
 import { SignSuccessPayload } from '../../types/actions';
 import { EpicDependencies } from '../../store';

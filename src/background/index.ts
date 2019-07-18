@@ -17,7 +17,7 @@
 import { browser } from 'webextension-polyfill-ts';
 import { Runtime } from 'webextension-polyfill-ts/dist/generated/runtime';
 import logger from '../logger';
-import { InPageMsgTypes, PageToBgMessage, RuntimeMessageOf, RuntimeMessageWith } from '../types';
+import { PageToBgMessage, RuntimeMessageWith } from '../types';
 import { PortStreams } from './streams';
 import handlers from './handlers';
 

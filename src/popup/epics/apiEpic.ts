@@ -16,15 +16,15 @@
 
 import { ofType, StateObservable, ActionsObservable } from 'redux-observable';
 import types from '../types';
-import { withLatestFrom, switchMap, startWith } from 'rxjs/operators';
+import { withLatestFrom, switchMap} from 'rxjs/operators';
 import { State } from '../types/state';
 import { AnyAction } from 'redux';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY} from 'rxjs';
 import _ from 'lodash';
 import { configure } from '../utils/api';
 import { networks } from '../../config';
 import { EpicDependencies } from '../store';
-import { BgMsgTypes, MessageOrigin, PopupMsgTypes } from '../../types';
+import { BgMsgTypes, MessageOrigin} from '../../types';
 
 const apiEpic = (
   action$: ActionsObservable<AnyAction>,
