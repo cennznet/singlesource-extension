@@ -1,34 +1,67 @@
 import { Account } from './account';
 
-export enum IncomingMsgTypes {
+export enum InPageMsgTypes {
   INIT = 'init',
   SIGN = 'sign'
 }
 
-export enum OutgoingMsgTypes {
+export enum BgMsgTypes {
   ACCOUNTS = 'accounts',
-  ENVIRONMENT = 'environment',
+  ENVIRONMENT = 'environment'
+}
+
+export enum PopupMsgTypes {
+  INIT = 'init',
   SIGNED = 'signed',
   SIGNED_FAILED = 'signed_failed'
 }
 
-export interface Message {
-  type: IncomingMsgTypes | OutgoingMsgTypes;
-  origin: 'page' | 'content' | 'bg';
+export enum MessageOrigin {
+  BG = 'ss:bg',
+  PAGE = 'ss:page',
+  CONTENT = 'ss:content',
+  SIGN_POPUP = 'ss:sign',
+  TOOLBAR = 'ss:toolbar'
 }
 
-export interface IncomingMessage extends Message {
-  origin: 'page';
+export interface RuntimeMessagePayload<T extends InPageMsgTypes | BgMsgTypes | PopupMsgTypes> {
+  type: T;
 }
 
-export type IncomingMessages = InitCommand | SignCommand;
+export interface RuntimeMessageOf<T extends InPageMsgTypes | BgMsgTypes | PopupMsgTypes> {
+  origin: string;
+  dst: string | string[];
+  payload: RuntimeMessagePayload<T>;
+}
 
-export interface IncomingRequest extends IncomingMessage {
+export interface RuntimeMessageWith<T> {
+  origin: string;
+  dst: string | string[];
+  payload: T;
+}
+
+export type PageToBgMessage = InitCommand | SignCommand;
+
+export interface RequestMessage {
   requestUUID: string;
 }
 
-export interface InitCommand extends IncomingMessage {
-  type: IncomingMsgTypes.INIT;
+export interface SuccessResponse<T> {
+  requestUUID: string;
+  result: T;
+  isError: false;
+}
+
+export interface FailedResponse {
+  requestUUID: string;
+  result: Error;
+  isError: true;
+}
+
+export type RequestResponse<T> = SuccessResponse<T> | FailedResponse;
+
+export interface InitCommand {
+  type: InPageMsgTypes.INIT;
 }
 
 export interface SignPayload {
@@ -42,39 +75,32 @@ export interface SignPayload {
   version?: string;
 }
 
-export interface SignCommand extends IncomingRequest {
-  type: IncomingMsgTypes.SIGN;
+export interface SignCommand extends RequestMessage {
+  type: InPageMsgTypes.SIGN;
   payload: SignPayload;
 }
 
-export type OutgoingMessages = AccountsUpdate | EnvironmentUpdate | ExtrinsicSignResponse;
+export type BgToPageMessage = AccountsUpdate | EnvironmentUpdate;
+export type SignToPageMessage = ExtrinsicSignResponse;
 
-export interface OutgoingResponse extends OutgoingMessage {
-  requestUUID: string;
-}
+export type ToPageMessages = BgToPageMessage | SignToPageMessage;
 
-export interface OutgoingMessage extends Message {
-  origin: 'bg';
-}
-
-export interface AccountsUpdate extends OutgoingMessage {
-  type: OutgoingMsgTypes.ACCOUNTS;
+export interface AccountsUpdate {
+  type: BgMsgTypes.ACCOUNTS;
   accounts: Account[];
 }
 
-export interface EnvironmentUpdate extends OutgoingMessage {
-  type: OutgoingMsgTypes.ENVIRONMENT;
+export interface EnvironmentUpdate {
+  type: BgMsgTypes.ENVIRONMENT;
   environment: string;
 }
 
-export interface ExtrinsicSignSuccess extends OutgoingResponse {
-  type: OutgoingMsgTypes.SIGNED;
-  hexSignature: string;
+export interface ExtrinsicSignSuccess extends SuccessResponse<string> {
+  type: PopupMsgTypes.SIGNED;
 }
 
-export interface ExtrinsicSignFailed extends OutgoingResponse {
-  type: OutgoingMsgTypes.SIGNED_FAILED;
-  error: Error;
+export interface ExtrinsicSignFailed extends FailedResponse {
+  type: PopupMsgTypes.SIGNED_FAILED;
 }
 
 export type ExtrinsicSignResponse = ExtrinsicSignSuccess | ExtrinsicSignFailed;

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { Writable } from 'stream';
+import { v4 } from 'uuid';
 import { browser } from 'webextension-polyfill-ts';
-import { CONTENT_SCRIPT_PORT_NAME } from '../config';
 import logger from '../logger';
-import { MessageDuplex } from '../utils/MessageDuplex';
 import { RuntimePortDuplex } from '../utils/RuntimePortDuplex';
-import { tag, TaggedDuplex, untag } from '../utils/tagUntag';
+import { TagUntagMessageDuplex, untag } from '../utils/tagUntag';
+import { InPageMsgTypes, MessageOrigin } from '../types';
+import { addOrigin } from '../utils/addOrigin';
 
 const injectScript = () => {
   try {
@@ -39,28 +39,27 @@ const injectScript = () => {
 const setupCommunication = () => {
   const port = browser.runtime.connect(null, {
     // TODO: change name to window.location.hostname
-    name: CONTENT_SCRIPT_PORT_NAME
+    name: `${MessageOrigin.PAGE}/${v4()}`
   });
 
   const portStream = new RuntimePortDuplex(port);
-  const msgStream = new MessageDuplex(window);
-  portStream.pipe(tag('ss:content')).pipe(msgStream)
-    .pipe(untag('ss:inpage')).pipe(portStream);
+  const inpageWriteStream = new TagUntagMessageDuplex(window,MessageOrigin.CONTENT, MessageOrigin.PAGE);
+  portStream.pipe(inpageWriteStream).pipe(addOrigin(port.name)).pipe(portStream);
 
-  port.onMessage.addListener(data => {
-    logger.debug('message from ext', data);
-    window.postMessage(data, window.origin);
-  });
-
+  // port.onMessage.addListener(data => {
+  //   logger.debug('message from ext', data);
+  //   window.postMessage(data, window.origin);
+  // });
   return {
-    inpageWriteStream: new TaggedDuplex('ss:content').pipe(msgStream)
+    inpageWriteStream,
+    portStream
   };
 };
 
-const init = (inpageWriteStream: Writable) => {
-  inpageWriteStream.write({ type: 'init' });
+const init = (inpageWriteStream: RuntimePortDuplex) => {
+  inpageWriteStream.send({ type: InPageMsgTypes.INIT }, MessageOrigin.BG);
 };
 
 injectScript();
-const { inpageWriteStream } = setupCommunication();
-window.onload = () => init(inpageWriteStream);
+const { inpageWriteStream, portStream } = setupCommunication();
+window.onload = () => init(portStream);

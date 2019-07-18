@@ -15,19 +15,21 @@
  */
 
 import { fromEvent, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { OutgoingMessages } from '../types';
-import { TaggedDuplex, untag } from '../utils/tagUntag';
-import { MessageDuplex } from '../utils/MessageDuplex';
+import { map, tap } from 'rxjs/operators';
+import { MessageOrigin, RuntimeMessageWith, ToPageMessages } from '../types';
+import { TagUntagMessageDuplex, untag } from '../utils/tagUntag';
+import logger from '../logger';
 
-const _taggedStream = new TaggedDuplex('ss:inpage');
-export const inpageBgDuplexStream = _taggedStream.pipe(new MessageDuplex(window)).pipe(untag('ss:content')).pipe(_taggedStream)
+export const inpageBgDuplexStream = new TagUntagMessageDuplex(window, MessageOrigin.PAGE, MessageOrigin.CONTENT);
 
-const messenger$: Observable<OutgoingMessages> = fromEvent(inpageBgDuplexStream, 'data').pipe(
-  map(event => event as any)
+const messenger$: Observable<ToPageMessages> = fromEvent<RuntimeMessageWith<ToPageMessages>>(inpageBgDuplexStream, 'data').pipe(
+  tap(event => {
+    logger.debug('injected:', event);
+  }),
+  map(event => event.payload)
 );
 
-export function filterResponse(message: OutgoingMessages, uuid: string) {
+export function filterResponse(message: ToPageMessages, uuid: string) {
   return message['requestUUID'] && message['requestUUID'] === uuid;
 }
 

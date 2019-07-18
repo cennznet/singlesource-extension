@@ -22,19 +22,19 @@ import signer from './signer';
 import messenger$, { inpageBgDuplexStream } from './messenger';
 import { Account, EnvironmentUpdate } from '../types';
 import { ofType } from 'redux-observable';
-import { AccountsUpdate, OutgoingMsgTypes } from '../types';
+import { AccountsUpdate, BgMsgTypes } from '../types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
 const environment$ = new ReplaySubject<string>(1);
 
 messenger$.pipe(
-  ofType<AccountsUpdate>(OutgoingMsgTypes.ACCOUNTS),
+  ofType<AccountsUpdate>(BgMsgTypes.ACCOUNTS),
   map(msg => msg.accounts),
   distinctUntilChanged((x, y) => isEqual(x, y))
 ).subscribe(accounts$);
 
 messenger$.pipe(
-  ofType<EnvironmentUpdate>(OutgoingMsgTypes.ENVIRONMENT),
+  ofType<EnvironmentUpdate>(BgMsgTypes.ENVIRONMENT),
   map(msg => msg.environment),
   distinctUntilChanged()
 ).subscribe(environment$);

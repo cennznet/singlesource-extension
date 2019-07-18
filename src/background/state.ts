@@ -22,4 +22,20 @@ class State {
   };
 }
 
-export default new State();
+const state = new State();
+
+export const getEnvironment = (): Promise<string> => {
+  return state.restore()
+    .then(JSON.parse)
+    .then(state => state.environment || 'PRODUCTION')
+    .then(JSON.parse);
+};
+
+export const getAccounts = (): Promise<any> => {
+  return state.restore()
+    .then(JSON.parse)
+    .then(state => state.accounts || '[]')
+    .then(JSON.parse);
+};
+
+export default state;

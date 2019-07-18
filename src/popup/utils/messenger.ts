@@ -14,38 +14,51 @@
  * limitations under the License.
  */
 
+import { v4 } from 'uuid';
 import { browser } from 'webextension-polyfill-ts';
 import { Runtime } from 'webextension-polyfill-ts/dist/generated/runtime';
 import { POPUP_PORT_NAME } from '../../config';
+import { MessageOrigin } from '../../types';
+import { RuntimePortDuplex } from '../../utils/RuntimePortDuplex';
 
-type Callback = (message: any, port: Runtime.Port) => void;
-
-class Messenger {
-  port: Runtime.Port;
-
-  constructor(name: string) {
-    try {
-      this.port = browser.runtime.connect(null, { name });
-    } catch (error) {
-      // fails when running as webpage
-    }
+export function initConnection(origin: MessageOrigin.TOOLBAR | MessageOrigin.SIGN_POPUP) {
+  try {
+    const port = browser.runtime.connect(null,
+      { name: `${origin}/${v4()}` });
+    return new RuntimePortDuplex(port);
+  } catch (error) {
+    // fails when running as webpage
   }
-
-  addListener = (callback: Callback) => {
-    this.port.onMessage.addListener(callback);
-  };
-
-  removeListener = (callback: Callback) => {
-    this.port.onMessage.removeListener(callback);
-  };
-
-  send = (data: any) => {
-    try {
-      this.port.postMessage(data);
-    } catch (error) {
-      // fails when running as webpage
-    }
-  };
 }
 
-export default new Messenger(POPUP_PORT_NAME);
+// type Callback = (message: any, port: Runtime.Port) => void;
+//
+// class Messenger {
+//   port: Runtime.Port;
+//
+//   constructor(name: string) {
+//     try {
+//       this.port = browser.runtime.connect(null, { name });
+//     } catch (error) {
+//       // fails when running as webpage
+//     }
+//   }
+//
+//   addListener = (callback: Callback) => {
+//     this.port.onMessage.addListener(callback);
+//   };
+//
+//   removeListener = (callback: Callback) => {
+//     this.port.onMessage.removeListener(callback);
+//   };
+//
+//   send = (data: any) => {
+//     try {
+//       this.port.postMessage(data);
+//     } catch (error) {
+//       // fails when running as webpage
+//     }
+//   };
+// }
+//
+// export default new Messenger(POPUP_PORT_NAME);

@@ -16,7 +16,7 @@
 
 import { combineEpics } from 'redux-observable';
 import chainEpic from './chainEpic';
-import messengerEpic from './messengerEpic';
+// import messengerEpic from './messengerEpic';
 import navigateEpic from './navigateEpic';
 import initEpic from './initEpic';
 import signEpics from './sign';
@@ -28,7 +28,7 @@ import getTransactions from './getTransactionsEpic';
 
 const epics: any[] = [
   chainEpic,
-  messengerEpic,
+  // messengerEpic,
   navigateEpic,
   initEpic,
   ...accounts,

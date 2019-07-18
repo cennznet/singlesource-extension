@@ -14,32 +14,34 @@
  * limitations under the License.
  */
 
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActionsObservable, ofType } from 'redux-observable';
 import types from '../../types';
 import { Action } from 'redux-actions';
-import { ExtrinsicSignFailed, OutgoingMsgTypes } from '../../../types';
+import { ExtrinsicSignFailed, MessageOrigin, PopupMsgTypes } from '../../../types';
 import { SignFailPayload } from '../../types/actions';
+import { EpicDependencies } from '../../store';
+import getParameter from '../../utils/getParameter';
 
 const signFailEpic = (
-  action$: ActionsObservable<Action<any>>
-): Observable<Action<ExtrinsicSignFailed>> =>
+  action$: ActionsObservable<Action<any>>,
+  _,
+  { runtimeStream }: EpicDependencies
+): Observable<never> =>
   action$.pipe(
     ofType<Action<SignFailPayload>>(types.SIGN.FAIL),
     switchMap(({ payload: { requestUUID, error } }) => {
-        const payload: ExtrinsicSignFailed = {
-          type: OutgoingMsgTypes.SIGNED_FAILED,
-          error,
-          requestUUID,
-          origin: 'bg'
-        };
-        return of({
-          type: types.POST_MESSAGE,
-          payload
-        });
-      }
-    )
+      const payload: ExtrinsicSignFailed = {
+        type: PopupMsgTypes.SIGNED_FAILED,
+        result: error,
+        isError: true,
+        requestUUID
+      };
+      const parent = getParameter('parent') || MessageOrigin.PAGE;
+      runtimeStream.send(payload, parent);
+      return EMPTY;
+    })
   );
 
 export default signFailEpic;

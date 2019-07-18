@@ -14,26 +14,30 @@
  * limitations under the License.
  */
 
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { withLatestFrom, switchMap } from 'rxjs/operators';
 import { ofType, ActionsObservable, StateObservable } from 'redux-observable';
 import { AnyAction } from 'redux';
 import types from '../../types';
 import { State } from '../../types/state';
+import { BgMsgTypes, MessageOrigin } from '../../../types';
+import { EpicDependencies } from '../../store';
 
 const onAccountsChangeEpic = (
   action$: ActionsObservable<AnyAction>,
-  state$: StateObservable<State>
+  state$: StateObservable<State>,
+  { runtimeStream }: EpicDependencies
 ) =>
   action$.pipe(
     ofType(types.GET_ACCOUNTS.SUCCESS, types.DISCONNECT),
     withLatestFrom(state$),
     switchMap(([, state]) => {
       const { accounts } = state;
-      return of({
-        type: types.POST_MESSAGE,
-        payload: { type: 'accounts', accounts }
-      });
+      runtimeStream.send({
+        type: BgMsgTypes.ACCOUNTS,
+        accounts
+      }, MessageOrigin.PAGE);
+      return EMPTY;
     })
   );
 

@@ -1,9 +1,17 @@
 import { Duplex } from 'readable-stream';
+import {
+  InPageMsgTypes,
+  RequestMessage,
+  RequestResponse,
+  RuntimeMessageOf,
+  RuntimeMessagePayload,
+  RuntimeMessageWith
+} from '../types';
 
 
 export class MessageDuplex extends Duplex{
 
-  constructor(private window: Window) {
+  constructor(protected window: Window) {
     super({ objectMode: true });
     window.addEventListener('message', this.eventHandler);
   }
@@ -21,7 +29,7 @@ export class MessageDuplex extends Duplex{
     callback(err);
   }
 
-  private eventHandler = ({data}: MessageEvent) => {
+  protected eventHandler = ({data}: MessageEvent) => {
     this.push(data);
   };
 }

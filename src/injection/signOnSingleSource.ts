@@ -19,33 +19,31 @@ import { v4 } from 'uuid';
 import messenger$, { filterResponse, inpageBgDuplexStream } from './messenger';
 import {
   ExtrinsicSignResponse,
-  IncomingMsgTypes,
-  OutgoingMsgTypes,
+  InPageMsgTypes,
   SignCommand,
-  SignPayload
+  SignPayload, PopupMsgTypes, MessageOrigin
 } from '../types';
 import { map, filter, first } from 'rxjs/operators';
 
-const signOnSingleSource = (payload: SignPayload): Observable<string> => {
+const signOnSingleSource = (payload: SignPayload): Promise<string> => {
   const uuid = v4();
   const message: SignCommand = {
     payload,
-    type: IncomingMsgTypes.SIGN,
+    type: InPageMsgTypes.SIGN,
     requestUUID: uuid,
-    origin: 'page'
   };
-  inpageBgDuplexStream.write(message);
-  return messenger$.pipe(
-    filter(res => filterResponse(res, uuid)),
-    map( (res: ExtrinsicSignResponse) => {
-      if (res.type === OutgoingMsgTypes.SIGNED) {
-        return res.hexSignature;
-      } else {
-        throw res.error;
-      }
-    }),
-    first()
-  );
+  return inpageBgDuplexStream.sendRequest(message, MessageOrigin.BG);
+  // return messenger$.pipe(
+  //   filter(res => filterResponse(res, uuid)),
+  //   map( (res: ExtrinsicSignResponse) => {
+  //     if (res.type === PopupMsgTypes.SIGNED) {
+  //       return res.hexSignature;
+  //     } else {
+  //       throw res.error;
+  //     }
+  //   }),
+  //   first()
+  // );
 };
 
 export default signOnSingleSource;

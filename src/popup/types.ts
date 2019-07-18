@@ -26,7 +26,7 @@ const asyncAction = (type: string) => ({
 });
 
 export default {
-  POST_MESSAGE: action('POST_MESSAGE'),
+  // POST_MESSAGE: action('POST_MESSAGE'),
   INIT: action('INIT'),
   NAVIGATE: action('NAVIGATE'),
   SIGN: asyncAction('SIGN'),
