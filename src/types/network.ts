@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Environment } from './environment';
+export type Environment = 'PRODUCTION' | 'RIMU' | 'KAURI';
 
 export type Network = {
   environment: Environment;

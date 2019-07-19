@@ -20,9 +20,6 @@ import BigNumber from 'bignumber.js';
 
 BigNumber.set({ DECIMAL_PLACES: 5 });
 
-export const CONTENT_SCRIPT_PORT_NAME = 'CONTENT_SCRIPT_PORT_NAME';
-export const POPUP_PORT_NAME = 'POPUP_PORT_NAME';
-
 export const networks: Dictionary<Network> = {
   RIMU_CENNZENT: {
     environment: 'RIMU',
