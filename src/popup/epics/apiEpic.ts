@@ -16,17 +16,20 @@
 
 import { ofType, StateObservable, ActionsObservable } from 'redux-observable';
 import types from '../types';
-import { withLatestFrom, switchMap, startWith } from 'rxjs/operators';
+import { withLatestFrom, switchMap} from 'rxjs/operators';
 import { State } from '../types/state';
 import { AnyAction } from 'redux';
-import { of } from 'rxjs';
+import { EMPTY} from 'rxjs';
 import _ from 'lodash';
 import { configure } from '../utils/api';
 import { networks } from '../../config';
+import { EpicDependencies } from '../store';
+import { BgMsgTypes, MessageOrigin} from '../../types';
 
 const apiEpic = (
   action$: ActionsObservable<AnyAction>,
-  state$: StateObservable<State>
+  state$: StateObservable<State>,
+  { runtimeStream }: EpicDependencies
 ) =>
   action$.pipe(
     ofType(types.INIT, types.CHANGE_ENVIRONMENT),
@@ -35,13 +38,11 @@ const apiEpic = (
       const { environment } = state;
       const netwok = _.find(networks, { environment });
       configure(netwok.nodeUrl);
-      return of({
-        type: types.POST_MESSAGE,
-        payload: {
-          type: 'environment',
-          environment
-        }
-      });
+      runtimeStream.send({
+        type: BgMsgTypes.ENVIRONMENT,
+        environment
+      }, MessageOrigin.PAGE);
+      return EMPTY;
     })
   );
 

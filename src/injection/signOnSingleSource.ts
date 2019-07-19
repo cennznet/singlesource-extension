@@ -14,39 +14,22 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs';
 import { v4 } from 'uuid';
-import messenger$, { filterResponse } from './messenger';
+import { inpageBgDuplexStream } from './messenger';
 import {
-  ExtrinsicSignResponse,
-  IncomingMsgTypes,
-  OutgoingMsgTypes,
+  InPageMsgTypes,
   SignCommand,
-  SignPayload
+  SignPayload, MessageOrigin
 } from '../types';
-import { map, filter, first } from 'rxjs/operators';
 
-const signOnSingleSource = (payload: SignPayload): Observable<string> => {
+const signOnSingleSource = (payload: SignPayload): Promise<string> => {
   const uuid = v4();
   const message: SignCommand = {
     payload,
-    type: IncomingMsgTypes.SIGN,
+    type: InPageMsgTypes.SIGN,
     requestUUID: uuid,
-    origin: 'page'
   };
-
-  window.postMessage(message, window.origin);
-  return messenger$.pipe(
-    filter(res => filterResponse(res, uuid)),
-    map( (res: ExtrinsicSignResponse) => {
-      if (res.type === OutgoingMsgTypes.SIGNED) {
-        return res.hexSignature;
-      } else {
-        throw res.error;
-      }
-    }),
-    first()
-  );
+  return inpageBgDuplexStream.sendRequest(message, MessageOrigin.BG);
 };
 
 export default signOnSingleSource;

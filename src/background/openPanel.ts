@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+import queryString from 'query-string';
 import { browser } from 'webextension-polyfill-ts';
 import { SignCommand } from '../types';
 
-export default (params: { noheader: boolean; sign: SignCommand }) => {
-  const paramQuery = Object.keys(params)
-    .map(key => `${key}=${encodeURIComponent(JSON.stringify(params[key]))}`)
-    .join('&');
+export default (params: { noheader: boolean; sign: SignCommand; parent: string }) => {
+
+  const paramQuery = queryString.stringify({...params, sign: JSON.stringify(params.sign)});
   const url = browser.extension.getURL(`index.html?${paramQuery}`);
   browser.windows.create({
     url,

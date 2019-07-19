@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { createStore, applyMiddleware } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { composeWithDevTools } from 'remote-redux-devtools';
 import reducers from './reducers';
 import rootEpic from './epics';
+import { initConnection } from './utils/messenger';
+import { MessageOrigin } from '../types';
+import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
 
 const persistConfig = {
   key: 'root',
@@ -34,7 +37,13 @@ const composeEnhancers = composeWithDevTools({
   realtime: process.env.NODE_ENV === 'development'
 });
 
-const epicMiddleware = createEpicMiddleware({ dependencies: {} });
+const isSignPopup = window.location.search.includes('sign=');
+
+const runtimeStream = initConnection(isSignPopup ? MessageOrigin.SIGN_POPUP : MessageOrigin.TOOLBAR);
+
+export type EpicDependencies = {runtimeStream: RuntimePortDuplex};
+
+const epicMiddleware = createEpicMiddleware({ dependencies: {runtimeStream} });
 const middleware = applyMiddleware(epicMiddleware);
 const store = createStore(persistedReducer, composeEnhancers(
   middleware

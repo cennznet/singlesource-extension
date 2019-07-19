@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+import { v4 } from 'uuid';
 import { browser } from 'webextension-polyfill-ts';
-import { fromEvent } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { CONTENT_SCRIPT_PORT_NAME } from '../config';
-import logger from '../logger';
+import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
+import { MultiplexWindowMessageDuplex} from '../streamUtils/MultiplexWindowMessageDuplex';
+import { InPageMsgTypes, MessageOrigin } from '../types';
+import { addOrigin } from '../streamUtils/addOrigin';
 
 const injectScript = () => {
   try {
@@ -37,23 +38,23 @@ const injectScript = () => {
 const setupCommunication = () => {
   const port = browser.runtime.connect(null, {
     // TODO: change name to window.location.hostname
-    name: CONTENT_SCRIPT_PORT_NAME
+    name: `${MessageOrigin.PAGE}/${v4()}`
   });
 
-  port.onMessage.addListener(data => {
-    logger.debug('message from ext', data);
-    window.postMessage(data, window.origin);
-  });
+  const portStream = new RuntimePortDuplex(port);
+  const inpageWriteStream = new MultiplexWindowMessageDuplex(window,MessageOrigin.CONTENT, MessageOrigin.PAGE);
+  portStream.pipe(inpageWriteStream).pipe(addOrigin(port.name)).pipe(portStream);
 
-  fromEvent<MessageEvent>(window, 'message')
-    .pipe(filter(e => e.source === window))
-    .subscribe(e => port.postMessage(e.data));
+  return {
+    inpageWriteStream,
+    portStream
+  };
 };
 
-const init = () => {
-  window.postMessage({ type: 'init' }, window.origin);
+const init = (inpageWriteStream: RuntimePortDuplex) => {
+  inpageWriteStream.send({ type: InPageMsgTypes.INIT }, MessageOrigin.BG);
 };
 
 injectScript();
-setupCommunication();
-window.onload = () => init();
+const { portStream } = setupCommunication();
+window.onload = () => init(portStream);

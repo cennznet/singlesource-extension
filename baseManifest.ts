@@ -22,7 +22,7 @@ module.exports = {
   permissions: [
     'tabs',
     'activeTab',
-    'webRequest',
+    // 'webRequest',
     'notifications',
     'storage',
     'clipboardWrite'

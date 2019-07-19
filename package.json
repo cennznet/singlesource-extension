@@ -24,6 +24,7 @@
     "@types/react": "16.8.22",
     "@types/react-dom": "^16.0.11",
     "@types/react-redux": "^7.1.1",
+    "@types/readable-stream": "^2.3.2",
     "@types/redux": "^3.6.0",
     "@types/redux-actions": "^2.6.1",
     "@types/safe-json-stringify": "^1.1.0",
@@ -36,7 +37,7 @@
     "prettier": "^1.17.0",
     "remote-redux-devtools": "^0.5.16",
     "ts-jest": "^24.0.0",
-    "webextension-polyfill-ts": "^0.9.0",
+    "webextension-polyfill-ts": "^0.9.1",
     "webpack-extension-manifest-plugin": "^0.4.3"
   },
   "dependencies": {
@@ -59,9 +60,11 @@
     "lz-string": "^1.4.4",
     "peerjs": "^1.0.1",
     "qrcode.react": "^0.9.3",
+    "query-string": "^6.8.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
+    "readable-stream": "^3.4.0",
     "redux": "^4.0.4",
     "redux-actions": "^2.6.5",
     "redux-observable": "^1.0.0",

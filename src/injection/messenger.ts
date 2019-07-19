@@ -15,15 +15,21 @@
  */
 
 import { fromEvent, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { OutgoingMessages } from '../types';
+import { map, tap } from 'rxjs/operators';
+import { MessageOrigin, RuntimeMessageWith, ToPageMessages } from '../types';
+import { MultiplexWindowMessageDuplex } from '../streamUtils/MultiplexWindowMessageDuplex';
+import logger from '../logger';
 
-const messenger$: Observable<OutgoingMessages> = fromEvent<MessageEvent>(window, 'message').pipe(
-  filter(event => event.source === window && event.data.origin === 'bg'),
-  map(event => event.data)
+export const inpageBgDuplexStream = new MultiplexWindowMessageDuplex(window, MessageOrigin.PAGE, MessageOrigin.CONTENT);
+
+const messenger$: Observable<ToPageMessages> = fromEvent<RuntimeMessageWith<ToPageMessages>>(inpageBgDuplexStream, 'data').pipe(
+  tap(event => {
+    logger.debug('injected:', event);
+  }),
+  map(event => event.payload)
 );
 
-export function filterResponse(message: OutgoingMessages, uuid: string) {
+export function filterResponse(message: ToPageMessages, uuid: string) {
   return message['requestUUID'] && message['requestUUID'] === uuid;
 }
 
