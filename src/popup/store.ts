@@ -23,7 +23,7 @@ import reducers from './reducers';
 import rootEpic from './epics';
 import { initConnection } from './utils/messenger';
 import { MessageOrigin } from '../types';
-import { RuntimePortDuplex } from '../utils/RuntimePortDuplex';
+import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
 
 const persistConfig = {
   key: 'root',

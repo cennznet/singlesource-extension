@@ -16,10 +16,10 @@
 
 import { v4 } from 'uuid';
 import { browser } from 'webextension-polyfill-ts';
-import { RuntimePortDuplex } from '../utils/RuntimePortDuplex';
-import { TagUntagMessageDuplex} from '../utils/tagUntag';
+import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
+import { MultiplexWindowMessageDuplex} from '../streamUtils/MultiplexWindowMessageDuplex';
 import { InPageMsgTypes, MessageOrigin } from '../types';
-import { addOrigin } from '../utils/addOrigin';
+import { addOrigin } from '../streamUtils/addOrigin';
 
 const injectScript = () => {
   try {
@@ -42,7 +42,7 @@ const setupCommunication = () => {
   });
 
   const portStream = new RuntimePortDuplex(port);
-  const inpageWriteStream = new TagUntagMessageDuplex(window,MessageOrigin.CONTENT, MessageOrigin.PAGE);
+  const inpageWriteStream = new MultiplexWindowMessageDuplex(window,MessageOrigin.CONTENT, MessageOrigin.PAGE);
   portStream.pipe(inpageWriteStream).pipe(addOrigin(port.name)).pipe(portStream);
 
   return {

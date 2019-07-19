@@ -17,10 +17,10 @@
 import { fromEvent, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { MessageOrigin, RuntimeMessageWith, ToPageMessages } from '../types';
-import { TagUntagMessageDuplex } from '../utils/tagUntag';
+import { MultiplexWindowMessageDuplex } from '../streamUtils/MultiplexWindowMessageDuplex';
 import logger from '../logger';
 
-export const inpageBgDuplexStream = new TagUntagMessageDuplex(window, MessageOrigin.PAGE, MessageOrigin.CONTENT);
+export const inpageBgDuplexStream = new MultiplexWindowMessageDuplex(window, MessageOrigin.PAGE, MessageOrigin.CONTENT);
 
 const messenger$: Observable<ToPageMessages> = fromEvent<RuntimeMessageWith<ToPageMessages>>(inpageBgDuplexStream, 'data').pipe(
   tap(event => {

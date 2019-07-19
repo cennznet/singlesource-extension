@@ -29,7 +29,7 @@ export function untag(tag: string) {
   });
 }
 
-export class TagUntagMessageDuplex extends Duplex {
+export class MultiplexWindowMessageDuplex extends Duplex {
   constructor(protected window: Window, public tag: string, public untag?: string){
     super({ objectMode: true });
     window.addEventListener('message', this.eventHandler);
