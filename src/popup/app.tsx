@@ -17,14 +17,14 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import styled from 'styled-components';
-import Router from './router';
-import store from './store';
+import AboutPage from './pages/about';
+import AccountDetails from './pages/account-details';
 import Connect from './pages/connect';
 import Dashboard from './pages/dashboard';
-import AccountDetails from './pages/account-details';
 import Sign from './pages/sign';
-import AboutPage from './pages/about';
 import TransactionsPage from './pages/transactions';
+import Router from './router';
+import store from './store';
 
 export const Container = styled.div`
   min-width: 400px;

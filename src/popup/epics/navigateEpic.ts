@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { AnyAction } from 'redux';
+import { ActionsObservable, ofType } from 'redux-observable';
 import { merge } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
-import { ofType, ActionsObservable } from 'redux-observable';
-import { AnyAction } from 'redux';
 import types from '../../shared/actions';
 
 const navigateEpic = (action$: ActionsObservable<AnyAction>) =>

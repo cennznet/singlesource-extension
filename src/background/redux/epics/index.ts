@@ -1,7 +1,7 @@
 import { combineEpics} from 'redux-observable';
 
-import signEpic from './sign';
 import pageEpics from './page';
+import signEpic from './sign';
 
 export default combineEpics(
   signEpic,

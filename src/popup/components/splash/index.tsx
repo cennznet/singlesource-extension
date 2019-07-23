@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
 import { Fade } from '@material-ui/core';
+import React, { PureComponent } from 'react';
 import { Container } from './style';
 
 type S = {

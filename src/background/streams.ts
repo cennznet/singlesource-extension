@@ -16,9 +16,9 @@
 
 import { Duplex } from 'readable-stream';
 import { Runtime } from 'webextension-polyfill-ts';
-import { BgMsgTypes, MessageOrigin, PayloadOf, RuntimeMessage } from '../types';
-import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
 import logger from '../logger';
+import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
+import { BgMsgTypes, MessageOrigin, PayloadOf, RuntimeMessage } from '../types';
 
 export class PortStreams extends Duplex{
   streams: RuntimePortDuplex[] = [];

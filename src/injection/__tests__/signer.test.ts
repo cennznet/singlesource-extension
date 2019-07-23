@@ -4,11 +4,11 @@ global.window = {};
 console.log = () => {};
 console.error = () => {};
 
-import signer from '../signer';
 import { Api } from '@cennznet/api';
 import { WsProvider } from '@cennznet/api/polkadot';
-import BigNumber from 'bignumber.js';
 import { GenericAsset } from '@cennznet/crml-generic-asset';
+import BigNumber from 'bignumber.js';
+import signer from '../signer';
 
 export const amountToWei = (
   amount: BigNumber,

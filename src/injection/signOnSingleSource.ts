@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { inpageBgDuplexStream } from './messenger';
 import {
   InPageMsgTypes,
-  SignPayload, MessageOrigin
+  MessageOrigin, SignPayload
 } from '../types';
+import { inpageBgDuplexStream } from './messenger';
 
-const signOnSingleSource = (payload: SignPayload): Promise<string> => {
+const signOnSingleSource = async (payload: SignPayload): Promise<string> => {
   return inpageBgDuplexStream.sendRequest(InPageMsgTypes.SIGN, payload, MessageOrigin.BG);
 };
 

@@ -15,16 +15,16 @@
  */
 
 import { combineEpics } from 'redux-observable';
+import accounts from './accounts';
+import apiEpic from './apiEpic';
+import balance from './balance';
 import chainEpic from './chainEpic';
+import getTransactions from './getTransactionsEpic';
+import initEpic from './initEpic';
+import mockEpics from './mock';
 // import messengerEpic from './messengerEpic';
 import navigateEpic from './navigateEpic';
-import initEpic from './initEpic';
 import signEpics from './sign';
-import accounts from './accounts';
-import balance from './balance';
-import apiEpic from './apiEpic';
-import mockEpics from './mock';
-import getTransactions from './getTransactionsEpic';
 
 const epics: any[] = [
   chainEpic,

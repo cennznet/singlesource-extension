@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import signFailEpic from './signFailEpic';
 import signRequestEpic from './signRequestEpic';
 import signSuccessEpic from './signSuccessEpic';
-import signFailEpic from './signFailEpic';
 
 export default [signRequestEpic, signSuccessEpic, signFailEpic];

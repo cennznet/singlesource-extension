@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import _ from 'lodash';
 import BigNumber from 'bignumber.js';
-import { createSelector } from 'reselect';
+import _ from 'lodash';
 import { AnyAction } from 'redux';
+import { createSelector } from 'reselect';
 import types from '../../shared/actions';
-import { State } from '../types/state';
 import { BalancesState } from '../types/balancesState';
+import { State } from '../types/state';
 
 const initialState: BalancesState = {};
 

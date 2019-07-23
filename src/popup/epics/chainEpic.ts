@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Observable, merge, of, EMPTY } from 'rxjs';
-import { mapTo, switchMap } from 'rxjs/operators';
-import { ofType, ActionsObservable } from 'redux-observable';
-import { REHYDRATE } from 'redux-persist';
-import types from '../../shared/actions';
 import { AnyAction } from 'redux';
+import { ActionsObservable, ofType } from 'redux-observable';
+import { REHYDRATE } from 'redux-persist';
+import { EMPTY, merge, Observable, of } from 'rxjs';
+import { mapTo, switchMap } from 'rxjs/operators';
+import types from '../../shared/actions';
 
 const chainEpic = (
   action$: ActionsObservable<AnyAction>

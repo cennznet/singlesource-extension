@@ -15,12 +15,12 @@
  */
 
 import { combineReducers } from 'redux';
-import route from './routeReducer';
-import sign from './signReducer';
-import selectedAccount from './selectedAccountReducer';
-import balances from './balancesReducer';
-import transactions from './transactions';
 import sharedReducers from '../../shared/reducers';
+import balances from './balancesReducer';
+import route from './routeReducer';
+import selectedAccount from './selectedAccountReducer';
+import sign from './signReducer';
+import transactions from './transactions';
 
 const reducers = combineReducers({
   ...sharedReducers,

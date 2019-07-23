@@ -15,8 +15,8 @@
  */
 
 import React, { PureComponent } from 'react';
-import { Container, Content } from './style';
 import { browser } from 'webextension-polyfill-ts';
+import { Container, Content } from './style';
 
 class AboutPage extends PureComponent {
   render() {

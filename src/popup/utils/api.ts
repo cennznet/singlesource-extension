@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { ReplaySubject } from 'rxjs';
 import { ApiRx } from '@cennznet/api';
 import { WsProvider } from '@cennznet/api/polkadot';
+import { ReplaySubject } from 'rxjs';
 
 const apiRx$ = new ReplaySubject<ApiRx>(1);
 
 export const configure = (nodeUrl: string) => {
-  let provider = new WsProvider(nodeUrl);
+  const provider = new WsProvider(nodeUrl);
   ApiRx.create({ provider }).subscribe(apiRx$);
 };
 

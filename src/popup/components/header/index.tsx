@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
 import {
+  IconButton,
   Menu,
   MenuItem,
-  IconButton,
-  Tooltip,
-  Popover
+  Popover,
+  Tooltip
 } from '@material-ui/core';
-import SettingsIcon from '@material-ui/icons/Settings';
 import AppsIcon from '@material-ui/icons/Apps';
-import { Container, Section, SelectedNetwork, Title, Dot } from './style';
-import { connect } from 'react-redux';
+import SettingsIcon from '@material-ui/icons/Settings';
 import _ from 'lodash';
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { networks } from '../../../config';
 import types from '../../../shared/actions';
-import { State } from '../../types/state';
-import { Route } from '../../types/route';
-import getParameter from '../../utils/getParameter';
 import { Network, NetworkName } from '../../../types';
+import { Route } from '../../types/route';
+import { State } from '../../types/state';
+import getParameter from '../../utils/getParameter';
+import { Container, Dot, Section, SelectedNetwork, Title } from './style';
 
 type P = {
   isConnected: boolean;

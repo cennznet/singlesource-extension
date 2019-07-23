@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import { ReplaySubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
-import { isEqual } from 'lodash';
 import { Signer } from '@cennznet/api/polkadot.types';
-import signer from './signer';
-import messenger$  from './messenger';
-import { Account, NetworkUpdate } from '../types';
+import { isEqual } from 'lodash';
 import { ofType } from 'redux-observable';
-import { AccountsUpdate, BgMsgTypes } from '../types';
+import { Observable, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
+import { Account, AccountsUpdate, BgMsgTypes, NetworkUpdate } from '../types';
+import messenger$  from './messenger';
+import signer from './signer';
+import { InjectedWindow } from './types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
 const network$ = new ReplaySubject<string>(1);
+
+declare var window: InjectedWindow;
 
 messenger$.pipe(
   ofType<AccountsUpdate>(BgMsgTypes.ACCOUNTS),
@@ -53,6 +55,6 @@ const SingleSource = {
   },
 };
 
-window['SingleSource'] = SingleSource;
+window.SingleSource = SingleSource;
 
 export default SingleSource;

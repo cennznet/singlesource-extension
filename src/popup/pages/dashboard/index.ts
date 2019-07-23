@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import DashboardPage from './dashboardPage';
+import { Dispatch } from 'redux';
 import types from '../../../shared/actions';
 import { Account } from '../../../types';
 import { State } from '../../types/state';
+import DashboardPage from './dashboardPage';
 
 const mapStateToProps = ({ accounts }: State) => ({
   accounts

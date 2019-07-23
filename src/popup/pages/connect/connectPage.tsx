@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import copy from 'copy-to-clipboard';
-import React, { PureComponent } from 'react';
-import QRCode from 'qrcode.react';
-import stringify from 'safe-json-stringify';
 import { CircularProgress } from '@material-ui/core';
+import copy from 'copy-to-clipboard';
 import LZString from 'lz-string';
-import Splash from '../../components/splash';
-import { Content, Title, Subtitle } from './style';
+import QRCode from 'qrcode.react';
+import React, { PureComponent } from 'react';
+import stringify from 'safe-json-stringify';
 import { Account, NetworkName } from '../../../types';
+import Splash from '../../components/splash';
 import P2PSession from '../../utils/p2pSession';
+import { Content, Subtitle, Title } from './style';
 
 type Props = {
   network: NetworkName;

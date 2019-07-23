@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
-import { Container, Content, Column, Row, Icon, Asset, Balance } from './style';
-import _ from 'lodash';
-import { connect } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import { CircularProgress } from '@material-ui/core';
-import { getAssetName } from '../../utils/asset';
-import { State } from '../../types/state';
-import { getBalanceInfoSelector } from '../../reducers/balancesReducer';
+import BigNumber from 'bignumber.js';
+import _ from 'lodash';
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import types from '../../../shared/actions';
+import { getBalanceInfoSelector } from '../../reducers/balancesReducer';
+import { State } from '../../types/state';
+import { getAssetName } from '../../utils/asset';
+import { Asset, Balance, Column, Container, Content, Icon, Row } from './style';
 
 type Props = {
   address: string;

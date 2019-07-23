@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import ConnectPage from './connectPage';
+import { Dispatch } from 'redux';
 import types from '../../../shared/actions';
 import { Account } from '../../../types';
 import { State } from '../../types/state';
+import ConnectPage from './connectPage';
 
 const mapStateToProps = ({ network }: State) => ({
   network

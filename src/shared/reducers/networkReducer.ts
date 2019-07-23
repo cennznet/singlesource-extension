@@ -15,8 +15,8 @@
  */
 
 import { AnyAction } from 'redux';
-import actions from '../actions';
 import { NetworkName } from '../../types';
+import actions from '../actions';
 
 const initialState: NetworkName = 'RIMU';
 

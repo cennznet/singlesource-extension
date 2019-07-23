@@ -16,8 +16,8 @@
 
 import { browser } from 'webextension-polyfill-ts';
 import logger from '../logger';
-import { PortStreams } from './streams';
 import setupRedux from './redux';
+import { PortStreams } from './streams';
 
 const streamRouter = new PortStreams();
 

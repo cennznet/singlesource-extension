@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Network } from './types';
-import { Dictionary } from 'lodash';
 import BigNumber from 'bignumber.js';
+import { Dictionary } from 'lodash';
+import { Network } from './types';
 
 BigNumber.set({ DECIMAL_PLACES: 5 });
 

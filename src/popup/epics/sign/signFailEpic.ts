@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import { Action } from 'redux-actions';
+import { ActionsObservable, ofType } from 'redux-observable';
 import { EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ActionsObservable, ofType } from 'redux-observable';
 import types from '../../../shared/actions';
-import { Action } from 'redux-actions';
 import { MessageOrigin, PopupMsgTypes } from '../../../types';
-import { SignFailPayload } from '../../types/actions';
 import { EpicDependencies } from '../../store';
+import { SignFailPayload } from '../../types/actions';
 import getParameter from '../../utils/getParameter';
 
 const signFailEpic = (
