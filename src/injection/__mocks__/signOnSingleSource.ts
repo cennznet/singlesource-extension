@@ -1,14 +1,14 @@
-import { Wallet, HDKeyring } from '@cennznet/wallet';
-import { stringToU8a } from '@cennznet/util';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { FunctionMetadata } from '@plugnet/types/Metadata/v5/Calls';
 import {
-  U8a,
-  RuntimeVersion,
+  Extrinsic,
   Index,
   Method,
-  Extrinsic
+  RuntimeVersion,
+  U8a
 } from '@cennznet/types/polkadot';
+import { stringToU8a } from '@cennznet/util';
+import { HDKeyring, Wallet } from '@cennznet/wallet';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { FunctionMetadata } from '@plugnet/types/Metadata/v5/Calls';
 import { SignPayload } from "../../types";
 
 // @ts-ignore

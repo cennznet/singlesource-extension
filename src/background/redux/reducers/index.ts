@@ -1,5 +1,5 @@
-import { Account } from '../../../types';
 import { combineReducers } from 'redux';
+import { Account } from '../../../types';
 
 import sharedReducers from '../../../shared/reducers';
 

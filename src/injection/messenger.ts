@@ -16,9 +16,9 @@
 
 import { fromEvent, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { MessageOrigin, ToPageMessages } from '../types';
-import { MultiplexWindowMessageDuplex } from '../streamUtils/MultiplexWindowMessageDuplex';
 import logger from '../logger';
+import { MultiplexWindowMessageDuplex } from '../streamUtils/MultiplexWindowMessageDuplex';
+import { MessageOrigin, ToPageMessages } from '../types';
 
 export const inpageBgDuplexStream = new MultiplexWindowMessageDuplex(window, MessageOrigin.PAGE, MessageOrigin.CONTENT);
 

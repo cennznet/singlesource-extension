@@ -16,8 +16,8 @@
 
 import { Account, Network, NetworkName } from '../../types';
 import { BalancesState } from './balancesState';
-import { AssetTransactionsState } from './transactions';
 import { Route } from './route';
+import { AssetTransactionsState } from './transactions';
 
 export type State = {
   selectedNetwork: Network;

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { connect } from 'react-redux';
 import _ from 'lodash';
-import AccountDetailsPage from './accountDetailsPage';
+import { connect } from 'react-redux';
 import { State } from '../../types/state';
+import AccountDetailsPage from './accountDetailsPage';
 
 const mapStateToProps = (state: State) => {
   const { selectedAccount, accounts } = state;

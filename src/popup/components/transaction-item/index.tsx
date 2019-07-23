@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Tooltip, CircularProgress } from '@material-ui/core';
+import { CircularProgress, Tooltip } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import BN from 'bn.js';
 import Moment from 'moment';
-import {
-  Container,
-  Content,
-  Row,
-  Column,
-  Flow,
-  Amount,
-  Asset,
-  Date,
-  IconContainer,
-  Address
-} from './style';
+import React from 'react';
+import { AssetTransferTx } from '../../types/transactions';
 import { weiToAmount } from '../../utils/amount';
 import { getAssetName } from '../../utils/asset';
-import { AssetTransferTx } from '../../types/transactions';
+import {
+  Address,
+  Amount,
+  Asset,
+  Column,
+  Container,
+  Content,
+  Date,
+  Flow,
+  IconContainer,
+  Row
+} from './style';
 
 const getAddress = (transaction: AssetTransferTx): string => {
   const address =

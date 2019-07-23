@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
-import { Observable, EMPTY } from 'rxjs';
-import { withLatestFrom, switchMap } from 'rxjs/operators';
-import { AnyAction } from 'redux';
 import _ from 'lodash';
-import { State } from '../../types/state';
+import { AnyAction } from 'redux';
+import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
+import { EMPTY, Observable } from 'rxjs';
+import { switchMap, withLatestFrom } from 'rxjs/operators';
 import types from '../../../shared/actions';
+import { State } from '../../types/state';
 import getParameter from '../../utils/getParameter';
 
 const signRequestEpic = (

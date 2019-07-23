@@ -15,9 +15,9 @@
  */
 
 import React, { PureComponent } from 'react';
-import AccountItem from '../../components/account-item';
-import { Container, Content, Title, Items } from './style';
 import { Account } from '../../../types';
+import AccountItem from '../../components/account-item';
+import { Container, Content, Items, Title } from './style';
 
 type Props = {
   accounts: Account[];

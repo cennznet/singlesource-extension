@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ActionsObservable, ofType } from 'redux-observable';
 import { AnyAction } from 'redux';
+import { ActionsObservable, ofType } from 'redux-observable';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import types from '../../../shared/actions';

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import copy from 'copy-to-clipboard';
-import React, { PureComponent } from 'react';
-import QRCode from 'qrcode.react';
-import stringify from 'safe-json-stringify';
-import { Container, Title, Subtitle, Hash } from './style';
 import { CircularProgress } from '@material-ui/core';
+import copy from 'copy-to-clipboard';
 import LZString from 'lz-string';
-import P2PSession from '../../utils/p2pSession';
+import QRCode from 'qrcode.react';
+import React, { PureComponent } from 'react';
+import stringify from 'safe-json-stringify';
 import { NetworkName } from '../../../types';
+import P2PSession from '../../utils/p2pSession';
+import { Container, Hash, Subtitle, Title } from './style';
 
 type Props = {
   network: NetworkName;
@@ -72,21 +72,23 @@ class SignPage extends PureComponent<Props, State> {
     const secretKey = this.peer.secretKey;
     const { network, sign } = this.props;
 
-    if (sign.hexSignature)
+    if (sign.hexSignature) {
       return (
         <Container>
           <Title>Sign Successful</Title>
           <Hash>Signature: {sign.hexSignature}</Hash>
         </Container>
       );
+    }
 
-    if (!!sent)
+    if (!!sent) {
       return (
         <Container>
           <Title>Do not close the modal</Title>
           <Hash>Connection established. Waiting for response...</Hash>
         </Container>
       );
+    }
 
     const request = stringify({
       sessionId,

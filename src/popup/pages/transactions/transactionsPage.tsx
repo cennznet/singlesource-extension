@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
-import _ from 'lodash';
 import { CircularProgress, Icon, IconButton } from '@material-ui/core';
-import { Container, Content, Title, Items, Row } from './style';
-import { AssetTransferTx } from '../../types/transactions';
+import _ from 'lodash';
+import React, { PureComponent } from 'react';
 import TransactionItem from '../../components/transaction-item';
+import { AssetTransferTx } from '../../types/transactions';
+import { Container, Content, Items, Row, Title } from './style';
 
 type Props = {
   params: { address: string; assetId: number };

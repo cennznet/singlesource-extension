@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Dialog, Paper } from '@material-ui/core';
-import styled from 'styled-components';
 import QRCode from 'qrcode.react';
+import React from 'react';
+import styled from 'styled-components';
 
 const Container = styled.div`
   flex: 1;

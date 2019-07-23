@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import Peer from 'peerjs';
-import { ReplaySubject, AsyncSubject, Subject, EMPTY } from 'rxjs';
 import CryptoJS from 'crypto-js';
-import { v4 } from 'uuid';
+import Peer from 'peerjs';
+import { AsyncSubject, EMPTY, ReplaySubject, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { v4 } from 'uuid';
 
 // const peerJS = {
 //   host: 'service.centralityapp.com',
@@ -128,7 +128,7 @@ class P2PSession {
     conn.on('error', e => {this.error$.next(e);});
   }
 
-  connect(peerId): Promise<void> {
+  async connect(peerId): Promise<void> {
     return this.peerId$
       .pipe(
         switchMap(() => {
@@ -140,7 +140,7 @@ class P2PSession {
       .toPromise();
   }
 
-  send(message): Promise<void> {
+  async send(message): Promise<void> {
     return new Promise((resolve, reject) => {
       const msg = CryptoJS.AES.encrypt(
         JSON.stringify(message),

@@ -16,10 +16,10 @@
 
 import { v4 } from 'uuid';
 import { browser } from 'webextension-polyfill-ts';
-import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
-import { MultiplexWindowMessageDuplex} from '../streamUtils/MultiplexWindowMessageDuplex';
-import { InPageMsgTypes, MessageOrigin } from '../types';
 import { addOrigin } from '../streamUtils/addOrigin';
+import { MultiplexWindowMessageDuplex} from '../streamUtils/MultiplexWindowMessageDuplex';
+import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
+import { InPageMsgTypes, MessageOrigin } from '../types';
 
 const injectScript = () => {
   try {

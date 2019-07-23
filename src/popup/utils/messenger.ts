@@ -16,8 +16,8 @@
 
 import { v4 } from 'uuid';
 import { browser } from 'webextension-polyfill-ts';
-import { MessageOrigin } from '../../types';
 import { RuntimePortDuplex } from '../../streamUtils/RuntimePortDuplex';
+import { MessageOrigin } from '../../types';
 
 export function initConnection(origin: MessageOrigin.TOOLBAR | MessageOrigin.SIGN_POPUP) {
   try {

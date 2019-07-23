@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-import { of, Observable } from 'rxjs';
+import {ApiRx} from '@cennznet/api';
+import { ActionsObservable, ofType } from 'redux-observable';
+import { Observable, of } from 'rxjs';
 import {
-  mergeMap,
-  map,
   catchError,
+  map,
+  mergeMap,
   switchMap,
   takeUntil,
   timeout
 } from 'rxjs/operators';
-import { ofType, ActionsObservable } from 'redux-observable';
-import {ApiRx} from '@cennznet/api';
 import types from '../../../shared/actions';
 import { Asset } from '../../../types';
-import apiRx$ from '../../utils/api';
 import { weiToAmount } from '../../utils/amount';
+import apiRx$ from '../../utils/api';
 
 type Action = { type: string; payload: { asset: Asset } };
 

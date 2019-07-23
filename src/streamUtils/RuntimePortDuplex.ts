@@ -16,8 +16,8 @@
 
 import { Duplex } from 'readable-stream';
 import { Runtime } from 'webextension-polyfill-ts';
-import { MsgTypes, PayloadOf, RuntimeMessage } from '../types';
 import logger from '../logger';
+import { MsgTypes, PayloadOf, RuntimeMessage } from '../types';
 
 type MessageWithoutOrigin<T extends MsgTypes> = Pick<RuntimeMessage<T, any>, Exclude<keyof RuntimeMessage<T, any>, 'origin'>>;
 

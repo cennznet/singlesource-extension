@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import { AnyAction } from 'redux';
+import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
-import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
-import { AnyAction } from 'redux';
 import types from '../../../shared/actions';
-import { State } from '../../types/state';
 import { BgMsgTypes, MessageOrigin } from '../../../types';
 import { EpicDependencies } from '../../store';
+import { State } from '../../types/state';
 
 const onAccountsChangeEpic = (
   action$: ActionsObservable<AnyAction>,

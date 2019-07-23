@@ -19,11 +19,11 @@ import { createEpicMiddleware } from 'redux-observable';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { composeWithDevTools } from 'remote-redux-devtools';
-import reducers from './reducers';
-import rootEpic from './epics';
-import { initConnection } from './utils/messenger';
-import { MessageOrigin } from '../types';
 import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
+import { MessageOrigin } from '../types';
+import rootEpic from './epics';
+import reducers from './reducers';
+import { initConnection } from './utils/messenger';
 
 const persistConfig = {
   key: 'root',

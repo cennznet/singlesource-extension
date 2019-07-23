@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
 import { Tooltip } from '@material-ui/core';
-import { Container, Content, Name, Address, Assets } from './style';
+import React, { PureComponent } from 'react';
 import { Account } from '../../../types';
 import { getAssetName } from '../../utils/asset';
+import { Address, Assets, Container, Content, Name } from './style';
 
 type Props = {
   account: Account;

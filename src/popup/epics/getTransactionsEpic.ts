@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { AnyAction } from 'redux';
-import { ofType, ActionsObservable, StateObservable } from 'redux-observable';
-import { switchMap, withLatestFrom } from 'rxjs/operators';
 import _ from 'lodash';
-import { State } from '../types/state';
+import { AnyAction } from 'redux';
+import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
+import { switchMap, withLatestFrom } from 'rxjs/operators';
 import types from '../../shared/actions';
+import { State } from '../types/state';
 
 const baseUrl = (env: string) =>
   `https://internal-api-${env}.uncoverexplorer.com/v1`;
@@ -40,7 +40,7 @@ const getTransactionsEpic = (
   action$.pipe(
     ofType(types.FETCH_TRANSACTIONS.REQUEST),
     withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    switchMap(async ([action, state]) => {
       const { address, assetId } = action.payload;
       const { network } = state;
       const url = transactionUrl(network, address, assetId);

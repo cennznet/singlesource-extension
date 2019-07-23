@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import React, { PureComponent, ComponentClass } from 'react';
-import { connect } from 'react-redux';
 import _ from 'lodash';
+import React, { ComponentClass, PureComponent } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
-import Header from './components/header';
 import Footer from './components/footer';
-import { State } from './types/state';
+import Header from './components/header';
 import { Route } from './types/route';
+import { State } from './types/state';
 
 const Container = styled.div`
   flex: 1;

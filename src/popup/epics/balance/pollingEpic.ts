@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
-import { switchMap, withLatestFrom, takeUntil } from 'rxjs/operators';
-import { Observable, timer } from 'rxjs';
-import { AnyAction } from 'redux';
 import _ from 'lodash';
+import { AnyAction } from 'redux';
+import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
+import { Observable, timer } from 'rxjs';
+import { switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
 import types from '../../../shared/actions';
 import { State } from '../../types/state';
 

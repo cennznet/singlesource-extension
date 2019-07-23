@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
-import { Container, Content, Title, Row, Items } from './style';
-import AssetItem from '../../components/asset-item';
-import { Tooltip, IconButton } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import GradientIcon from '@material-ui/icons/Gradient';
+import React, { PureComponent } from 'react';
 import { Account } from '../../../types';
-import QRModal from '../../components/qr-modal';
 import Address from '../../components/address';
+import AssetItem from '../../components/asset-item';
+import QRModal from '../../components/qr-modal';
+import { Container, Content, Items, Row, Title } from './style';
 
 type P = {
   account: Account;
@@ -41,7 +41,7 @@ class AccountDetailsPage extends PureComponent<P, S> {
   render() {
     const { account } = this.props;
     const { addressQROpen } = this.state;
-    if (!account)
+    if (!account) {
       return (
         <Container>
           <Content>
@@ -49,6 +49,7 @@ class AccountDetailsPage extends PureComponent<P, S> {
           </Content>
         </Container>
       );
+    }
     const { name, address, assets } = account;
     return (
       <Container>

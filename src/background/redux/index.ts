@@ -1,13 +1,13 @@
-import { PortStreams } from '../streams';
-import { fromEvent } from 'rxjs';
-import { ToBgMessage } from '../../types';
-import { createEpicMiddleware, Epic } from 'redux-observable';
 import { applyMiddleware, createStore } from 'redux';
-import rootEpic from './epics';
+import { createEpicMiddleware, Epic } from 'redux-observable';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import reducers from './reducers';
 import { composeWithDevTools } from 'remote-redux-devtools';
+import { fromEvent } from 'rxjs';
+import { ToBgMessage } from '../../types';
+import { PortStreams } from '../streams';
+import rootEpic from './epics';
+import reducers from './reducers';
 
 export default (streamRouter: PortStreams) => {
   // message stream and epic

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import pollingEpic from './pollingEpic';
 import fetchBalanceEpic from './fetchBalanceEpic';
+import pollingEpic from './pollingEpic';
 
 const epics = [pollingEpic, fetchBalanceEpic];
 

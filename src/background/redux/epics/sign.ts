@@ -1,8 +1,8 @@
-import { EMPTY, Observable } from 'rxjs';
 import { Action } from 'redux-actions';
-import { InPageMsgTypes, SignCommand } from '../../../types';
 import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
+import { EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { InPageMsgTypes, SignCommand } from '../../../types';
 import openPanel from '../../openPanel';
 import { BackgroundState } from '../reducers';
 

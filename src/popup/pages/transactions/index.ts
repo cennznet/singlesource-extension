@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { connect } from 'react-redux';
 import _ from 'lodash';
-import TransactionsPage from './transactionsPage';
-import { State } from '../../types/state';
+import { connect } from 'react-redux';
+import types from '../../../shared/actions';
 import {
   getTransactionsSelector,
   isFetchingTransactionsSelector
 } from '../../reducers/transactions';
-import types from '../../../shared/actions';
+import { State } from '../../types/state';
+import TransactionsPage from './transactionsPage';
 
 const mapStateToProps = (state: State, props: any) => {
   const { address, assetId } = props.params;

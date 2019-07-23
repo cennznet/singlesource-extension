@@ -17,8 +17,8 @@
 import { Signer } from '@cennznet/api/polkadot.types';
 import { Extrinsic } from '@cennznet/types/extrinsic';
 import { SignatureOptions } from '@cennznet/types/polkadot.types';
-import signOnSingleSource from './signOnSingleSource';
 import { SignPayload } from '../types';
+import signOnSingleSource from './signOnSingleSource';
 
 let id = 0;
 

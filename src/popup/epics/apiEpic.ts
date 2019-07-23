@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { ofType, StateObservable, ActionsObservable } from 'redux-observable';
-import types from '../../shared/actions';
-import { withLatestFrom, switchMap} from 'rxjs/operators';
-import { State } from '../types/state';
-import { AnyAction } from 'redux';
-import { EMPTY} from 'rxjs';
 import _ from 'lodash';
-import { configure } from '../utils/api';
+import { AnyAction } from 'redux';
+import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
+import { EMPTY} from 'rxjs';
+import { switchMap, withLatestFrom} from 'rxjs/operators';
 import { networks } from '../../config';
-import { EpicDependencies } from '../store';
+import types from '../../shared/actions';
 import { BgMsgTypes, MessageOrigin} from '../../types';
+import { EpicDependencies } from '../store';
+import { State } from '../types/state';
+import { configure } from '../utils/api';
 
 // const apiEpic = (
 //   action$: ActionsObservable<AnyAction>,

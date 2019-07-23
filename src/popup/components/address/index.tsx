@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
-import styled from 'styled-components';
 import {
-  TextField,
+  IconButton,
   InputAdornment,
-  Tooltip,
-  IconButton
+  TextField,
+  Tooltip
 } from '@material-ui/core';
 import CopyIcon from '@material-ui/icons/FileCopy';
+import React, { PureComponent } from 'react';
+import styled from 'styled-components';
 
 const Row = styled.div`
   flex: 1;
