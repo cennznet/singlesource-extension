@@ -14,28 +14,10 @@
  * limitations under the License.
  */
 
-import storage from 'redux-persist/lib/storage';
+import accounts from './accountsReducer';
+import network from './networkReducer';
 
-class State {
-  restore = () => {
-    return storage.getItem('persist:root');
-  };
-}
-
-const state = new State();
-
-export const getEnvironment = (): Promise<string> => {
-  return state.restore()
-    .then(JSON.parse)
-    .then(state => state.environment || 'PRODUCTION')
-    .then(JSON.parse);
+export default {
+  accounts,
+  network,
 };
-
-export const getAccounts = (): Promise<any> => {
-  return state.restore()
-    .then(JSON.parse)
-    .then(state => state.accounts || '[]')
-    .then(JSON.parse);
-};
-
-export default state;

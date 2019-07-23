@@ -15,7 +15,7 @@
  */
 
 import { AnyAction } from 'redux';
-import types from '../types';
+import types from '../../shared/actions';
 import { Route } from '../types/route';
 
 const initialState: Route = {

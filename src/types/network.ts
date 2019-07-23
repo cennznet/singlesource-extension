@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-export type Environment = 'PRODUCTION' | 'RIMU' | 'KAURI';
+export type NetworkName = 'PRODUCTION' | 'RIMU' | 'KAURI';
 
 export type Network = {
-  environment: Environment;
-  name: string;
+  name: NetworkName;
+  displayName: string;
   nodeUrl: string;
   color: string;
 };

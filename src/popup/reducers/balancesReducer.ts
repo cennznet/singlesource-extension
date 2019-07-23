@@ -18,7 +18,7 @@ import _ from 'lodash';
 import BigNumber from 'bignumber.js';
 import { createSelector } from 'reselect';
 import { AnyAction } from 'redux';
-import types from '../types';
+import types from '../../shared/actions';
 import { State } from '../types/state';
 import { BalancesState } from '../types/balancesState';
 

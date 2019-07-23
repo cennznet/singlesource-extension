@@ -19,7 +19,7 @@ import { switchMap, withLatestFrom } from 'rxjs/operators';
 import { ofType, ActionsObservable, StateObservable } from 'redux-observable';
 import { AnyAction } from 'redux';
 import _ from 'lodash';
-import types from '../types';
+import types from '../../shared/actions';
 
 const initEpic = (
   action$: ActionsObservable<AnyAction>,

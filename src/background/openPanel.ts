@@ -18,9 +18,9 @@ import queryString from 'query-string';
 import { browser } from 'webextension-polyfill-ts';
 import { SignCommand } from '../types';
 
-export default (params: { noheader: boolean; sign: SignCommand; parent: string }) => {
+export default (params: { noheader: boolean; sign: SignCommand }) => {
 
-  const paramQuery = queryString.stringify({...params, sign: JSON.stringify(params.sign)});
+  const paramQuery = queryString.stringify({noheader: params.noheader, sign: JSON.stringify(params.sign)});
   const url = browser.extension.getURL(`index.html?${paramQuery}`);
   browser.windows.create({
     url,

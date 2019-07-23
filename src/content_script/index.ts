@@ -52,7 +52,7 @@ const setupCommunication = () => {
 };
 
 const init = (inpageWriteStream: RuntimePortDuplex) => {
-  inpageWriteStream.send({ type: InPageMsgTypes.INIT }, MessageOrigin.BG);
+  inpageWriteStream.send(InPageMsgTypes.INIT, {}, MessageOrigin.BG);
 };
 
 injectScript();

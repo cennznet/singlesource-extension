@@ -15,34 +15,20 @@
  */
 
 import { browser } from 'webextension-polyfill-ts';
-import { Runtime } from 'webextension-polyfill-ts/dist/generated/runtime';
 import logger from '../logger';
-import { PageToBgMessage, RuntimeMessageWith } from '../types';
 import { PortStreams } from './streams';
-import handlers from './handlers';
-
-let ports: Runtime.Port[] = [];
-
+import setupRedux from './redux';
 
 const streamRouter = new PortStreams();
 
-streamRouter.on('data', (message: RuntimeMessageWith<PageToBgMessage>) => {
-  logger.debug('bg: <-', message);
-  const {payload} = message;
-  if (payload.type && handlers[payload.type]) {
-    handlers[payload.type](message as any, streamRouter);
-  }
-});
+setupRedux(streamRouter);
 
 browser.runtime.onConnect.addListener(port => {
   logger.debug('browser.runtime.onConnect', port);
-
-  ports.push(port);
 
   streamRouter.setup(port);
   port.onDisconnect.addListener(() => {
     logger.debug('port.onDisconnect', port);
     streamRouter.remove(port);
-    ports = ports.filter(i => i !== port);
   });
 });

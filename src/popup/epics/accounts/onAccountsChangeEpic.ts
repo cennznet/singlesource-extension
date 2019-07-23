@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { EMPTY} from 'rxjs';
-import { withLatestFrom, switchMap } from 'rxjs/operators';
-import { ofType, ActionsObservable, StateObservable } from 'redux-observable';
+import { EMPTY } from 'rxjs';
+import { switchMap, withLatestFrom } from 'rxjs/operators';
+import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
 import { AnyAction } from 'redux';
-import types from '../../types';
+import types from '../../../shared/actions';
 import { State } from '../../types/state';
 import { BgMsgTypes, MessageOrigin } from '../../../types';
 import { EpicDependencies } from '../../store';
@@ -33,10 +33,7 @@ const onAccountsChangeEpic = (
     withLatestFrom(state$),
     switchMap(([, state]) => {
       const { accounts } = state;
-      runtimeStream.send({
-        type: BgMsgTypes.ACCOUNTS,
-        accounts
-      }, MessageOrigin.PAGE);
+      runtimeStream.send(BgMsgTypes.ACCOUNTS, accounts, [MessageOrigin.PAGE, MessageOrigin.BG]);
       return EMPTY;
     })
   );

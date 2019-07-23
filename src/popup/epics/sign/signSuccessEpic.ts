@@ -17,7 +17,7 @@
 import { Observable, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ofType, ActionsObservable } from 'redux-observable';
-import types from '../../types';
+import types from '../../../shared/actions';
 import { ExtrinsicSignSuccess, PopupMsgTypes, MessageOrigin } from '../../../types';
 import { Action } from 'redux-actions';
 import { SignSuccessPayload } from '../../types/actions';
@@ -32,14 +32,17 @@ const signSuccessEpic = (
   action$.pipe(
     ofType<Action<SignSuccessPayload>>(types.SIGN.SUCCESS),
     switchMap(({ payload: { requestUUID, hexSignature } }) => {
-      const payload: ExtrinsicSignSuccess = {
-        type: PopupMsgTypes.SIGNED,
-        result: hexSignature,
-        isError: false,
-        requestUUID
-      };
       const parent = getParameter('parent') || MessageOrigin.PAGE;
-      runtimeStream.send(payload, parent);
+      const message = {
+        dst: parent,
+        type: PopupMsgTypes.SIGNED,
+        requestUUID,
+        payload: {
+          result: hexSignature,
+          isError: false,
+        }
+      };
+      runtimeStream.send(message);
       return EMPTY;
     })
   );

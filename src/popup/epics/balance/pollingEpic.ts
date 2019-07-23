@@ -19,7 +19,7 @@ import { switchMap, withLatestFrom, takeUntil } from 'rxjs/operators';
 import { Observable, timer } from 'rxjs';
 import { AnyAction } from 'redux';
 import _ from 'lodash';
-import types from '../../types';
+import types from '../../../shared/actions';
 import { State } from '../../types/state';
 
 const pollingEpic = (

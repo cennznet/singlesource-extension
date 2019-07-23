@@ -18,7 +18,7 @@ import { ActionsObservable, ofType } from 'redux-observable';
 import { AnyAction } from 'redux';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import types from '../../types';
+import types from '../../../shared/actions';
 
 const fakeConnectEpic = (
   action$: ActionsObservable<AnyAction>

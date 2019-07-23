@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Network } from './popup/types/network';
+import { Network } from './types';
 import { Dictionary } from 'lodash';
 import BigNumber from 'bignumber.js';
 
@@ -22,14 +22,14 @@ BigNumber.set({ DECIMAL_PLACES: 5 });
 
 export const networks: Dictionary<Network> = {
   RIMU_CENNZENT: {
-    environment: 'RIMU',
-    name: 'Rimu - CENNZnet',
+    name: 'RIMU',
+    displayName: 'Rimu - CENNZnet',
     nodeUrl: 'wss://rimu.unfrastructure.io/public/ws',
     color: '#F45BFF'
   },
   KAURI_CENNZNET: {
-    environment: 'KAURI',
-    name: 'Kauri - CENNZnet',
+    name: 'KAURI',
+    displayName: 'Kauri - CENNZnet',
     nodeUrl: 'wss://cennznet-node-0.centrality.me:9944',
     color: '#FFCA2D'
   }

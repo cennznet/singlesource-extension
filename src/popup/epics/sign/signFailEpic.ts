@@ -17,9 +17,9 @@
 import { EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActionsObservable, ofType } from 'redux-observable';
-import types from '../../types';
+import types from '../../../shared/actions';
 import { Action } from 'redux-actions';
-import { ExtrinsicSignFailed, MessageOrigin, PopupMsgTypes } from '../../../types';
+import { MessageOrigin, PopupMsgTypes } from '../../../types';
 import { SignFailPayload } from '../../types/actions';
 import { EpicDependencies } from '../../store';
 import getParameter from '../../utils/getParameter';
@@ -32,14 +32,17 @@ const signFailEpic = (
   action$.pipe(
     ofType<Action<SignFailPayload>>(types.SIGN.FAIL),
     switchMap(({ payload: { requestUUID, error } }) => {
-      const payload: ExtrinsicSignFailed = {
-        type: PopupMsgTypes.SIGNED_FAILED,
-        result: error,
-        isError: true,
-        requestUUID
-      };
       const parent = getParameter('parent') || MessageOrigin.PAGE;
-      runtimeStream.send(payload, parent);
+      const message = {
+        dst: parent,
+        type: PopupMsgTypes.SIGNED,
+        requestUUID,
+        payload: {
+          result: error,
+          isError: true,
+        }
+      };
+      runtimeStream.send(message);
       return EMPTY;
     })
   );

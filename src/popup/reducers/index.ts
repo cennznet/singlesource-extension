@@ -17,18 +17,16 @@
 import { combineReducers } from 'redux';
 import route from './routeReducer';
 import sign from './signReducer';
-import accounts from './accountsReducer';
 import selectedAccount from './selectedAccountReducer';
-import environment from './environmentReducer';
 import balances from './balancesReducer';
 import transactions from './transactions';
+import sharedReducers from '../../shared/reducers';
 
 const reducers = combineReducers({
+  ...sharedReducers,
   route,
   sign,
-  accounts,
   selectedAccount,
-  environment,
   balances,
   transactions
 });

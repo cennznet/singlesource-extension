@@ -15,7 +15,7 @@
  */
 
 import { ofType, StateObservable, ActionsObservable } from 'redux-observable';
-import types from '../types';
+import types from '../../shared/actions';
 import { withLatestFrom, switchMap} from 'rxjs/operators';
 import { State } from '../types/state';
 import { AnyAction } from 'redux';
@@ -26,22 +26,36 @@ import { networks } from '../../config';
 import { EpicDependencies } from '../store';
 import { BgMsgTypes, MessageOrigin} from '../../types';
 
+// const apiEpic = (
+//   action$: ActionsObservable<AnyAction>,
+//   state$: StateObservable<State>,
+//   { runtimeStream }: EpicDependencies
+// ) =>
+//   action$.pipe(
+//     ofType(types.INIT, types.CHANGE_ENVIRONMENT),
+//     withLatestFrom(state$),
+//     switchMap(([, state]) => {
+//       const { environment } = state;
+//       const network = _.find(networks, { name: environment });
+//       configure(network.nodeUrl);
+//       runtimeStream.send(BgMsgTypes.ENVIRONMENT, environment, MessageOrigin.PAGE);
+//       return EMPTY;
+//     })
+//   );
+
 const apiEpic = (
   action$: ActionsObservable<AnyAction>,
   state$: StateObservable<State>,
   { runtimeStream }: EpicDependencies
 ) =>
   action$.pipe(
-    ofType(types.INIT, types.CHANGE_ENVIRONMENT),
+    ofType(types.CHANGE_ENVIRONMENT),
     withLatestFrom(state$),
     switchMap(([, state]) => {
-      const { environment } = state;
-      const netwok = _.find(networks, { environment });
-      configure(netwok.nodeUrl);
-      runtimeStream.send({
-        type: BgMsgTypes.ENVIRONMENT,
-        environment
-      }, MessageOrigin.PAGE);
+      const { network } = state;
+      const networkMeta = _.find(networks, { name: network });
+      configure(networkMeta.nodeUrl);
+      runtimeStream.send(BgMsgTypes.ENVIRONMENT, network, [MessageOrigin.PAGE, MessageOrigin.BG]);
       return EMPTY;
     })
   );

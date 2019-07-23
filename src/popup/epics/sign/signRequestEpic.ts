@@ -20,7 +20,7 @@ import { withLatestFrom, switchMap } from 'rxjs/operators';
 import { AnyAction } from 'redux';
 import _ from 'lodash';
 import { State } from '../../types/state';
-import types from '../../types';
+import types from '../../../shared/actions';
 import getParameter from '../../utils/getParameter';
 
 const signRequestEpic = (

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import types from '../types';
+import types from '../../shared/actions';
 import { AnyAction } from 'redux';
 
 const selectedAccountReducer = (state = null, action: AnyAction) => {

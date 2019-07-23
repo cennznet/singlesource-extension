@@ -15,19 +15,17 @@
  */
 
 import { AnyAction } from 'redux';
-import _ from 'lodash';
-import types from '../types';
-import { Account } from '../../types';
+import actions from '../actions';
 
 const initialState: Account[] = [];
 
 const accountsReducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
-    case types.GET_ACCOUNTS.SUCCESS:
+    case actions.GET_ACCOUNTS.SUCCESS:
       return action.payload;
-    case types.GET_ACCOUNTS.FAIL:
+    case actions.GET_ACCOUNTS.FAIL:
       return initialState;
-    case types.DISCONNECT:
+    case actions.DISCONNECT:
       return initialState;
     default:
       return state;

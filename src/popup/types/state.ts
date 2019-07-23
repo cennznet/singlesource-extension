@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { Account } from '../../types';
-import { Environment } from './environment';
-import { Network } from './network';
+import { Account, Network, NetworkName } from '../../types';
 import { BalancesState } from './balancesState';
 import { AssetTransactionsState } from './transactions';
 import { Route } from './route';
@@ -29,7 +27,7 @@ export type State = {
   route: Route;
   sign: Object;
   loadingStatus: { [key: string]: boolean };
-  environment: Environment;
+  network: NetworkName;
   balances: BalancesState;
   transactions: AssetTransactionsState;
 };

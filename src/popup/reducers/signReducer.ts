@@ -15,7 +15,7 @@
  */
 
 import { AnyAction } from 'redux';
-import types from '../types';
+import types from '../../shared/actions';
 
 const initialState = {};
 

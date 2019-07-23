@@ -23,7 +23,7 @@ import { CircularProgress } from '@material-ui/core';
 import { getAssetName } from '../../utils/asset';
 import { State } from '../../types/state';
 import { getBalanceInfoSelector } from '../../reducers/balancesReducer';
-import types from '../../types';
+import types from '../../../shared/actions';
 
 type Props = {
   address: string;

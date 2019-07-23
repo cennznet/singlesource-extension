@@ -17,12 +17,12 @@
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import ConnectPage from './connectPage';
-import types from '../../types';
+import types from '../../../shared/actions';
 import { Account } from '../../../types';
 import { State } from '../../types/state';
 
-const mapStateToProps = ({ environment }: State) => ({
-  environment
+const mapStateToProps = ({ network }: State) => ({
+  network
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
