@@ -24,9 +24,8 @@ import {
   timeout
 } from 'rxjs/operators';
 import { ofType, ActionsObservable } from 'redux-observable';
-import _ from 'lodash';
 import {ApiRx} from '@cennznet/api';
-import types from '../../types';
+import types from '../../../shared/actions';
 import { Asset } from '../../../types';
 import apiRx$ from '../../utils/api';
 import { weiToAmount } from '../../utils/amount';

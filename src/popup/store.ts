@@ -28,13 +28,13 @@ import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['accounts', 'environment']
+  whitelist: ['accounts', 'network']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 const composeEnhancers = composeWithDevTools({
-  realtime: process.env.NODE_ENV === 'development'
+  realtime: process.env.mode === 'development'
 });
 
 const isSignPopup = window.location.search.includes('sign=');

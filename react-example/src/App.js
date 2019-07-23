@@ -44,7 +44,7 @@ class App extends Component {
 
     getSingleSource()
       .then(SingleSource => {
-        SingleSource.environment$.subscribe(environment => {
+        SingleSource.network$.subscribe(environment => {
           configureApi(environment);
           this.setState({ environment });
         });

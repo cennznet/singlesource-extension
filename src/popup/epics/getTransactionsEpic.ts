@@ -19,7 +19,7 @@ import { ofType, ActionsObservable, StateObservable } from 'redux-observable';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
 import _ from 'lodash';
 import { State } from '../types/state';
-import types from '../types';
+import types from '../../shared/actions';
 
 const baseUrl = (env: string) =>
   `https://internal-api-${env}.uncoverexplorer.com/v1`;
@@ -42,8 +42,8 @@ const getTransactionsEpic = (
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       const { address, assetId } = action.payload;
-      const { environment } = state;
-      const url = transactionUrl(environment, address, assetId);
+      const { network } = state;
+      const url = transactionUrl(network, address, assetId);
       return fetch(url)
         .then(response => response.json())
         .then(response => {

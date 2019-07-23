@@ -22,7 +22,7 @@ import {
   getTransactionsSelector,
   isFetchingTransactionsSelector
 } from '../../reducers/transactions';
-import types from '../../types';
+import types from '../../../shared/actions';
 
 const mapStateToProps = (state: State, props: any) => {
   const { address, assetId } = props.params;

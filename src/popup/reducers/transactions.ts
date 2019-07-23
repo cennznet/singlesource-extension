@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { AssetTransactionsState, AssetTransferTx } from '../types/transactions';
 import { State } from '../types/state';
-import types from '../types';
+import types from '../../shared/actions';
 
 type FetchTransactionAction = {
   type: string;

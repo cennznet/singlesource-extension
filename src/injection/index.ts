@@ -20,24 +20,24 @@ import { isEqual } from 'lodash';
 import { Signer } from '@cennznet/api/polkadot.types';
 import signer from './signer';
 import messenger$  from './messenger';
-import { Account, EnvironmentUpdate } from '../types';
+import { Account, NetworkUpdate } from '../types';
 import { ofType } from 'redux-observable';
 import { AccountsUpdate, BgMsgTypes } from '../types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
-const environment$ = new ReplaySubject<string>(1);
+const network$ = new ReplaySubject<string>(1);
 
 messenger$.pipe(
   ofType<AccountsUpdate>(BgMsgTypes.ACCOUNTS),
-  map(msg => msg.accounts),
+  map(msg => msg.payload),
   distinctUntilChanged((x, y) => isEqual(x, y))
 ).subscribe(accounts$);
 
 messenger$.pipe(
-  ofType<EnvironmentUpdate>(BgMsgTypes.ENVIRONMENT),
-  map(msg => msg.environment),
+  ofType<NetworkUpdate>(BgMsgTypes.ENVIRONMENT),
+  map(msg => msg.payload),
   distinctUntilChanged()
-).subscribe(environment$);
+).subscribe(network$);
 
 const SingleSource = {
   get signer(): Signer {
@@ -48,8 +48,8 @@ const SingleSource = {
     return accounts$;
   },
 
-  get environment$(): Observable<string> {
-    return environment$;
+  get network$(): Observable<string> {
+    return network$;
   },
 };
 

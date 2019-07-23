@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-import { AnyAction } from 'redux';
-import _ from 'lodash';
-import types from '../types';
-import { Account } from '../../types';
+import accounts from './accountsReducer';
+import network from './networkReducer';
 
-const initialState: Account[] = [];
-
-const accountsReducer = (state = initialState, action: AnyAction) => {
-  switch (action.type) {
-    case types.GET_ACCOUNTS.SUCCESS:
-      return action.payload;
-    case types.GET_ACCOUNTS.FAIL:
-      return initialState;
-    case types.DISCONNECT:
-      return initialState;
-    default:
-      return state;
-  }
+export default {
+  accounts,
+  network,
 };
-
-export default accountsReducer;

@@ -18,7 +18,7 @@ import { Observable, merge, of, EMPTY } from 'rxjs';
 import { mapTo, switchMap } from 'rxjs/operators';
 import { ofType, ActionsObservable } from 'redux-observable';
 import { REHYDRATE } from 'redux-persist';
-import types from '../types';
+import types from '../../shared/actions';
 import { AnyAction } from 'redux';
 
 const chainEpic = (

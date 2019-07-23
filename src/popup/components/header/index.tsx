@@ -28,12 +28,11 @@ import { Container, Section, SelectedNetwork, Title, Dot } from './style';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { networks } from '../../../config';
-import types from '../../types';
+import types from '../../../shared/actions';
 import { State } from '../../types/state';
-import { Network } from '../../types/network';
 import { Route } from '../../types/route';
-import { Environment } from '../../types/environment';
 import getParameter from '../../utils/getParameter';
+import { Network, NetworkName } from '../../../types';
 
 type P = {
   isConnected: boolean;
@@ -41,7 +40,7 @@ type P = {
   selectedNetwork: Network;
   onAccountDashboard: () => void;
   onDisconnect: () => void;
-  onEnvironment: (environment: Environment) => void;
+  onEnvironment: (network: NetworkName) => void;
   openAbout: () => void;
 };
 
@@ -95,7 +94,7 @@ class Header extends PureComponent<P, S> {
     if (network.nodeUrl === selectedNetwork.nodeUrl) return;
 
     onDisconnect();
-    onEnvironment(network.environment);
+    onEnvironment(network.name);
   };
 
   render() {
@@ -128,7 +127,7 @@ class Header extends PureComponent<P, S> {
                 this.networkRef = ref;
               }}
             >
-              {selectedNetwork.name}
+              {selectedNetwork.displayName}
             </Title>
           </SelectedNetwork>
           <Popover
@@ -149,10 +148,10 @@ class Header extends PureComponent<P, S> {
                 <MenuItem
                   key={key}
                   onClick={() => this.onSelectNetwork(network)}
-                  selected={network.environment === selectedNetwork.environment}
+                  selected={network.name === selectedNetwork.name}
                 >
                   <Dot color={network.color} />
-                  {network.name}
+                  {network.displayName}
                 </MenuItem>
               );
             })}
@@ -193,17 +192,17 @@ class Header extends PureComponent<P, S> {
   }
 }
 
-const mapStateToProps = ({ accounts, route, environment }: State) => ({
+const mapStateToProps = ({ accounts, route, network }: State) => ({
   isConnected: accounts.length > 0,
   route,
-  selectedNetwork: _.find(networks, { environment })
+  selectedNetwork: _.find(networks, { name: network })
 });
 
 const mapDispatchToProps = {
   onAccountDashboard: () => ({ type: types.NAVIGATE, payload: 'dashboard' }),
-  onEnvironment: (environment: Environment) => ({
+  onEnvironment: (network: NetworkName) => ({
     type: types.CHANGE_ENVIRONMENT,
-    payload: environment
+    payload: network
   }),
   onDisconnect: () => ({ type: types.DISCONNECT }),
   openAbout: () => ({ type: types.NAVIGATE, payload: 'about' })

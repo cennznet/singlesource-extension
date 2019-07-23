@@ -15,21 +15,21 @@
  */
 
 import { AnyAction } from 'redux';
-import { Environment } from '../types/environment';
-import types from '../types';
+import actions from '../actions';
+import { NetworkName } from '../../types';
 
-const initialState: Environment = 'RIMU';
+const initialState: NetworkName = 'RIMU';
 
-const environmentReducer = (
+const networkReducer = (
   state = initialState,
   action: AnyAction
-): Environment => {
+): NetworkName => {
   switch (action.type) {
-    case types.CHANGE_ENVIRONMENT:
+    case actions.CHANGE_ENVIRONMENT:
       return action.payload;
     default:
       return state;
   }
 };
 
-export default environmentReducer;
+export default networkReducer;

@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-import { v4 } from 'uuid';
 import { inpageBgDuplexStream } from './messenger';
 import {
   InPageMsgTypes,
-  SignCommand,
   SignPayload, MessageOrigin
 } from '../types';
 
 const signOnSingleSource = (payload: SignPayload): Promise<string> => {
-  const uuid = v4();
-  const message: SignCommand = {
-    payload,
-    type: InPageMsgTypes.SIGN,
-    requestUUID: uuid,
-  };
-  return inpageBgDuplexStream.sendRequest(message, MessageOrigin.BG);
+  return inpageBgDuplexStream.sendRequest(InPageMsgTypes.SIGN, payload, MessageOrigin.BG);
 };
 
 export default signOnSingleSource;

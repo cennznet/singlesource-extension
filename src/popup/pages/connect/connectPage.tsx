@@ -22,12 +22,11 @@ import { CircularProgress } from '@material-ui/core';
 import LZString from 'lz-string';
 import Splash from '../../components/splash';
 import { Content, Title, Subtitle } from './style';
-import { Account } from '../../../types';
-import { Environment } from '../../types/environment';
+import { Account, NetworkName } from '../../../types';
 import P2PSession from '../../utils/p2pSession';
 
 type Props = {
-  environment: Environment;
+  network: NetworkName;
   onConnect: (accounts: Account[]) => void;
 };
 
@@ -68,7 +67,7 @@ class ConnectPage extends PureComponent<Props, State> {
   }
 
   render() {
-    const { environment } = this.props;
+    const { network } = this.props;
     const sessionId = this.peer.uuid;
     const secretKey = this.peer.secretKey;
     const { peerId, error, opened } = this.state;
@@ -83,7 +82,7 @@ class ConnectPage extends PureComponent<Props, State> {
       sessionId,
       secretKey,
       peerId,
-      environment,
+      environment: network,
       type: 'connectRequest'
     });
 

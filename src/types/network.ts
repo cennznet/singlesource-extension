@@ -14,28 +14,11 @@
  * limitations under the License.
  */
 
-import storage from 'redux-persist/lib/storage';
+export type NetworkName = 'PRODUCTION' | 'RIMU' | 'KAURI';
 
-class State {
-  restore = () => {
-    return storage.getItem('persist:root');
-  };
-}
-
-const state = new State();
-
-export const getEnvironment = (): Promise<string> => {
-  return state.restore()
-    .then(JSON.parse)
-    .then(state => state.environment || 'PRODUCTION')
-    .then(JSON.parse);
+export type Network = {
+  name: NetworkName;
+  displayName: string;
+  nodeUrl: string;
+  color: string;
 };
-
-export const getAccounts = (): Promise<any> => {
-  return state.restore()
-    .then(JSON.parse)
-    .then(state => state.accounts || '[]')
-    .then(JSON.parse);
-};
-
-export default state;

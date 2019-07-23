@@ -15,12 +15,11 @@
  */
 
 import { Duplex, Transform } from 'readable-stream';
+import v4 from 'uuid/v4';
 import {
-  InPageMsgTypes,
+  MsgTypes, PayloadOf,
   RequestMessage,
-  RequestResponse,
-  RuntimeMessageOf,
-  RuntimeMessagePayload, RuntimeMessageWith
+  RequestResponse, RuntimeMessage
 } from '../types';
 
 export function tag(tag: string) {
@@ -36,9 +35,9 @@ export function untag(tag: string) {
   return new Transform({
     objectMode: true,
     transform(chunk: any, encoding: string, callback: (error?: Error, data?: any) => void): void {
-      if(chunk[tag]) {
+      if (chunk[tag]) {
         callback(null, chunk[tag]);
-      }else{
+      } else {
         callback();
       }
     }
@@ -46,35 +45,39 @@ export function untag(tag: string) {
 }
 
 export class MultiplexWindowMessageDuplex extends Duplex {
-  constructor(protected window: Window, public tag: string, public untag?: string){
+  constructor(protected window: Window, public tag: string, public untag?: string) {
     super({ objectMode: true });
     window.addEventListener('message', this.eventHandler);
   }
 
-  send<T extends RuntimeMessagePayload<InPageMsgTypes>>(payload: T, dst: string | string[]): void {
-    //origin will be added in content_script
-    this.write({
-      origin: undefined,
+  send<T extends MsgTypes>(type: T, payload: PayloadOf<RuntimeMessage<T, any>>, dst: string | string[]) {
+    const message: RuntimeMessage<T, any> = {
+      origin: undefined, //origin will be added in content_script
       dst,
+      type,
       payload
-    } as RuntimeMessageOf<InPageMsgTypes>)
+    };
+    this.write(message);
   }
 
-  async sendRequest<T extends RuntimeMessagePayload<InPageMsgTypes> & RequestMessage, U >(payload: T, dst: string | string[]): Promise<U> {
-    //origin will be added in content_script
-    this.write({
-      origin: undefined,
+  async sendRequest<T extends MsgTypes, U>(type: T, payload: PayloadOf<RuntimeMessage<T, any>>, dst: string | string[]): Promise<U> {
+    const uuid = v4();
+    const message: RuntimeMessage<T, any> & RequestMessage = {
+      origin: undefined, //origin will be added in content_script
       dst,
-      payload
-    } as RuntimeMessageOf<InPageMsgTypes>);
+      type,
+      payload,
+      requestUUID: uuid
+    };
+    this.write(message);
     return new Promise((resolve, reject) => {
-      const filter = (message: RuntimeMessageWith<RequestResponse<U>>) => {
-        const {payload: {requestUUID}} = message;
-        if (requestUUID === payload.requestUUID) {
-          if (message.payload.isError) {
-            reject(message.payload.result);
-          }else{
-            resolve(message.payload.result as U);
+      const filter = (message: RuntimeMessage<T, RequestResponse<U>> & RequestMessage) => {
+        const { payload, requestUUID } = message;
+        if (requestUUID === uuid) {
+          if (payload.isError) {
+            reject(payload.result);
+          } else {
+            resolve(payload.result as U);
           }
           this.removeListener('data', filter);
         }
@@ -83,8 +86,31 @@ export class MultiplexWindowMessageDuplex extends Duplex {
     });
   }
 
+  // async sendRequest<T extends RuntimeMessagePayload<InPageMsgTypes> & RequestMessage, U >(payload: T, dst: string | string[]): Promise<U> {
+  //   //origin will be added in content_script
+  //   this.write({
+  //     origin: undefined,
+  //     dst,
+  //     payload
+  //   } as RuntimeMessageOf<InPageMsgTypes>);
+  //   return new Promise((resolve, reject) => {
+  //     const filter = (message: RuntimeMessageWith<RequestResponse<U>>) => {
+  //       const {payload: {requestUUID}} = message;
+  //       if (requestUUID === payload.requestUUID) {
+  //         if (message.payload.isError) {
+  //           reject(message.payload.result);
+  //         }else{
+  //           resolve(message.payload.result as U);
+  //         }
+  //         this.removeListener('data', filter);
+  //       }
+  //     };
+  //     this.on('data', filter);
+  //   });
+  // }
+
   _write(chunk: any, encoding: string, callback: (error?: (Error | null)) => void): void {
-    this.window.postMessage({[this.tag]: chunk}, window.origin);
+    this.window.postMessage({ [this.tag]: chunk }, window.origin);
     callback();
   }
 
@@ -96,8 +122,8 @@ export class MultiplexWindowMessageDuplex extends Duplex {
     callback(err);
   }
 
-  protected eventHandler = ({data}: MessageEvent) => {
-    if(data[this.untag]) {
+  protected eventHandler = ({ data }: MessageEvent) => {
+    if (data[this.untag]) {
       this.push(data[this.untag]);
     }
   };

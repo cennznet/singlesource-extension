@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-import { Environment } from './environment';
+import { AnyAction } from 'redux';
+import actions from '../actions';
 
-export type Network = {
-  environment: Environment;
-  name: string;
-  nodeUrl: string;
-  color: string;
+const initialState: Account[] = [];
+
+const accountsReducer = (state = initialState, action: AnyAction) => {
+  switch (action.type) {
+    case actions.GET_ACCOUNTS.SUCCESS:
+      return action.payload;
+    case actions.GET_ACCOUNTS.FAIL:
+      return initialState;
+    case actions.DISCONNECT:
+      return initialState;
+    default:
+      return state;
+  }
 };
+
+export default accountsReducer;

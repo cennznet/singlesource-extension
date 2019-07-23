@@ -16,7 +16,7 @@
 
 import { Duplex } from 'readable-stream';
 import { Runtime } from 'webextension-polyfill-ts';
-import { BgMsgTypes, MessageOrigin, RuntimeMessageOf, RuntimeMessagePayload } from '../types';
+import { BgMsgTypes, MessageOrigin, PayloadOf, RuntimeMessage } from '../types';
 import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
 import logger from '../logger';
 
@@ -39,12 +39,14 @@ export class PortStreams extends Duplex{
     stream.destroy();
   }
 
-  send<T extends RuntimeMessagePayload<BgMsgTypes>>(payload: T, dst: string | string[]) {
-    this.write({
+  send<T extends BgMsgTypes>(type: T, payload: PayloadOf<RuntimeMessage<T, any>>, dst: string | string[]) {
+    const message: RuntimeMessage<T, any> = {
       origin: MessageOrigin.BG,
       dst,
+      type,
       payload
-    } as RuntimeMessageOf<BgMsgTypes>);
+    };
+    this.write(message);
   }
 
   _write(chunk: any, encoding: string, callback: (error?: (Error | null)) => void): void {
@@ -73,7 +75,7 @@ export class PortStreams extends Duplex{
 
 }
 
-function isRuntimeMessage(data: any): data is RuntimeMessageOf<any> {
+function isRuntimeMessage(data: any): data is RuntimeMessage<any, any> {
   logger.debug('isRuntimeMessage', data);
   // FIXME
   return true;

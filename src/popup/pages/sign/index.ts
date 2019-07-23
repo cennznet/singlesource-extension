@@ -17,7 +17,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import SignPage from './signPage';
-import types from '../../types';
+import types from '../../../shared/actions';
 import { State } from '../../types/state';
 
 const mapStateToProps = ({ sign, environment }: State) => ({

@@ -22,10 +22,10 @@ import { Container, Title, Subtitle, Hash } from './style';
 import { CircularProgress } from '@material-ui/core';
 import LZString from 'lz-string';
 import P2PSession from '../../utils/p2pSession';
-import { Environment } from '../../types/environment';
+import { NetworkName } from '../../../types';
 
 type Props = {
-  environment: Environment;
+  network: NetworkName;
   sign: any;
   onSignComplete: (requestUUID: string, hexSignature: string) => void;
 };
@@ -70,7 +70,7 @@ class SignPage extends PureComponent<Props, State> {
     const { peerId, sent } = this.state;
     const sessionId = this.peer.uuid;
     const secretKey = this.peer.secretKey;
-    const { environment, sign } = this.props;
+    const { network, sign } = this.props;
 
     if (sign.hexSignature)
       return (
@@ -92,15 +92,15 @@ class SignPage extends PureComponent<Props, State> {
       sessionId,
       secretKey,
       peerId,
-      environment,
+      environment: network,
       type: 'signRequest'
     });
 
     const encoded = LZString.compressToEncodedURIComponent(request);
-    const link = `singlesource-${environment.toLowerCase()}://?request=${encoded}`;
-    if (peerId) {
-      console.log(link);
-    }
+    // const link = `singlesource-${network.toLowerCase()}://?request=${encoded}`;
+    // if (peerId) {
+    //   console.log(link);
+    // }
 
     return (
       <Container>

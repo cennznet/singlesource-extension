@@ -16,17 +16,12 @@
 
 import { Duplex } from 'readable-stream';
 import { Runtime } from 'webextension-polyfill-ts';
-import {
-  BgMsgTypes,
-  InPageMsgTypes,
-  MessageOrigin, PageToBgMessage,
-  PopupMsgTypes,
-  RuntimeMessageOf,
-  RuntimeMessagePayload
-} from '../types';
+import { MsgTypes, PayloadOf, RuntimeMessage } from '../types';
 import logger from '../logger';
 
-export class RuntimePortDuplex extends Duplex{
+type MessageWithoutOrigin<T extends MsgTypes> = Pick<RuntimeMessage<T, any>, Exclude<keyof RuntimeMessage<T, any>, 'origin'>>;
+
+export class RuntimePortDuplex extends Duplex {
   port: Runtime.Port;
   origin: string;
 
@@ -37,12 +32,25 @@ export class RuntimePortDuplex extends Duplex{
     port.onMessage.addListener(this.eventHandler);
   }
 
-  send<T extends RuntimeMessagePayload<PopupMsgTypes| InPageMsgTypes | BgMsgTypes>>(payload: T, dst: string | string[]) {
-    this.write({
-      origin: this.origin,
-      dst,
-      payload
-    } as RuntimeMessageOf<PopupMsgTypes | InPageMsgTypes | BgMsgTypes>)
+  send<T extends MsgTypes>(message: MessageWithoutOrigin<T>);
+  send<T extends MsgTypes>(type: T, payload: PayloadOf<RuntimeMessage<T, any>>, dst: string | string[]);
+  send<T extends MsgTypes>(
+    arg1: MessageWithoutOrigin<T> | T,
+    arg2?: PayloadOf<RuntimeMessage<T, any>>,
+    arg3?: string | string[]
+  ) {
+    let message: RuntimeMessage<T, any>;
+    if (arg2 && arg3) {
+      message = {
+        origin: this.origin,
+        dst: arg3,
+        type: arg1 as T,
+        payload: arg2
+      };
+    } else {
+      message = Object.assign({}, arg1 as MessageWithoutOrigin<T>, { origin: this.origin });
+    }
+    this.write(message);
   }
 
   _write(chunk: any, encoding: string, callback: (error?: (Error | null)) => void): void {
