@@ -14,22 +14,40 @@
  * limitations under the License.
  */
 
-import { AnyAction } from 'redux';
-import { ActionsObservable, ofType } from 'redux-observable';
-import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import types from '../../../shared/actions';
+import {AnyAction} from 'redux';
+import {Action} from 'redux-actions';
+import {ActionsObservable, combineEpics, ofType, StateObservable} from 'redux-observable';
+import {Observable, of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
+import {BackgroundState} from '../../../background/redux/reducers';
+import actions from '../../../shared/actions';
+import {BgMsgTypes, PeerjsData} from '../../../types';
+import {EpicDependencies} from '../../store';
 
 const connectEpic = (action$: ActionsObservable<AnyAction>) => {
   return action$.pipe(
-    ofType(types.CONNECT),
-    switchMap(({ payload }) => {
+    ofType(actions.CONNECT),
+    switchMap(({payload}) => {
       return of({
-        type: types.GET_ACCOUNTS.SUCCESS,
-        payload
+        type: actions.GET_ACCOUNTS.SUCCESS,
+        payload,
       });
     })
   );
 };
 
-export default connectEpic;
+const peerjsConnectResponseEpic = (
+  action$: ActionsObservable<Action<any>>,
+  state$: StateObservable<BackgroundState>,
+  {runtimeStream}: EpicDependencies
+): Observable<Action<any>> =>
+  action$.pipe(
+    ofType(actions.STREAM_MSG),
+    map(msg => msg.payload),
+    ofType<PeerjsData>(BgMsgTypes.RTC_DATA),
+    map(data => data.payload),
+    ofType('connectResponse'),
+    map(connectResponse => ({type: actions.CONNECT, payload: (connectResponse as any).accounts}))
+  );
+
+export default combineEpics(connectEpic, peerjsConnectResponseEpic);

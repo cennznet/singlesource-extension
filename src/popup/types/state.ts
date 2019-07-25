@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-import { Account, Network, NetworkName } from '../../types';
-import { BalancesState } from './balancesState';
-import { Route } from './route';
-import { AssetTransactionsState } from './transactions';
+import {Account, Network, NetworkName} from '../../types';
+import {PeerjsState} from '../reducers/peerjsReducer';
+import {SignState} from '../reducers/signReducer';
+import {BalancesState} from './balancesState';
+import {Route} from './route';
+import {AssetTransactionsState} from './transactions';
 
 export type State = {
   selectedNetwork: Network;
@@ -25,9 +27,10 @@ export type State = {
   selectedAsset: number;
   accounts: Account[];
   route: Route;
-  sign: Object;
-  loadingStatus: { [key: string]: boolean };
+  sign: SignState;
+  loadingStatus: {[key: string]: boolean};
   network: NetworkName;
   balances: BalancesState;
   transactions: AssetTransactionsState;
+  peerjs: PeerjsState;
 };

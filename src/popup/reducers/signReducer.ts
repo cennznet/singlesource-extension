@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
-import { AnyAction } from 'redux';
-import types from '../../shared/actions';
+import produce from 'immer';
+import {Action, handleActions} from 'redux-actions';
+import actions from '../../shared/actions';
+import {SignCommand, SignPayload} from '../../types';
 
 const initialState = {};
 
-const signReducer = (state = initialState, action: AnyAction) => {
-  switch (action.type) {
-    case types.SIGN.REQUEST:
-      return action.payload;
-    case types.SIGN.SUCCESS:
-      return { ...state, ...action.payload };
-    default:
-      return state;
-  }
+export type SignState = {
+  requestUUID: string;
+  payload: SignPayload;
+  hexSignature?: string;
 };
 
-export default signReducer;
+export default handleActions(
+  {
+    [actions.SIGN.REQUEST]: produce((state: SignState, {payload: signCommand}: Action<SignCommand>) => {
+      state.requestUUID = signCommand.requestUUID;
+      state.payload = signCommand.payload;
+      state.hexSignature = undefined;
+    }),
+    [actions.SIGN.SUCCESS]: produce((state: SignState, {payload}: Action<string>) => {
+      state.hexSignature = payload;
+    }),
+  },
+  initialState
+);

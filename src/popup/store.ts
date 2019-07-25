@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-import { applyMiddleware, createStore } from 'redux';
-import { createEpicMiddleware } from 'redux-observable';
-import { persistReducer, persistStore } from 'redux-persist';
+import {applyMiddleware, createStore} from 'redux';
+import {createEpicMiddleware} from 'redux-observable';
+import {persistReducer, persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { composeWithDevTools } from 'remote-redux-devtools';
-import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
-import { MessageOrigin } from '../types';
+import {composeWithDevTools} from 'remote-redux-devtools';
+import {fromEvent} from 'rxjs';
+import {map} from 'rxjs/operators';
+import actions from '../shared/actions';
+import {RuntimePortDuplex} from '../streamUtils/RuntimePortDuplex';
+import {MessageOrigin} from '../types';
 import rootEpic from './epics';
 import reducers from './reducers';
-import { initConnection } from './utils/messenger';
+import {initConnection} from './utils/messenger';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['accounts', 'network']
+  whitelist: ['accounts', 'network'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 const composeEnhancers = composeWithDevTools({
-  realtime: process.env.mode === 'development'
+  realtime: process.env.mode === 'development',
 });
 
 const isSignPopup = window.location.search.includes('sign=');
@@ -43,14 +46,15 @@ const runtimeStream = initConnection(isSignPopup ? MessageOrigin.SIGN_POPUP : Me
 
 export type EpicDependencies = {runtimeStream: RuntimePortDuplex};
 
-const epicMiddleware = createEpicMiddleware({ dependencies: {runtimeStream} });
+const epicMiddleware = createEpicMiddleware({dependencies: {runtimeStream}});
 const middleware = applyMiddleware(epicMiddleware);
-const store = createStore(persistedReducer, composeEnhancers(
-  middleware
-) as any);
+const store = createStore(persistedReducer, composeEnhancers(middleware) as any);
 
 persistStore(store);
 
 epicMiddleware.run(rootEpic);
+
+const messages$ = fromEvent(runtimeStream, 'data');
+messages$.pipe(map(msg => ({type: actions.STREAM_MSG, payload: msg}))).subscribe(store.dispatch);
 
 export default store;

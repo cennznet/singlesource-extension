@@ -22,57 +22,32 @@ import React, { PureComponent } from 'react';
 import stringify from 'safe-json-stringify';
 import { Account, NetworkName } from '../../../types';
 import Splash from '../../components/splash';
-import P2PSession from '../../utils/p2pSession';
+import { PeerjsState } from '../../reducers/peerjsReducer';
 import { Content, Subtitle, Title } from './style';
 
 type Props = {
   network: NetworkName;
   onConnect: (accounts: Account[]) => void;
-};
-
-type State = {
-  peerId?: string;
-  error?: Error;
-  opened: boolean;
-};
+  initPeerjsConnection(): void;
+} & PeerjsState;
 
 function cliConnectCmd(encoded: string) {
   return `cennz-cli ext:connect ${encoded}`;
 }
 
-class ConnectPage extends PureComponent<Props, State> {
-  private peer: P2PSession;
+class ConnectPage extends PureComponent<Props> {
 
   constructor(props: Props) {
     super(props);
     this.state = { peerId: null, error: null, opened: false };
-    this.connect();
   }
 
-  connect() {
-    if (this.peer) {
-      this.peer.destroy();
-    }
-    this.peer = new P2PSession();
-    this.peer.peerId$.subscribe(peerId => this.setState({ peerId }));
-    this.peer.connection$.subscribe(() => this.setState({ opened: true }));
-    this.peer.data$.subscribe(response => {
-      const { accounts } = response;
-      this.props.onConnect(accounts);
-    });
-    this.peer.error$.subscribe(error => {
-      console.log(error);
-      this.connect();
-    });
+  componentWillMount(): void {
+    this.props.initPeerjsConnection();
   }
 
   render() {
-    const { network } = this.props;
-    const sessionId = this.peer.uuid;
-    const secretKey = this.peer.secretKey;
-    const { peerId, error, opened } = this.state;
-
-    if (error) return <pre>{stringify(error)}</pre>;
+    const { network, peerId, opened, secretKey, sessionId } = this.props;
 
     if (opened) {
       return 'Connection established! Do not close this window.';
@@ -87,10 +62,6 @@ class ConnectPage extends PureComponent<Props, State> {
     });
 
     const encoded = LZString.compressToEncodedURIComponent(request);
-    // const link = `singlesource-${environment.toLowerCase()}://?request=${encoded}`;
-    // if (peerId) {
-    //   console.log(link);
-    // }
 
     return (
       <Content>

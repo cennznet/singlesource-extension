@@ -14,35 +14,53 @@
  * limitations under the License.
  */
 
-import _ from 'lodash';
-import { AnyAction } from 'redux';
-import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
-import { EMPTY, Observable } from 'rxjs';
-import { switchMap, withLatestFrom } from 'rxjs/operators';
-import types from '../../../shared/actions';
-import { State } from '../../types/state';
+import {AnyAction} from 'redux';
+import {Action} from 'redux-actions';
+import {ActionsObservable, combineEpics, ofType, StateObservable} from 'redux-observable';
+import {EMPTY, Observable} from 'rxjs';
+import {map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {BackgroundState} from '../../../background/redux/reducers';
+import actions from '../../../shared/actions';
+import {BgMsgTypes, PeerjsData, SignCommand} from '../../../types';
+import {EpicDependencies} from '../../store';
+import {State} from '../../types/state';
 import getParameter from '../../utils/getParameter';
 
-const signRequestEpic = (
-  action$: ActionsObservable<AnyAction>,
-  state$: StateObservable<State>
-): Observable<any> =>
+const signOnLoadEpic = (action$: ActionsObservable<AnyAction>, state$: StateObservable<State>): Observable<any> =>
   action$.pipe(
-    ofType(types.GET_ACCOUNTS.SUCCESS),
+    ofType(actions.GET_ACCOUNTS.SUCCESS),
     withLatestFrom(state$),
     switchMap(([, state]) => {
-      const { accounts } = state;
-      if (_.isEmpty(accounts)) return EMPTY;
+      const {accounts} = state;
+      if (accounts.length === 0) return EMPTY;
 
-      const request = JSON.parse(getParameter('sign'));
+      const request: SignCommand = JSON.parse(getParameter('sign'));
       if (request) {
-        return [
-          { type: types.SIGN.REQUEST, payload: request },
-          { type: types.NAVIGATE, payload: 'sign' }
-        ];
+        return [{type: actions.SIGN.REQUEST, payload: request}, {type: actions.NAVIGATE, payload: 'sign'}];
       }
 
       return EMPTY;
     })
   );
-export default signRequestEpic;
+
+const signRequestEpic = (action$: ActionsObservable<AnyAction>, state$: StateObservable<State>): Observable<any> =>
+  action$.pipe(
+    ofType<Action<SignCommand>>(actions.SIGN.REQUEST),
+    map(({payload: signCommand}) => ({type: actions.PEERJS_SEND, payload: signCommand.payload}))
+  );
+
+const peerjsSignResponseEpic = (
+  action$: ActionsObservable<Action<any>>,
+  state$: StateObservable<BackgroundState>,
+  {runtimeStream}: EpicDependencies
+): Observable<Action<any>> =>
+  action$.pipe(
+    ofType(actions.STREAM_MSG),
+    map(msg => msg.payload),
+    ofType<PeerjsData>(BgMsgTypes.RTC_DATA),
+    map(data => data.payload),
+    ofType('signResponse'),
+    map(rsp => ({type: actions.SIGN.SUCCESS, payload: (rsp as any).hexSignature}))
+  );
+
+export default combineEpics(signOnLoadEpic, signRequestEpic, peerjsSignResponseEpic);

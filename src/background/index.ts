@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-import { browser } from 'webextension-polyfill-ts';
-import logger from '../logger';
+import {browser} from 'webextension-polyfill-ts';
+import actions from '../shared/actions';
 import setupRedux from './redux';
-import { PortStreams } from './streams';
+import {PortStreams} from './streams';
 
 const streamRouter = new PortStreams();
 
-setupRedux(streamRouter);
+const store = setupRedux(streamRouter);
 
 browser.runtime.onConnect.addListener(port => {
-  logger.debug('browser.runtime.onConnect', port);
+  store.dispatch({type: actions.PORT_CONNECT, payload: port});
 
-  streamRouter.setup(port);
   port.onDisconnect.addListener(() => {
-    logger.debug('port.onDisconnect', port);
-    streamRouter.remove(port);
+    store.dispatch({type: actions.PORT_DISCONNECT, payload: port});
   });
 });
