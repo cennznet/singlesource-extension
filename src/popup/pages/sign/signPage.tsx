@@ -39,31 +39,10 @@ class SignPage extends PureComponent<Props, {}> {
 
   constructor(props: Props) {
     super(props);
-    // this.state = { peerId: null, error: null, sent: false };
-    // this.peer.peerId$.subscribe(peerId => {
-    //   this.setState({ peerId });
-    //   console.log('sign payload', this.props.sign.payload);
-    //   this.peer.send(this.props.sign.payload).then(() => {
-    //     this.setState({ sent: true });
-    //   });
-    // });
-    //
-    // this.peer._data$.subscribe(({ hexSignature }) => {
-    //   const {
-    //     sign: { requestUUID },
-    //     onSignComplete
-    //   } = this.props;
-    //   onSignComplete(requestUUID, hexSignature);
-    //   this.peer.destroy();
-    // });
-    // this.peer.error$.subscribe(error => {
-    //   this.setState({ error });
-    // });
   }
 
   componentWillMount(): void {
     this.props.initPeerjsConnection();
-    // this.props.sendThroughRtc(this.props.sign.payload);
   }
 
   render() {
