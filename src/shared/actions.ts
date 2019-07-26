@@ -22,11 +22,10 @@ const asyncAction = (type: string) => ({
   REQUEST: `${prefix}${type}/REQUEST`,
   SUCCESS: `${prefix}${type}/SUCCESS`,
   FAIL: `${prefix}${type}/FAIL`,
-  CANCEL: `${prefix}${type}/CANCEL`
+  CANCEL: `${prefix}${type}/CANCEL`,
 });
 
 export default {
-  // POST_MESSAGE: action('POST_MESSAGE'),
   INIT: action('INIT'),
   NAVIGATE: action('NAVIGATE'),
   SIGN: asyncAction('SIGN'),
@@ -40,5 +39,14 @@ export default {
   FETCH_TRANSACTIONS: asyncAction('FETCH_TRANSACTIONS'),
 
   CONNECT: action('CONNECT'),
-  DISCONNECT: action('DISCONNECT')
+  DISCONNECT: action('DISCONNECT'),
+
+  PEERJS_INIT: asyncAction('PEERJS_INIT'),
+  PEERJS_CONNECT: action('PEERJS_CONNECT'),
+  PEERJS_SEND: action('PEERJS_SEND'),
+
+  STREAM_MSG: action('STREAM_MSG'),
+
+  PORT_CONNECT: action('PORT_CONNECT'),
+  PORT_DISCONNECT: action('PORT_DISCONNECT'),
 };

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { Duplex } from 'readable-stream';
-import { Runtime } from 'webextension-polyfill-ts';
+import {Duplex} from 'readable-stream';
+import {Runtime} from 'webextension-polyfill-ts';
 import logger from '../logger';
-import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
-import { BgMsgTypes, MessageOrigin, PayloadOf, RuntimeMessage } from '../types';
+import {RuntimePortDuplex} from '../streamUtils/RuntimePortDuplex';
+import {BgMsgTypes, MessageOrigin, PayloadOf, RuntimeMessage} from '../types';
 
-export class PortStreams extends Duplex{
+export class PortStreams extends Duplex {
   streams: RuntimePortDuplex[] = [];
 
-  constructor(){
+  constructor() {
     super({objectMode: true});
   }
 
@@ -44,25 +44,29 @@ export class PortStreams extends Duplex{
       origin: MessageOrigin.BG,
       dst,
       type,
-      payload
+      payload,
     };
     this.write(message);
   }
 
-  _write(chunk: any, encoding: string, callback: (error?: (Error | null)) => void): void {
-    if (isRuntimeMessage(chunk)){
+  _write(chunk: any, encoding: string, callback: (error?: Error | null) => void): void {
+    if (isRuntimeMessage(chunk)) {
       const handle = (dst: string) => {
-        if (dst === MessageOrigin.BG){
+        if (dst === MessageOrigin.BG) {
           this.push(chunk);
         } else {
-          const stream = this.streams.find( stream => stream.port.name.startsWith(dst) );
+          const stream = this.streams.find(stream => stream.port.name.startsWith(dst));
           if (stream) {
-            stream.write(chunk);
+            try {
+              stream.write(chunk);
+            } catch (e) {
+              logger.debug('port write error', e);
+            }
           }
         }
       };
       if (chunk.dst instanceof Array) {
-        chunk.dst.forEach((dst) => handle(dst));
+        chunk.dst.forEach(dst => handle(dst));
       } else {
         handle(chunk.dst);
       }
@@ -70,13 +74,10 @@ export class PortStreams extends Duplex{
     callback();
   }
 
-  _read(size?: number): void {
-  }
-
+  _read(size?: number): void {}
 }
 
 function isRuntimeMessage(data: any): data is RuntimeMessage<any, any> {
-  logger.debug('isRuntimeMessage', data);
   // FIXME
   return true;
 }

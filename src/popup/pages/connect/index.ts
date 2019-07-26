@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
 import types from '../../../shared/actions';
-import { Account } from '../../../types';
-import { State } from '../../types/state';
+import {State} from '../../types/state';
 import ConnectPage from './connectPage';
 
-const mapStateToProps = ({ network }: State) => ({
-  network
+const mapStateToProps = ({network, peerjs}: State) => ({
+  network,
+  ...peerjs,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onConnect: (accounts: Account[]) => {
-    dispatch({ type: types.CONNECT, payload: accounts });
-  }
+  initPeerjsConnection: () => dispatch({type: types.PEERJS_INIT.REQUEST}),
 });
 
 export default connect(

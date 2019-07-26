@@ -14,33 +14,34 @@
  * limitations under the License.
  */
 
-import { Action } from 'redux-actions';
-import { ActionsObservable, ofType } from 'redux-observable';
-import { EMPTY, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import {Action} from 'redux-actions';
+import {ActionsObservable, ofType} from 'redux-observable';
+import {EMPTY, Observable} from 'rxjs';
+import {switchMap, withLatestFrom} from 'rxjs/operators';
 import types from '../../../shared/actions';
-import { ExtrinsicSignSuccess, MessageOrigin, PopupMsgTypes } from '../../../types';
-import { EpicDependencies } from '../../store';
-import { SignSuccessPayload } from '../../types/actions';
+import {MessageOrigin, PopupMsgTypes} from '../../../types';
+import {EpicDependencies} from '../../store';
+import {State} from '../../types/state';
 import getParameter from '../../utils/getParameter';
 
 const signSuccessEpic = (
   action$: ActionsObservable<Action<any>>,
-  _,
-  { runtimeStream }: EpicDependencies
+  state$: Observable<State>,
+  {runtimeStream}: EpicDependencies
 ): Observable<never> =>
   action$.pipe(
-    ofType<Action<SignSuccessPayload>>(types.SIGN.SUCCESS),
-    switchMap(({ payload: { requestUUID, hexSignature } }) => {
+    ofType<Action<string>>(types.SIGN.SUCCESS),
+    withLatestFrom(state$),
+    switchMap(([{payload}, {sign: {requestUUID}}]) => {
       const parent = getParameter('parent') || MessageOrigin.PAGE;
       const message = {
         dst: parent,
         type: PopupMsgTypes.SIGNED,
         requestUUID,
         payload: {
-          result: hexSignature,
+          result: payload,
           isError: false,
-        }
+        },
       };
       runtimeStream.send(message);
       return EMPTY;

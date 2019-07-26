@@ -15,28 +15,33 @@
  */
 
 import produce from 'immer';
-import {Action, handleActions} from 'redux-actions';
+import {handleActions} from 'redux-actions';
 import actions from '../../shared/actions';
-import {SignCommand, SignPayload} from '../../types';
 
-const initialState = {};
+export type PeerjsState = {
+  peerId?: string;
+  secretKey?: string;
+  sessionId?: string;
+  opened: boolean;
+};
 
-export type SignState = {
-  requestUUID: string;
-  payload: SignPayload;
-  hexSignature?: string;
+const initState: PeerjsState = {
+  opened: false,
 };
 
 export default handleActions(
   {
-    [actions.SIGN.REQUEST]: produce((state: SignState, {payload: signCommand}: Action<SignCommand>) => {
-      state.requestUUID = signCommand.requestUUID;
-      state.payload = signCommand.payload;
-      state.hexSignature = undefined;
+    [actions.PEERJS_INIT.REQUEST]: produce((state: PeerjsState) => {
+      state.opened = false;
     }),
-    [actions.SIGN.SUCCESS]: produce((state: SignState, {payload}: Action<string>) => {
-      state.hexSignature = payload;
+    [actions.PEERJS_INIT.SUCCESS]: produce((state: PeerjsState, {payload: {peerId, secretKey, sessionId}}) => {
+      state.peerId = peerId;
+      state.secretKey = secretKey;
+      state.sessionId = sessionId;
+    }),
+    [actions.PEERJS_CONNECT]: produce((state: PeerjsState) => {
+      state.opened = true;
     }),
   },
-  initialState
+  initState
 );

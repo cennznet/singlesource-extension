@@ -15,24 +15,37 @@
  */
 
 import {Action} from 'redux-actions';
-import {ActionsObservable, ofType, StateObservable} from 'redux-observable';
+import {ActionsObservable, combineEpics, ofType, StateObservable} from 'redux-observable';
 import {EMPTY, Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
-import {InPageMsgTypes, SignCommand} from '../../../types';
-import openPanel from '../../openPanel';
+import {Runtime} from 'webextension-polyfill-ts';
+import actions from '../../../shared/actions';
+import {EpicDependencies} from '../index';
 import {BackgroundState} from '../reducers';
 
-const signEpic = (
+const portConnectEpic = (
   action$: ActionsObservable<Action<any>>,
   state$: StateObservable<BackgroundState>,
-  {router}
+  {router}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
-    ofType<SignCommand>(InPageMsgTypes.SIGN),
-    switchMap((message: SignCommand) => {
-      openPanel({noheader: true, sign: message});
+    ofType<Action<Runtime.Port>>(actions.PORT_CONNECT),
+    switchMap(({payload}) => {
+      router.setup(payload);
+      return EMPTY;
+    })
+  );
+const portDisconnectEpic = (
+  action$: ActionsObservable<Action<any>>,
+  state$: StateObservable<BackgroundState>,
+  {router}: EpicDependencies
+): Observable<Action<any>> =>
+  action$.pipe(
+    ofType<Action<Runtime.Port>>(actions.PORT_DISCONNECT),
+    switchMap(({payload}) => {
+      router.remove(payload);
       return EMPTY;
     })
   );
 
-export default signEpic;
+export default combineEpics(portConnectEpic, portDisconnectEpic);

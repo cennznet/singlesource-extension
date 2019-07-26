@@ -14,39 +14,7 @@
  * limitations under the License.
  */
 
-import { Account } from './account';
-
-export type MsgTypes = InPageMsgTypes | BgMsgTypes | PopupMsgTypes;
-
-export enum InPageMsgTypes {
-  INIT = 'init',
-  SIGN = 'sign'
-}
-
-export enum BgMsgTypes {
-  ACCOUNTS = 'accounts',
-  ENVIRONMENT = 'environment'
-}
-
-export enum PopupMsgTypes {
-  INIT = 'init',
-  SIGNED = 'signed',
-  SIGNED_FAILED = 'signed_failed'
-}
-
-export enum MessageOrigin {
-  BG = 'ss:bg',
-  PAGE = 'ss:page',
-  CONTENT = 'ss:content',
-  SIGN_POPUP = 'ss:sign',
-  TOOLBAR = 'ss:toolbar'
-}
-
-// export interface RuntimeMessagePayload<T extends InPageMsgTypes | BgMsgTypes | PopupMsgTypes> {
-//   type: T;
-// }
-
-export type PayloadOf<T> = T extends RuntimeMessage<any, infer R> ? R : never;
+import {Account} from './account';
 
 export interface RuntimeMessage<T extends InPageMsgTypes | BgMsgTypes | PopupMsgTypes, U> {
   origin: string;
@@ -56,13 +24,15 @@ export interface RuntimeMessage<T extends InPageMsgTypes | BgMsgTypes | PopupMsg
   requestUUID?: string;
 }
 
-// export interface RuntimeMessageWith<T> {
-//   origin: string;
-//   dst: string | string[];
-//   payload: T;
-// }
+export type PayloadOf<T> = T extends RuntimeMessage<any, infer R> ? R : never;
 
-export type ToBgMessage = InitCommand | SignCommand;
+export enum MessageOrigin {
+  BG = 'ss:bg',
+  PAGE = 'ss:page',
+  CONTENT = 'ss:content',
+  SIGN_POPUP = 'ss:sign',
+  TOOLBAR = 'ss:toolbar',
+}
 
 export interface RequestMessage {
   requestUUID: string;
@@ -82,6 +52,24 @@ export interface FailedResponse {
 
 export type RequestResponse<T> = SuccessResponse<T> | FailedResponse;
 
+export type MsgTypes = InPageMsgTypes | BgMsgTypes | PopupMsgTypes;
+
+export enum InPageMsgTypes {
+  INIT = 'init',
+  SIGN = 'sign',
+}
+
+export enum BgMsgTypes {
+  ACCOUNTS = 'accounts',
+  ENVIRONMENT = 'environment',
+  PEERJS_READY = 'bg:peerjs-ready',
+  PEERJS_ERROR = 'bg:peerjs-error',
+  RTC_OPEN = 'bg:rtc-open',
+  RTC_DATA = 'bg:rtc-data',
+  RTC_ERROR = 'bg:rtc-error',
+  RTC_CLOSED = 'bg:rtc-closed',
+}
+
 export type InitCommand = RuntimeMessage<InPageMsgTypes.INIT, never>;
 
 export interface SignPayload {
@@ -97,30 +85,44 @@ export interface SignPayload {
 
 export type SignCommand = RuntimeMessage<InPageMsgTypes.SIGN, SignPayload> & RequestMessage;
 
-export type BgToPageMessage = AccountsUpdate | NetworkUpdate;
-export type SignToPageMessage = ExtrinsicSignResponse;
-
-export type ToPageMessages = BgToPageMessage | SignToPageMessage;
-
 export type AccountsUpdate = RuntimeMessage<BgMsgTypes.ACCOUNTS, Account[]>;
 
 export type NetworkUpdate = RuntimeMessage<BgMsgTypes.ENVIRONMENT, string>;
 
-// export interface EnvironmentUpdate {
-//   type: BgMsgTypes.ENVIRONMENT;
-//   environment: string;
-// }
+export type PeerjsReady = RuntimeMessage<BgMsgTypes.PEERJS_READY, PeerjsReadyPayload>;
+export type PeerjsError = RuntimeMessage<BgMsgTypes.PEERJS_ERROR, Error>;
+export type PeerjsOpen = RuntimeMessage<BgMsgTypes.RTC_OPEN, {}>;
+export type PeerjsData = RuntimeMessage<BgMsgTypes.RTC_DATA, {accounts: Account[]} | {}>;
+
+// =================================  Popup Messages ==========================================
+export enum PopupMsgTypes {
+  SIGNED = 'popup:signed',
+  SIGNED_FAILED = 'popup:signed_failed',
+  PEERJS_INIT = 'popup:peerjs-init',
+  PEERJS_SEND = 'popup:peerjs-send',
+}
 
 export type ExtrinsicSignSuccess = RuntimeMessage<PopupMsgTypes.SIGNED, SuccessResponse<string>> & RequestMessage;
 
-// export interface ExtrinsicSignSuccess extends SuccessResponse<string> {
-//   type: PopupMsgTypes.SIGNED;
-// }
-
 export type ExtrinsicSignFailed = RuntimeMessage<PopupMsgTypes.SIGNED_FAILED, FailedResponse> & RequestMessage;
 
-// export interface ExtrinsicSignFailed extends FailedResponse {
-//   type: PopupMsgTypes.SIGNED_FAILED;
-// }
-
 export type ExtrinsicSignResponse = ExtrinsicSignSuccess | ExtrinsicSignFailed;
+
+export type PeerjsInit = RuntimeMessage<PopupMsgTypes.PEERJS_INIT, {}>;
+
+export type PeerjsSend = RuntimeMessage<PopupMsgTypes.PEERJS_SEND, any>;
+
+export interface PeerjsReadyPayload {
+  peerId: string;
+  secretKey: string;
+  sessionId: string;
+}
+
+// aggregate types
+export type BgToPageMessage = AccountsUpdate | NetworkUpdate;
+
+export type SignToPageMessage = ExtrinsicSignResponse;
+
+export type ToPageMessages = BgToPageMessage | SignToPageMessage;
+
+export type ToBgMessage = InitCommand | SignCommand;

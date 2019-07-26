@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import sharedReducers from '../../shared/reducers';
 import balances from './balancesReducer';
+import peerjs from './peerjsReducer';
 import route from './routeReducer';
 import selectedAccount from './selectedAccountReducer';
 import sign from './signReducer';
@@ -28,7 +29,8 @@ const reducers = combineReducers({
   sign,
   selectedAccount,
   balances,
-  transactions
+  transactions,
+  peerjs,
 });
 
 export default reducers;

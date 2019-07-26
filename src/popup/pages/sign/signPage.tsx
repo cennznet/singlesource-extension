@@ -21,56 +21,32 @@ import QRCode from 'qrcode.react';
 import React, { PureComponent } from 'react';
 import stringify from 'safe-json-stringify';
 import { NetworkName } from '../../../types';
-import P2PSession from '../../utils/p2pSession';
+import { PeerjsState } from '../../reducers/peerjsReducer';
+import { SignState } from '../../reducers/signReducer';
 import { Container, Hash, Subtitle, Title } from './style';
 
 type Props = {
   network: NetworkName;
-  sign: any;
-  onSignComplete: (requestUUID: string, hexSignature: string) => void;
-};
-
-type State = {
-  peerId?: string;
-  sent: boolean;
-  error?: Error;
-};
+  sign: SignState;
+  initPeerjsConnection(): void;
+} & PeerjsState;
 
 function cliSignCmd(encoded: string) {
   return `cennz-cli ext:sign ${encoded}`;
 }
 
-class SignPage extends PureComponent<Props, State> {
-  peer = new P2PSession();
+class SignPage extends PureComponent<Props, {}> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { peerId: null, error: null, sent: false };
-    this.peer.peerId$.subscribe(peerId => {
-      this.setState({ peerId });
-      this.peer.send(this.props.sign.payload).then(() => {
-        this.setState({ sent: true });
-      });
-    });
+  }
 
-    this.peer.data$.subscribe(({ hexSignature }) => {
-      const {
-        sign: { requestUUID },
-        onSignComplete
-      } = this.props;
-      onSignComplete(requestUUID, hexSignature);
-      this.peer.destroy();
-    });
-    this.peer.error$.subscribe(error => {
-      this.setState({ error });
-    });
+  componentWillMount(): void {
+    this.props.initPeerjsConnection();
   }
 
   render() {
-    const { peerId, sent } = this.state;
-    const sessionId = this.peer.uuid;
-    const secretKey = this.peer.secretKey;
-    const { network, sign } = this.props;
+    const { peerId, opened, sessionId, secretKey, network, sign } = this.props;
 
     if (sign.hexSignature) {
       return (
@@ -81,7 +57,7 @@ class SignPage extends PureComponent<Props, State> {
       );
     }
 
-    if (!!sent) {
+    if (opened) {
       return (
         <Container>
           <Title>Do not close the modal</Title>
@@ -99,10 +75,6 @@ class SignPage extends PureComponent<Props, State> {
     });
 
     const encoded = LZString.compressToEncodedURIComponent(request);
-    // const link = `singlesource-${network.toLowerCase()}://?request=${encoded}`;
-    // if (peerId) {
-    //   console.log(link);
-    // }
 
     return (
       <Container>

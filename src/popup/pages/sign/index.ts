@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
 import types from '../../../shared/actions';
-import { State } from '../../types/state';
+import {State} from '../../types/state';
 import SignPage from './signPage';
 
-const mapStateToProps = ({ sign, environment }: State) => ({
+const mapStateToProps = ({sign, network, peerjs}: State) => ({
   sign,
-  environment
+  network,
+  ...peerjs,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onSignComplete: (requestUUID: string, hexSignature: string) =>
-    dispatch({
-      type: types.SIGN.SUCCESS,
-      payload: { requestUUID, hexSignature }
-    }),
-  onSignFail: (requestUUID: string, error: Error) =>
-    dispatch({ type: types.SIGN.FAIL, payload: { requestUUID, error } })
+  initPeerjsConnection: () => dispatch({type: types.PEERJS_INIT.REQUEST}),
 });
 
 export default connect(

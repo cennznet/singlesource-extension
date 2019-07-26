@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { combineEpics } from 'redux-observable';
+import {combineEpics} from 'redux-observable';
 import accounts from './accounts';
 import apiEpic from './apiEpic';
 import balance from './balance';
@@ -22,13 +22,12 @@ import chainEpic from './chainEpic';
 import getTransactions from './getTransactionsEpic';
 import initEpic from './initEpic';
 import mockEpics from './mock';
-// import messengerEpic from './messengerEpic';
 import navigateEpic from './navigateEpic';
+import peerjsEpic from './peerjsEpic';
 import signEpics from './sign';
 
 const epics: any[] = [
   chainEpic,
-  // messengerEpic,
   navigateEpic,
   initEpic,
   ...accounts,
@@ -36,7 +35,8 @@ const epics: any[] = [
   ...balance,
   apiEpic,
   ...mockEpics,
-  getTransactions
+  getTransactions,
+  peerjsEpic,
 ];
 
 const rootEpic = (...args: any[]) => combineEpics(...epics)(...args);

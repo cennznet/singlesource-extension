@@ -14,33 +14,34 @@
  * limitations under the License.
  */
 
-import { Action } from 'redux-actions';
-import { ActionsObservable, ofType } from 'redux-observable';
-import { EMPTY, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import {Action} from 'redux-actions';
+import {ActionsObservable, ofType} from 'redux-observable';
+import {EMPTY, Observable} from 'rxjs';
+import {switchMap, withLatestFrom} from 'rxjs/operators';
 import types from '../../../shared/actions';
-import { MessageOrigin, PopupMsgTypes } from '../../../types';
-import { EpicDependencies } from '../../store';
-import { SignFailPayload } from '../../types/actions';
+import {MessageOrigin, PopupMsgTypes} from '../../../types';
+import {EpicDependencies} from '../../store';
+import {State} from '../../types/state';
 import getParameter from '../../utils/getParameter';
 
 const signFailEpic = (
   action$: ActionsObservable<Action<any>>,
-  _,
-  { runtimeStream }: EpicDependencies
+  state$: Observable<State>,
+  {runtimeStream}: EpicDependencies
 ): Observable<never> =>
   action$.pipe(
-    ofType<Action<SignFailPayload>>(types.SIGN.FAIL),
-    switchMap(({ payload: { requestUUID, error } }) => {
+    ofType<Action<Error>>(types.SIGN.FAIL),
+    withLatestFrom(state$),
+    switchMap(([{payload}, {sign: {requestUUID}}]) => {
       const parent = getParameter('parent') || MessageOrigin.PAGE;
       const message = {
         dst: parent,
         type: PopupMsgTypes.SIGNED,
         requestUUID,
         payload: {
-          result: error,
+          result: payload,
           isError: true,
-        }
+        },
       };
       runtimeStream.send(message);
       return EMPTY;
