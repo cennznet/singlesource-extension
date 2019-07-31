@@ -36,7 +36,6 @@ const enableRequestEpic = (
       if (_.isEmpty(accounts)) return EMPTY;
 
       const request: EnableCommand = JSON.parse(getParameter('enable'));
-      console.log('request==>', request);
       if (request) {
         return [
           { type: actions.ENABLE.REQUEST, payload: request },

@@ -30,7 +30,6 @@ export type EnableState = {
 export default handleActions(
   {
     [actions.ENABLE.REQUEST]: produce((state: EnableState, {payload: enableCommand}: Action<EnableCommand>) => {
-      console.log('enableCommand==>', enableCommand);
       state.domain = enableCommand.payload.domain;
       state.originPage = enableCommand.origin;
       state.requestUUID = enableCommand.requestUUID;

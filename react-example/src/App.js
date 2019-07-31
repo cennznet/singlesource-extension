@@ -43,7 +43,6 @@ class App extends Component {
     };
 
     getSingleSource()
-    //   .then(SingleSource => SingleSource.enable())
       .then(SingleSource => {
         SingleSource.network$.subscribe(environment => {
           configureApi(environment);
