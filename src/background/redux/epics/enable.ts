@@ -21,6 +21,7 @@ import { switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { EpicDependencies } from '..';
 import {BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
+import {MessageOrigin} from '../../../types/message';
 import openEnablePanel from '../../panel/openEnablePanel';
 import {getPageInfoFromRouter} from '../../utils/getDomainFromRouter';
 import { BackgroundState } from '../reducers';
@@ -51,6 +52,7 @@ const enableEpic  = (
         });
       } else {
         router.write({
+          origin:MessageOrigin.BG, 
           dst: origin,
           type: BgMsgTypes.ENABLE_RESPONSE,
           requestUUID: enableCommand.requestUUID,
