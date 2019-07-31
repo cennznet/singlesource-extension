@@ -32,9 +32,19 @@ const enableRequestEpic = (
   action$.pipe(
     ofType(actions.ENABLE.PERMANENT),
     withLatestFrom(state$),
-    switchMap(([, state]) => {
-      runtimeStream.send(BgMsgTypes.ENABLE_RESPONSE, true, state.enable.originPage);
-      runtimeStream.send(PopupMsgTypes.ADD_ENABLED_DOMAIN, state.enable, MessageOrigin.BG);
+    switchMap(([, {enable}]) => {
+      const {requestUUID, originPage} = enable;
+      
+      runtimeStream.send({
+        dst: originPage,
+        type: BgMsgTypes.ENABLE_RESPONSE,
+        requestUUID,
+        payload: {
+          result: true,
+          isError: false,
+        }
+      });
+      runtimeStream.send(PopupMsgTypes.ADD_ENABLED_DOMAIN, enable, MessageOrigin.BG);
       window.close();
       return EMPTY;
     })

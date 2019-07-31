@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
 import { EMPTY, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, withLatestFrom } from 'rxjs/operators';
 import actions from '../../../shared/actions';
 import {BgMsgTypes, MessageOrigin} from '../../../types/message';
 import { EpicDependencies } from '../../store';
@@ -31,8 +31,17 @@ const enableRequestEpic = (
 ): Observable<any> =>
   action$.pipe(
     ofType(actions.ENABLE.ONCE),
-    switchMap(() => {
-      runtimeStream.send(BgMsgTypes.ENABLE_RESPONSE, true, MessageOrigin.PAGE);
+    withLatestFrom(state$),
+    switchMap(([, {enable: {requestUUID, originPage}}]) => {
+      runtimeStream.send({
+        dst: originPage,
+        type: BgMsgTypes.ENABLE_RESPONSE,
+        requestUUID,
+        payload: {
+          result: true,
+          isError: false,
+        }
+      });
       window.close();
       return EMPTY;
     })

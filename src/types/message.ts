@@ -79,7 +79,7 @@ export interface EnablePayload {
   domain: string
 }
 
-export type EnableCommand = RuntimeMessage<InPageMsgTypes.ENABLE, EnablePayload>;
+export type EnableCommand = RuntimeMessage<InPageMsgTypes.ENABLE, EnablePayload>  & RequestMessage;
 
 export interface SignPayload {
   extrinsic: string;

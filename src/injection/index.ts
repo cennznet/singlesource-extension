@@ -27,7 +27,6 @@ import { InjectedWindow, ISingleSource } from './types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
 const network$ = new ReplaySubject<string>(1);
-const isEnable$ = new ReplaySubject<boolean>(1);
 
 declare var window: InjectedWindow;
 
@@ -36,12 +35,6 @@ messenger$.pipe(
   map(msg => msg.payload),
   distinctUntilChanged((x, y) => isEqual(x, y))
 ).subscribe(accounts$);
-
-messenger$.pipe(
-  ofType<IsEnableUpdate>(BgMsgTypes.ENABLE_RESPONSE),
-  map(msg => msg.payload),
-  distinctUntilChanged((x, y) => isEqual(x, y))
-).subscribe(isEnable$);
 
 messenger$.pipe(
   ofType<NetworkUpdate>(BgMsgTypes.ENVIRONMENT),
@@ -63,10 +56,7 @@ const SingleSource = {
   },
 
   async enable(): Promise<ISingleSource> {
-    inpageBgDuplexStream.send(InPageMsgTypes.ENABLE, {}, MessageOrigin.BG);
-
-    const isEnable = await isEnable$.pipe(take(1)).toPromise();
-    console.log('isEnable===>', isEnable);
+    const isEnable = await inpageBgDuplexStream.sendRequest(InPageMsgTypes.ENABLE, {}, MessageOrigin.BG);
     if (isEnable) {
       return SingleSource;
     }

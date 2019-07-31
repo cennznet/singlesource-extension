@@ -36,12 +36,30 @@ const enableEpic  = (
     switchMap( ([enableCommand, state])=>{
       const {origin} = enableCommand;
       const domain = getPageInfoFromRouter(router, origin);
+      // enableCommand.payload.domain = domain
 
       if (!state.enabledDomains.includes(domain)) {
         // open panel and ask for the accessPermission of this url
-        openEnablePanel({ noheader: true, enable: enableCommand });
+        openEnablePanel({
+          noheader: true,
+          enable: {
+            ...enableCommand,
+            payload: {
+              ...enableCommand.payload,
+              domain
+            }
+          }
+        });
       } else {
-        router.send(BgMsgTypes.ENABLE_RESPONSE, true, origin);
+        router.write({
+          dst: origin,
+          type: BgMsgTypes.ENABLE_RESPONSE,
+          requestUUID: enableCommand.requestUUID,
+          payload: {
+            result: true,
+            isError: false,
+          }
+        })
       }
 
       return EMPTY;

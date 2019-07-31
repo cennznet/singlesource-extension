@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
 import { EMPTY, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, withLatestFrom } from 'rxjs/operators';
 import actions from '../../../shared/actions';
 import { BgMsgTypes, MessageOrigin } from '../../../types';
 import { EpicDependencies } from '../../store';
@@ -31,8 +31,17 @@ const enableRejectEpic = (
 ): Observable<any> =>
   action$.pipe(
     ofType(actions.ENABLE.REJECT),
-    switchMap(() => {
-      runtimeStream.send(BgMsgTypes.ENABLE_RESPONSE, false, MessageOrigin.PAGE);
+    withLatestFrom(state$),
+    switchMap(([,{enable: {requestUUID, originPage}}]) => {
+      runtimeStream.send({
+        dst: originPage,
+        type: BgMsgTypes.ENABLE_RESPONSE,
+        requestUUID,
+        payload: {
+          result: false,
+          isError: false,
+        }
+      });
       // close enable popup
       window.close();
       return EMPTY;
