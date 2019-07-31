@@ -36,7 +36,6 @@ const enableEpic  = (
     switchMap( ([enableCommand, state])=>{
       const {origin} = enableCommand;
       const domain = getPageInfoFromRouter(router, origin);
-      // enableCommand.payload.domain = domain
 
       if (!state.enabledDomains.includes(domain)) {
         // open panel and ask for the accessPermission of this url
