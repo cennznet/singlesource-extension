@@ -63,9 +63,7 @@ const SingleSource = {
   },
 
   async enable(): Promise<ISingleSource> {
-    const domain = window.location.hostname
-    
-    inpageBgDuplexStream.send(InPageMsgTypes.ENABLE, {domain}, MessageOrigin.BG);
+    inpageBgDuplexStream.send(InPageMsgTypes.ENABLE, {}, MessageOrigin.BG);
 
     const isEnable = await isEnable$.pipe(take(1)).toPromise();
     console.log('isEnable===>', isEnable);

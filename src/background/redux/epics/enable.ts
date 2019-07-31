@@ -22,6 +22,7 @@ import { switchMap, withLatestFrom } from 'rxjs/operators';
 import { EpicDependencies } from '..';
 import {BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
 import openEnablePanel from '../../panel/openEnablePanel';
+import {getPageInfoFromRouter} from '../../utils/getDomainFromRouter';
 import { BackgroundState } from '../reducers';
 
 const enableEpic  = (
@@ -33,8 +34,8 @@ const enableEpic  = (
     ofType<EnableCommand>(InPageMsgTypes.ENABLE),
     withLatestFrom(state$),
     switchMap( ([enableCommand, state])=>{
-      const {origin, payload} = enableCommand;
-      const {domain} = payload;
+      const {origin} = enableCommand;
+      const domain = getPageInfoFromRouter(router, origin);
 
       if (!state.enabledDomains.includes(domain)) {
         // open panel and ask for the accessPermission of this url
