@@ -18,14 +18,16 @@ import { Signer } from '@cennznet/api/polkadot.types';
 import { isEqual } from 'lodash';
 import { ofType } from 'redux-observable';
 import { Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
-import { Account, AccountsUpdate, BgMsgTypes, NetworkUpdate } from '../types';
-import messenger$  from './messenger';
+import { distinctUntilChanged, map, take } from 'rxjs/operators';
+
+import { Account, AccountsUpdate, BgMsgTypes, InPageMsgTypes, IsEnableUpdate, MessageOrigin, NetworkUpdate } from '../types';
+import messenger$, { inpageBgDuplexStream }  from './messenger';
 import signer from './signer';
-import { InjectedWindow } from './types';
+import { InjectedWindow, ISingleSource } from './types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
 const network$ = new ReplaySubject<string>(1);
+const isEnable$ = new ReplaySubject<boolean>(1);
 
 declare var window: InjectedWindow;
 
@@ -34,6 +36,12 @@ messenger$.pipe(
   map(msg => msg.payload),
   distinctUntilChanged((x, y) => isEqual(x, y))
 ).subscribe(accounts$);
+
+messenger$.pipe(
+  ofType<IsEnableUpdate>(BgMsgTypes.ENABLE_RESPONSE),
+  map(msg => msg.payload),
+  distinctUntilChanged((x, y) => isEqual(x, y))
+).subscribe(isEnable$);
 
 messenger$.pipe(
   ofType<NetworkUpdate>(BgMsgTypes.ENVIRONMENT),
@@ -53,6 +61,20 @@ const SingleSource = {
   get network$(): Observable<string> {
     return network$;
   },
+
+  async enable(): Promise<ISingleSource> {
+    const domain = window.location.hostname
+    
+    inpageBgDuplexStream.send(InPageMsgTypes.ENABLE, {domain}, MessageOrigin.BG);
+
+    const isEnable = await isEnable$.pipe(take(1)).toPromise();
+    console.log('isEnable===>', isEnable);
+    if (isEnable) {
+      return SingleSource;
+    }
+    
+    return null;
+  }
 };
 
 window.SingleSource = SingleSource;

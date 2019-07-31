@@ -19,10 +19,20 @@ import { browser } from 'webextension-polyfill-ts';
 import { RuntimePortDuplex } from '../../streamUtils/RuntimePortDuplex';
 import { MessageOrigin } from '../../types';
 
-export function initConnection(origin: MessageOrigin.TOOLBAR | MessageOrigin.SIGN_POPUP) {
+export function initConnection(windowLocation: Location) {
+  let origin = MessageOrigin.TOOLBAR;
+
+  if (windowLocation.search.includes('sign=')) {
+    origin = MessageOrigin.SIGN_POPUP;
+  } else if (windowLocation.search.includes('enable=')) {
+    origin = MessageOrigin.ENABLE_POPUP;
+  }
+
   try {
-    const port = browser.runtime.connect(null,
-      { name: `${origin}/${v4()}` });
+    const port = browser.runtime.connect(
+      null,
+      { name: `${origin}/${v4()}` }
+    );
     return new RuntimePortDuplex(port);
   } catch (error) {
     // fails when running as webpage

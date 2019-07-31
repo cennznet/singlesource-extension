@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-import queryString from 'query-string';
-import { browser } from 'webextension-polyfill-ts';
-import { SignCommand } from '../types';
+import produce from 'immer';
+import { Action, handleActions } from 'redux-actions';
+import actions from '../../shared/actions';
+import { EnableCommand } from '../../types';
 
-export default (params: { noheader: boolean; sign: SignCommand }) => {
+const initialState = {};
 
-  const paramQuery = queryString.stringify({noheader: params.noheader, sign: JSON.stringify(params.sign)});
-  const url = browser.extension.getURL(`index.html?${paramQuery}`);
-  browser.windows.create({
-    url,
-    type: 'panel',
-    width: 400,
-    height: 600,
-    top: 200,
-    left: 500
-  });
+export type EnableState = {
+  domain: string;
+  originPage: string;
 };
+
+export default handleActions(
+  {
+    [actions.ENABLE.REQUEST]: produce((state: EnableState, {payload: enableCommand}: Action<EnableCommand>) => {
+      state.domain = enableCommand.payload.domain;
+      state.originPage = enableCommand.origin;
+    }),
+  },
+  initialState
+);

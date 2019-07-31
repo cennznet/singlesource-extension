@@ -39,7 +39,7 @@ export default (streamRouter: PortStreams) => {
   const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['accounts', 'network'],
+    whitelist: ['accounts', 'network', 'enabledDomains']
   };
 
   const persistedReducer = persistReducer(persistConfig, reducers);

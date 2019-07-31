@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-import accounts from './accountsReducer';
-import enabledDomains from './enabledDomainsReducer'
-import network from './networkReducer';
-
-export default {
-  accounts,
-  enabledDomains,
-  network
-};
+export enum AccessPermission {
+  PERMANENT = 'permanent',
+  ONCE = 'once',
+  REJECT = 'reject'
+}

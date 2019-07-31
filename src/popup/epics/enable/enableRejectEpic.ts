@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
+import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
-import { EMPTY } from 'rxjs';
-import { switchMap, withLatestFrom } from 'rxjs/operators';
-import types from '../../../shared/actions';
+import { EMPTY, Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import actions from '../../../shared/actions';
 import { BgMsgTypes, MessageOrigin } from '../../../types';
 import { EpicDependencies } from '../../store';
 import { State } from '../../types/state';
 
-const onAccountsChangeEpic = (
+const enableRejectEpic = (
   action$: ActionsObservable<AnyAction>,
   state$: StateObservable<State>,
   {runtimeStream}: EpicDependencies
-) =>
+): Observable<any> =>
   action$.pipe(
-    ofType(types.GET_ACCOUNTS.SUCCESS, types.DISCONNECT),
-    withLatestFrom(state$),
-    switchMap(([, state]) => {
-      const { accounts } = state;
-      runtimeStream.send(BgMsgTypes.ACCOUNTS, accounts, [MessageOrigin.PAGE, MessageOrigin.BG]);
+    ofType(actions.ENABLE.REJECT),
+    switchMap(() => {
+      runtimeStream.send(BgMsgTypes.ENABLE_RESPONSE, false, MessageOrigin.PAGE);
+      // close enable popup
+      window.close();
       return EMPTY;
     })
   );
 
-export default onAccountsChangeEpic;
+export default enableRejectEpic;

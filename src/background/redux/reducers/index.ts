@@ -22,6 +22,7 @@ import sharedReducers from '../../../shared/reducers';
 export type BackgroundState = {
   accounts: Account[];
   network: string;
+  enabledDomains: string[];
 };
 
 const reducers = combineReducers({

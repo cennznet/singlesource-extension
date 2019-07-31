@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-import accounts from './accountsReducer';
-import enabledDomains from './enabledDomainsReducer'
-import network from './networkReducer';
+import queryString from 'query-string';
+import { browser } from 'webextension-polyfill-ts';
+import {EnableCommand} from '../../types/message';
 
-export default {
-  accounts,
-  enabledDomains,
-  network
+export default (params: { noheader: boolean; enable: EnableCommand }) => {
+  const paramQuery = queryString.stringify({noheader: params.noheader, enable: JSON.stringify(params.enable)});
+  const url = browser.extension.getURL(`index.html?${paramQuery}`);
+  browser.windows.create({
+    url,
+    type: 'panel',
+    width: 400,
+    height: 600,
+    top: 200,
+    left: 500
+  });
 };

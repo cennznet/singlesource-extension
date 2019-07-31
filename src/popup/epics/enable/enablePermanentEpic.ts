@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
+import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
-import types from '../../../shared/actions';
-import { BgMsgTypes, MessageOrigin } from '../../../types';
+import actions from '../../../shared/actions';
+import {BgMsgTypes, MessageOrigin, PopupMsgTypes} from '../../../types/message';
 import { EpicDependencies } from '../../store';
-import { State } from '../../types/state';
+import {State} from '../../types/state';
 
-const onAccountsChangeEpic = (
+const enableRequestEpic = (
   action$: ActionsObservable<AnyAction>,
   state$: StateObservable<State>,
   {runtimeStream}: EpicDependencies
-) =>
+): Observable<any> =>
   action$.pipe(
-    ofType(types.GET_ACCOUNTS.SUCCESS, types.DISCONNECT),
+    ofType(actions.ENABLE.PERMANENT),
     withLatestFrom(state$),
     switchMap(([, state]) => {
-      const { accounts } = state;
-      runtimeStream.send(BgMsgTypes.ACCOUNTS, accounts, [MessageOrigin.PAGE, MessageOrigin.BG]);
+      runtimeStream.send(BgMsgTypes.ENABLE_RESPONSE, true, state.enable.originPage);
+      runtimeStream.send(PopupMsgTypes.ADD_ENABLED_DOMAIN, state.enable, MessageOrigin.BG);
+      window.close();
       return EMPTY;
     })
   );
 
-export default onAccountsChangeEpic;
+export default enableRequestEpic;

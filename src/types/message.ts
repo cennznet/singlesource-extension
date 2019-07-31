@@ -31,6 +31,7 @@ export enum MessageOrigin {
   PAGE = 'ss:page',
   CONTENT = 'ss:content',
   SIGN_POPUP = 'ss:sign',
+  ENABLE_POPUP = 'ss:enable',
   TOOLBAR = 'ss:toolbar',
 }
 
@@ -57,6 +58,7 @@ export type MsgTypes = InPageMsgTypes | BgMsgTypes | PopupMsgTypes;
 export enum InPageMsgTypes {
   INIT = 'init',
   SIGN = 'sign',
+  ENABLE = 'enable'
 }
 
 export enum BgMsgTypes {
@@ -68,9 +70,16 @@ export enum BgMsgTypes {
   RTC_DATA = 'bg:rtc-data',
   RTC_ERROR = 'bg:rtc-error',
   RTC_CLOSED = 'bg:rtc-closed',
+  ENABLE_RESPONSE = 'enable-response'
 }
 
 export type InitCommand = RuntimeMessage<InPageMsgTypes.INIT, never>;
+
+export interface EnablePayload {
+  domain: string
+}
+
+export type EnableCommand = RuntimeMessage<InPageMsgTypes.ENABLE, EnablePayload>;
 
 export interface SignPayload {
   extrinsic: string;
@@ -86,8 +95,8 @@ export interface SignPayload {
 export type SignCommand = RuntimeMessage<InPageMsgTypes.SIGN, SignPayload> & RequestMessage;
 
 export type AccountsUpdate = RuntimeMessage<BgMsgTypes.ACCOUNTS, Account[]>;
-
 export type NetworkUpdate = RuntimeMessage<BgMsgTypes.ENVIRONMENT, string>;
+export type IsEnableUpdate = RuntimeMessage<BgMsgTypes.ENABLE_RESPONSE, boolean>;
 
 export type PeerjsReady = RuntimeMessage<BgMsgTypes.PEERJS_READY, PeerjsReadyPayload>;
 export type PeerjsError = RuntimeMessage<BgMsgTypes.PEERJS_ERROR, Error>;
@@ -100,6 +109,7 @@ export enum PopupMsgTypes {
   SIGNED_FAILED = 'popup:signed_failed',
   PEERJS_INIT = 'popup:peerjs-init',
   PEERJS_SEND = 'popup:peerjs-send',
+  ADD_ENABLED_DOMAIN = 'popup:add-enabled-domain'
 }
 
 export type ExtrinsicSignSuccess = RuntimeMessage<PopupMsgTypes.SIGNED, SuccessResponse<string>> & RequestMessage;
@@ -119,7 +129,7 @@ export interface PeerjsReadyPayload {
 }
 
 // aggregate types
-export type BgToPageMessage = AccountsUpdate | NetworkUpdate;
+export type BgToPageMessage = AccountsUpdate | NetworkUpdate | IsEnableUpdate;
 
 export type SignToPageMessage = ExtrinsicSignResponse;
 

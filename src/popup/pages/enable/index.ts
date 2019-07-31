@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-import accounts from './accountsReducer';
-import enabledDomains from './enabledDomainsReducer'
-import network from './networkReducer';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
+import actions from '../../../shared/actions';
+import {State} from '../../types/state';
+import EnablePage from './enablePage';
 
-export default {
-  accounts,
-  enabledDomains,
-  network
-};
+const mapStateToProps = ({enable}: State) => ({
+  domain: enable.domain
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  onCancel: () => dispatch({type: actions.ENABLE.REJECT}),
+  onEnableOnce: () => dispatch({type: actions.ENABLE.ONCE}),
+  onEnable: (domain: string) => dispatch({type: actions.ENABLE.PERMANENT})
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EnablePage);

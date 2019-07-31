@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-import accounts from './accountsReducer';
-import enabledDomains from './enabledDomainsReducer'
-import network from './networkReducer';
+import produce from 'immer';
+import {Action, handleActions} from 'redux-actions';
+import { EnableState } from '../../popup/reducers/enableReducer';
+import {PopupMsgTypes} from '../../types';
 
-export default {
-  accounts,
-  enabledDomains,
-  network
-};
+const initialState: string[] = [];
+
+export default handleActions(
+  {
+    [PopupMsgTypes.ADD_ENABLED_DOMAIN]: produce((state: string[], {payload: domainState}: Action<EnableState>) => {
+      state.push(domainState.domain);
+    })
+  },
+  initialState
+);
