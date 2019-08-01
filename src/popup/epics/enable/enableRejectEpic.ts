@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
 import { EMPTY, Observable } from 'rxjs';
