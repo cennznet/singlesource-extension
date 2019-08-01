@@ -61,7 +61,8 @@ const SingleSource = {
       return SingleSource;
     }
     
-    return null;
+    // An error will be thrown from the request promise above if the authorization is rejected. Code should never reach here
+    throw new Error('Authorization failed');
   }
 };
 

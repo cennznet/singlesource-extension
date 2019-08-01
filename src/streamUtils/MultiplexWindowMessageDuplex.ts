@@ -75,7 +75,7 @@ export class MultiplexWindowMessageDuplex extends Duplex {
         const { payload, requestUUID } = message;
         if (requestUUID === uuid) {
           if (payload.isError) {
-            reject(payload.result);
+            reject(new Error(payload.result));
           } else {
             resolve(payload.result as U);
           }

@@ -38,8 +38,8 @@ const enableRejectEpic = (
         type: BgMsgTypes.ENABLE_RESPONSE,
         requestUUID,
         payload: {
-          result: false,
-          isError: false,
+          result:  'User rejected the authorization request',
+          isError: true,
         }
       });
       // close enable popup

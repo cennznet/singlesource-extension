@@ -22,7 +22,7 @@ import { switchMap, withLatestFrom } from 'rxjs/operators';
 import { EpicDependencies } from '..';
 import {BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
 import {MessageOrigin} from '../../../types/message';
-import openEnablePanel from '../../panel/openEnablePanel';
+import openPanel from '../../panel/openPanel';
 import {getPageInfoFromRouter} from '../../utils/getDomainFromRouter';
 import { BackgroundState } from '../reducers';
 
@@ -44,10 +44,7 @@ const enableEpic  = (
         enable.payload.domain = domain;
 
         // open panel and ask for the accessPermission of this url
-        openEnablePanel({
-          noheader: true,
-          enable
-        });
+        openPanel(true, enable, 'enable');
       } else {
         router.write({
           origin:MessageOrigin.BG, 

@@ -20,7 +20,7 @@ import {EMPTY, Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {EpicDependencies} from '..';
 import {InPageMsgTypes, SignCommand} from '../../../types';
-import openSignPanel from '../../panel/openSignPanel';
+import openPanel from '../../panel/openPanel';
 import {BackgroundState} from '../reducers';
 
 const signEpic = (
@@ -31,7 +31,7 @@ const signEpic = (
   action$.pipe(
     ofType<SignCommand>(InPageMsgTypes.SIGN),
     switchMap((message: SignCommand) => {
-      openSignPanel({noheader: true, sign: message});
+      openPanel(true, message, 'sign');
       return EMPTY;
     })
   );

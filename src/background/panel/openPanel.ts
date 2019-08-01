@@ -16,10 +16,9 @@
 
 import queryString from 'query-string';
 import { browser } from 'webextension-polyfill-ts';
-import {EnableCommand} from '../../types/message';
 
-export default (params: { noheader: boolean; enable: EnableCommand }) => {
-  const paramQuery = queryString.stringify({noheader: params.noheader, enable: JSON.stringify(params.enable)});
+export default (noheader: boolean, param: any, pageName: string) => {
+  const paramQuery = queryString.stringify({noheader: noheader, [pageName]: JSON.stringify(param)});
   const url = browser.extension.getURL(`index.html?${paramQuery}`);
   browser.windows.create({
     url,

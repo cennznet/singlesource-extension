@@ -47,7 +47,7 @@ export interface SuccessResponse<T> {
 
 export interface FailedResponse {
   // requestUUID: string;
-  result: Error;
+  result: string;
   isError: true;
 }
 
