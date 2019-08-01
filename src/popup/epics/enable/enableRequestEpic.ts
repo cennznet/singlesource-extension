@@ -14,28 +14,37 @@
  * limitations under the License.
  */
 
+import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
-import types from '../../../shared/actions';
-import { BgMsgTypes, MessageOrigin } from '../../../types';
-import { EpicDependencies } from '../../store';
+import actions from '../../../shared/actions';
+import {EnableCommand} from '../../../types/message';
 import { State } from '../../types/state';
+import getParameter from '../../utils/getParameter';
 
-const onAccountsChangeEpic = (
+const enableRequestEpic = (
   action$: ActionsObservable<AnyAction>,
-  state$: StateObservable<State>,
-  {runtimeStream}: EpicDependencies
-) =>
+  state$: StateObservable<State>
+): Observable<any> =>
   action$.pipe(
-    ofType(types.GET_ACCOUNTS.SUCCESS, types.DISCONNECT),
+    ofType(actions.GET_ACCOUNTS.SUCCESS),
     withLatestFrom(state$),
     switchMap(([, state]) => {
       const { accounts } = state;
-      runtimeStream.send(BgMsgTypes.ACCOUNTS, accounts, [MessageOrigin.PAGE, MessageOrigin.BG]);
+      if (_.isEmpty(accounts)) return EMPTY;
+
+      const request: EnableCommand = JSON.parse(getParameter('enable'));
+      if (request) {
+        return [
+          { type: actions.ENABLE.REQUEST, payload: request },
+          { type: actions.NAVIGATE, payload: 'enable' }
+        ];
+      }
+
       return EMPTY;
     })
   );
 
-export default onAccountsChangeEpic;
+export default enableRequestEpic;

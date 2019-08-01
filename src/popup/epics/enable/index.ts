@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-import accounts from './accountsReducer';
-import enabledDomains from './enabledDomainsReducer'
-import network from './networkReducer';
+import enableOnceEpic from './enableOnceEpic';
+import enablePermanentEpic from './enablePermanentEpic';
+import enableRejectEpic from './enableRejectEpic';
+import enableRequestEpic from './enableRequestEpic';
 
-export default {
-  accounts,
-  enabledDomains,
-  network
-};
+export default [enableRejectEpic, enableRequestEpic, enableOnceEpic, enablePermanentEpic];

@@ -16,11 +16,15 @@
 
 import queryString from 'query-string';
 import { browser } from 'webextension-polyfill-ts';
-import { SignCommand } from '../types';
 
-export default (params: { noheader: boolean; sign: SignCommand }) => {
+export type Param = {
+  noheader: boolean;
+  pageName: string;
+  [key: string]: string|number|boolean;
+};
 
-  const paramQuery = queryString.stringify({noheader: params.noheader, sign: JSON.stringify(params.sign)});
+export default (param: Param) => {
+  const paramQuery = queryString.stringify(param);
   const url = browser.extension.getURL(`index.html?${paramQuery}`);
   browser.windows.create({
     url,

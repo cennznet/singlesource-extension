@@ -25,13 +25,24 @@ const asyncAction = (type: string) => ({
   CANCEL: `${prefix}${type}/CANCEL`,
 });
 
+const enableAction = (type: string) => ({
+  REQUEST: `${prefix}${type}/REQUEST`,
+  ONCE: `${prefix}${type}/ONCE`,
+  PERMANENT: `${prefix}${type}/PERMANENT`,
+  REJECT: `${prefix}${type}/REJECT`
+});
+
 export default {
   INIT: action('INIT'),
   NAVIGATE: action('NAVIGATE'),
   SIGN: asyncAction('SIGN'),
   GET_ACCOUNTS: asyncAction('GET_ACCOUNTS'),
 
+  ENABLE: enableAction('ENABLE'),
+  ADD_ENABLED_DOMAIN: action('ADD_ENABLED_DOMAIN'),
+  
   SELECT_ACCOUNT: action('SELECT_ACCOUNT'),
+
 
   CHANGE_ENVIRONMENT: action('CHANGE_ENVIRONMENT'),
 

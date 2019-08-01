@@ -19,6 +19,7 @@ import accounts from './accounts';
 import apiEpic from './apiEpic';
 import balance from './balance';
 import chainEpic from './chainEpic';
+import enableEpic from './enable';
 import getTransactions from './getTransactionsEpic';
 import initEpic from './initEpic';
 import mockEpics from './mock';
@@ -37,6 +38,7 @@ const epics: any[] = [
   ...mockEpics,
   getTransactions,
   peerjsEpic,
+  ...enableEpic
 ];
 
 const rootEpic = (...args: any[]) => combineEpics(...epics)(...args);

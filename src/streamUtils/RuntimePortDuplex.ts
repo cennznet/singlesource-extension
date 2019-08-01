@@ -40,7 +40,7 @@ export class RuntimePortDuplex extends Duplex {
     arg3?: string | string[]
   ) {
     let message: RuntimeMessage<T, any>;
-    if (arg2 && arg3) {
+    if ((arg2 !== null && arg2 !== undefined) && arg3) {
       message = {
         origin: this.origin,
         dst: arg3,

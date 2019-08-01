@@ -17,6 +17,7 @@
 import {combineReducers} from 'redux';
 import sharedReducers from '../../shared/reducers';
 import balances from './balancesReducer';
+import enable from './enableReducer';
 import peerjs from './peerjsReducer';
 import route from './routeReducer';
 import selectedAccount from './selectedAccountReducer';
@@ -31,6 +32,7 @@ const reducers = combineReducers({
   balances,
   transactions,
   peerjs,
+  enable
 });
 
 export default reducers;

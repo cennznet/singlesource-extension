@@ -18,11 +18,12 @@ import { Signer } from '@cennznet/api/polkadot.types';
 import { isEqual } from 'lodash';
 import { ofType } from 'redux-observable';
 import { Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
-import { Account, AccountsUpdate, BgMsgTypes, NetworkUpdate } from '../types';
-import messenger$  from './messenger';
+import { distinctUntilChanged, map, take } from 'rxjs/operators';
+
+import { Account, AccountsUpdate, BgMsgTypes, InPageMsgTypes, IsEnableUpdate, MessageOrigin, NetworkUpdate } from '../types';
+import messenger$, { inpageBgDuplexStream }  from './messenger';
 import signer from './signer';
-import { InjectedWindow } from './types';
+import { InjectedWindow, ISingleSource } from './types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
 const network$ = new ReplaySubject<string>(1);
@@ -53,6 +54,16 @@ const SingleSource = {
   get network$(): Observable<string> {
     return network$;
   },
+
+  async enable(): Promise<ISingleSource> {
+    const isEnable = await inpageBgDuplexStream.sendRequest(InPageMsgTypes.ENABLE, {}, MessageOrigin.BG);
+    if (isEnable) {
+      return SingleSource;
+    }
+    
+    // An error will be thrown from the request promise above if the authorization is rejected. Code should never reach here
+    throw new Error('Authorization failed');
+  }
 };
 
 window.SingleSource = SingleSource;

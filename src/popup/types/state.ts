@@ -15,6 +15,7 @@
  */
 
 import {Account, Network, NetworkName} from '../../types';
+import {EnableState} from '../reducers/enableReducer';
 import {PeerjsState} from '../reducers/peerjsReducer';
 import {SignState} from '../reducers/signReducer';
 import {BalancesState} from './balancesState';
@@ -33,4 +34,5 @@ export type State = {
   balances: BalancesState;
   transactions: AssetTransactionsState;
   peerjs: PeerjsState;
+  enable: EnableState;
 };

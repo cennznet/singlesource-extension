@@ -40,9 +40,7 @@ const composeEnhancers = composeWithDevTools({
   realtime: process.env.mode === 'development',
 });
 
-const isSignPopup = window.location.search.includes('sign=');
-
-const runtimeStream = initConnection(isSignPopup ? MessageOrigin.SIGN_POPUP : MessageOrigin.TOOLBAR);
+const runtimeStream = initConnection(window.location);
 
 export type EpicDependencies = {runtimeStream: RuntimePortDuplex};
 

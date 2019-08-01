@@ -21,6 +21,7 @@ import AboutPage from './pages/about';
 import AccountDetails from './pages/account-details';
 import Connect from './pages/connect';
 import Dashboard from './pages/dashboard';
+import Enable from './pages/enable';
 import Sign from './pages/sign';
 import TransactionsPage from './pages/transactions';
 import Router from './router';
@@ -47,6 +48,7 @@ const App = () => (
           dashboard: Dashboard,
           accountDetails: AccountDetails,
           sign: Sign,
+          enable: Enable,
           about: AboutPage,
           transactions: TransactionsPage
         }}
