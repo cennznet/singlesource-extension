@@ -44,7 +44,11 @@ const enableEpic  = (
         enable.payload.domain = domain;
 
         // open panel and ask for the accessPermission of this url
-        openPanel(true, enable, 'enable');
+        openPanel({
+          noheader: true, 
+          pageName: 'enable',
+          enable: JSON.stringify(enable)
+        });
       } else {
         router.write({
           origin:MessageOrigin.BG, 

@@ -17,8 +17,14 @@
 import queryString from 'query-string';
 import { browser } from 'webextension-polyfill-ts';
 
-export default (noheader: boolean, param: any, pageName: string) => {
-  const paramQuery = queryString.stringify({noheader: noheader, [pageName]: JSON.stringify(param)});
+export type Param = {
+  noheader: boolean;
+  pageName: string;
+  [key: string]: string|number|boolean;
+};
+
+export default (param: Param) => {
+  const paramQuery = queryString.stringify(param);
   const url = browser.extension.getURL(`index.html?${paramQuery}`);
   browser.windows.create({
     url,
