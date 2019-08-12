@@ -18,15 +18,17 @@ import { Signer } from '@cennznet/api/polkadot.types';
 import { isEqual } from 'lodash';
 import { ofType } from 'redux-observable';
 import { Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, map, take } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 import { Account, AccountsUpdate, BgMsgTypes, InPageMsgTypes, MessageOrigin, NetworkUpdate } from '../types';
 import messenger$, { inpageBgDuplexStream }  from './messenger';
 import signer from './signer';
-import {InjectedWindow, SingleSourceInjected} from './types';
+import { InjectedWindow, SingleSourceInjected } from './types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
+let accounts: Account[] = null;
 const network$ = new ReplaySubject<string>(1);
+let network: string = null;
 
 declare var window: InjectedWindow;
 
@@ -34,13 +36,19 @@ messenger$.pipe(
   ofType<AccountsUpdate>(BgMsgTypes.ACCOUNTS),
   map(msg => msg.payload),
   distinctUntilChanged((x, y) => isEqual(x, y))
-).subscribe(accounts$);
+).subscribe(accountsUpdated => {
+  accounts = accountsUpdated;
+  accounts$.next(accountsUpdated);
+});
 
 messenger$.pipe(
   ofType<NetworkUpdate>(BgMsgTypes.ENVIRONMENT),
   map(msg => msg.payload),
   distinctUntilChanged()
-).subscribe(network$);
+).subscribe(networkUpdated => {
+  network = networkUpdated;
+  network$.next(networkUpdated);
+});
 
 const singleSourceInjected = {
   get signer(): Signer {
@@ -51,16 +59,16 @@ const singleSourceInjected = {
     return accounts$;
   },
 
-  get accounts(): Promise<Account[]> {
-    return accounts$.toPromise(); 
+  get accounts(): Account[] | null {
+    return accounts;
   },
 
   get network$(): Observable<string> {
     return network$;
   },
 
-  get network(): Promise<string> {
-    return network$.toPromise();
+  get network(): string | null {
+    return network;
   },
 };
 

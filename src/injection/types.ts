@@ -31,19 +31,19 @@ export interface CennznetInjectedCreator {
 export interface CennznetInjected {
   signer: Signer;
   accounts$: Observable<Account[]>;
-  accounts: Promise<Account[]>;
-  network: Promise<string>;
+  accounts: Account[] | null;
   network$: Observable<string>;
+  network: string | null;
 }
 
 export interface SingleSourceInjected extends CennznetInjected {
-  //isConnected$: Observable<boolean>;
-  //isConnected: boolean;
+  // isConnected$: Observable<boolean>;
+  // isConnected: boolean;
   // isPaired$: Observable<boolean>;
   // isPaired: boolean;
-  // pairedDevice$: {
+  // pairedDevice$: Observable<{
   //   version: string;
   //   id: string;
-  // };
+  // }>;
   // pairedDevice;
 }
