@@ -1,3 +1,4 @@
+import {SingleSourceInjected} from './types';
 /**
  * Copyright 2019 Centrality Investments Limited
  *
@@ -19,12 +20,30 @@ import {Observable} from 'rxjs';
 import {Account} from '../types';
 
 export interface InjectedWindow extends Window {
-  SingleSource: ISingleSource,
+  cennznetInjected: {[key: string]: CennznetInjectedCreator}
 }
 
-export interface ISingleSource {
+export interface CennznetInjectedCreator {
+  version: string;
+  enable: () => Promise<CennznetInjected>;
+}
+
+export interface CennznetInjected {
   signer: Signer;
   accounts$: Observable<Account[]>;
+  accounts: Promise<Account[]>;
+  network: Promise<string>;
   network$: Observable<string>;
-  enable: () => Promise<ISingleSource>;
+}
+
+export interface SingleSourceInjected extends CennznetInjected {
+  //isConnected$: Observable<boolean>;
+  //isConnected: boolean;
+  // isPaired$: Observable<boolean>;
+  // isPaired: boolean;
+  // pairedDevice$: {
+  //   version: string;
+  //   id: string;
+  // };
+  // pairedDevice;
 }
