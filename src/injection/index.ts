@@ -26,9 +26,9 @@ import signer from './signer';
 import { InjectedWindow, SingleSourceInjected } from './types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
-let accounts: Account[] = null;
 const network$ = new ReplaySubject<string>(1);
-let network: string = null;
+let accounts: Account[];
+let network: string;
 
 declare var window: InjectedWindow;
 
@@ -59,7 +59,7 @@ const singleSourceInjected = {
     return accounts$;
   },
 
-  get accounts(): Account[] | null {
+  get accounts(): Account[] {
     return accounts;
   },
 
@@ -67,7 +67,7 @@ const singleSourceInjected = {
     return network$;
   },
 
-  get network(): string | null {
+  get network(): string {
     return network;
   },
 };

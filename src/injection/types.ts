@@ -31,9 +31,9 @@ export interface CennznetInjectedCreator {
 export interface CennznetInjected {
   signer: Signer;
   accounts$: Observable<Account[]>;
-  accounts: Account[] | null;
+  accounts: Account[];
   network$: Observable<string>;
-  network: string | null;
+  network: string;
 }
 
 export interface SingleSourceInjected extends CennznetInjected {
