@@ -55,8 +55,8 @@ export class PortStreams extends Duplex {
         if (dst === MessageOrigin.BG) {
           this.push(chunk);
         } else {
-          const stream = this.streams.find(stream => stream.port.name.startsWith(dst));
-          if (stream) {
+          const streams = this.streams.filter(stream => stream.port.name.startsWith(dst));
+          for (const stream of streams) {
             try {
               stream.write(chunk);
             } catch (e) {
