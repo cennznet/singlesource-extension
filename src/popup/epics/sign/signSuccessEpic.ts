@@ -19,7 +19,7 @@ import {ActionsObservable, ofType} from 'redux-observable';
 import {EMPTY, Observable} from 'rxjs';
 import {switchMap, withLatestFrom} from 'rxjs/operators';
 import types from '../../../shared/actions';
-import {MessageOrigin, PopupMsgTypes} from '../../../types';
+import {MessageOrigin, PopupMsgTypes, SignCommand} from '../../../types';
 import {EpicDependencies} from '../../store';
 import {State} from '../../types/state';
 import getParameter from '../../utils/getParameter';
@@ -33,7 +33,8 @@ const signSuccessEpic = (
     ofType<Action<string>>(types.SIGN.SUCCESS),
     withLatestFrom(state$),
     switchMap(([{payload}, {sign: {requestUUID}}]) => {
-      const parent = getParameter('parent') || MessageOrigin.PAGE;
+      const request: SignCommand = JSON.parse(getParameter('sign'));
+      const parent = request.origin || MessageOrigin.PAGE;
       const message = {
         dst: parent,
         type: PopupMsgTypes.SIGNED,
