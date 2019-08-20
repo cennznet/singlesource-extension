@@ -18,15 +18,17 @@ import { Signer } from '@cennznet/api/polkadot.types';
 import { isEqual } from 'lodash';
 import { ofType } from 'redux-observable';
 import { Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, map, take } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
-import { Account, AccountsUpdate, BgMsgTypes, InPageMsgTypes, IsEnableUpdate, MessageOrigin, NetworkUpdate } from '../types';
+import { Account, AccountsUpdate, BgMsgTypes, InPageMsgTypes, MessageOrigin, NetworkUpdate } from '../types';
 import messenger$, { inpageBgDuplexStream }  from './messenger';
 import signer from './signer';
-import { InjectedWindow, ISingleSource } from './types';
+import { InjectedWindow, SingleSourceInjected } from './types';
 
 const accounts$ = new ReplaySubject<Account[]>(1);
 const network$ = new ReplaySubject<string>(1);
+let accounts: Account[];
+let network: string;
 
 declare var window: InjectedWindow;
 
@@ -34,15 +36,21 @@ messenger$.pipe(
   ofType<AccountsUpdate>(BgMsgTypes.ACCOUNTS),
   map(msg => msg.payload),
   distinctUntilChanged((x, y) => isEqual(x, y))
-).subscribe(accounts$);
+).subscribe(accountsUpdated => {
+  accounts = accountsUpdated;
+  accounts$.next(accountsUpdated);
+});
 
 messenger$.pipe(
   ofType<NetworkUpdate>(BgMsgTypes.ENVIRONMENT),
   map(msg => msg.payload),
   distinctUntilChanged()
-).subscribe(network$);
+).subscribe(networkUpdated => {
+  network = networkUpdated;
+  network$.next(networkUpdated);
+});
 
-const SingleSource = {
+const singleSourceInjected = {
   get signer(): Signer {
     return signer;
   },
@@ -51,21 +59,34 @@ const SingleSource = {
     return accounts$;
   },
 
+  get accounts(): Account[] {
+    return accounts;
+  },
+
   get network$(): Observable<string> {
     return network$;
   },
 
-  async enable(): Promise<ISingleSource> {
+  get network(): string {
+    return network;
+  },
+};
+
+window.cennznetInjected = window.cennznetInjected || {};
+
+// tslint:disable-next-line: no-string-literal
+window.cennznetInjected['singleSource'] = {
+  get version(): string {
+    return 'semver';
+  },
+
+  async enable(): Promise<SingleSourceInjected> {
     const isEnable = await inpageBgDuplexStream.sendRequest(InPageMsgTypes.ENABLE, {}, MessageOrigin.BG);
     if (isEnable) {
-      return SingleSource;
+      return singleSourceInjected;
     }
     
     // An error will be thrown from the request promise above if the authorization is rejected. Code should never reach here
     throw new Error('Authorization failed');
   }
 };
-
-window.SingleSource = SingleSource;
-
-export default SingleSource;

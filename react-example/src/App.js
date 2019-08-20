@@ -16,13 +16,13 @@ const decodeAddress = (addr: string) => {
   Address.decodeAddress(addr);
 };
 
-const getSingleSource = () => {
+const getCennznetInjected = () => {
   return new Promise((resolve, reject) => {
     window.addEventListener('load', () => {
-      if (window.SingleSource) {
-        resolve(window.SingleSource);
+      if (window.cennznetInjected) {
+        resolve(window.cennznetInjected);
       } else {
-        reject(new Error('SingleSource not found!'));
+        reject(new Error('cennznetInjected not found!'));
       }
     });
   });
@@ -42,7 +42,10 @@ class App extends Component {
       sender: null
     };
 
-    getSingleSource()
+    getCennznetInjected()
+      .then(cennznetInjected => {
+          return cennznetInjected['singleSource'].enable()
+      })
       .then(SingleSource => {
         SingleSource.network$.subscribe(environment => {
           configureApi(environment);
