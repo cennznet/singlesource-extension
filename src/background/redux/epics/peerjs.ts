@@ -17,10 +17,10 @@
 import {Action} from 'redux-actions';
 import {ActionsObservable, combineEpics, ofType, StateObservable} from 'redux-observable';
 import {EMPTY, merge, Observable} from 'rxjs';
-import {mergeMap, switchMap, tap} from 'rxjs/operators';
+import {map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {Runtime} from 'webextension-polyfill-ts';
 import actions from '../../../shared/actions';
-import {BgMsgTypes, PeerjsInit, PeerjsSend, PopupMsgTypes} from '../../../types';
+import {BgMsgTypes, EpicMessageOrigin, PeerjsInit, PeerjsSend, PopupMsgTypes} from '../../../types';
 import P2PSession from '../../utils/p2pSession';
 import {EpicDependencies} from '../index';
 import {BackgroundState} from '../reducers';
@@ -35,6 +35,8 @@ const peerjsInitEpic = (
   {router}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
+    ofType(EpicMessageOrigin.POPUP),
+    map(msg => msg.payload),
     ofType<PeerjsInit>(PopupMsgTypes.PEERJS_INIT),
     mergeMap(({origin}) => {
       const peer = new P2PSession();
@@ -120,6 +122,8 @@ const peerjsSendQueueEpic = (
   {router}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
+    ofType(EpicMessageOrigin.POPUP),
+    map(msg => msg.payload),
     ofType<PeerjsSend>(PopupMsgTypes.PEERJS_SEND),
     mergeMap(({payload}) => {
       messageQueue.push(payload);

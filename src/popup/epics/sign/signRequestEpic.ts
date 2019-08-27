@@ -21,7 +21,7 @@ import {EMPTY, Observable} from 'rxjs';
 import {map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {BackgroundState} from '../../../background/redux/reducers';
 import actions from '../../../shared/actions';
-import {BgMsgTypes, PeerjsData, SignCommand} from '../../../types';
+import {BgMsgTypes, EpicMessageOrigin, PeerjsData, SignCommand} from '../../../types';
 import {EpicDependencies} from '../../store';
 import {State} from '../../types/state';
 import getParameter from '../../utils/getParameter';
@@ -56,6 +56,8 @@ const peerjsSignResponseEpic = (
 ): Observable<Action<any>> =>
   action$.pipe(
     ofType(actions.STREAM_MSG),
+    map(msg => msg.payload),
+    ofType(EpicMessageOrigin.BG),
     map(msg => msg.payload),
     ofType<PeerjsData>(BgMsgTypes.RTC_DATA),
     map(data => data.payload),

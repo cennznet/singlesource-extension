@@ -43,7 +43,8 @@ const enableRequestEpic = (
           isError: false,
         }
       });
-      runtimeStream.send(PopupMsgTypes.ADD_ENABLED_DOMAIN, enable, MessageOrigin.BG);
+      runtimeStream.send(PopupMsgTypes.ENABLED_PORT_ADD, runtimeStream.port.name, MessageOrigin.BG)
+      runtimeStream.send(PopupMsgTypes.ADD_ENABLED_DOMAIN, enable, MessageOrigin.BG); // TODO:
       window.close();
       return EMPTY;
     })

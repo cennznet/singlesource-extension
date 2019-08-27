@@ -16,7 +16,7 @@
 
 import {Account} from './account';
 
-export interface RuntimeMessage<T extends InPageMsgTypes | BgMsgTypes | PopupMsgTypes, U> {
+export interface RuntimeMessage<T extends MsgTypes, U> {
   origin: string;
   dst: string | string[];
   type: T;
@@ -32,7 +32,7 @@ export enum MessageOrigin {
   CONTENT = 'ss:content',
   SIGN_POPUP = 'ss:sign',
   ENABLE_POPUP = 'ss:enable',
-  TOOLBAR = 'ss:toolbar',
+  TOOLBAR = 'ss:toolbar'
 }
 
 export interface RequestMessage {
@@ -109,7 +109,8 @@ export enum PopupMsgTypes {
   SIGNED_FAILED = 'popup:signed_failed',
   PEERJS_INIT = 'popup:peerjs-init',
   PEERJS_SEND = 'popup:peerjs-send',
-  ADD_ENABLED_DOMAIN = 'popup:add-enabled-domain'
+  ADD_ENABLED_DOMAIN = 'popup:add-enabled-domain',
+  ENABLED_PORT_ADD = 'popup:enabled_port_add'// TODO:
 }
 
 export type ExtrinsicSignSuccess = RuntimeMessage<PopupMsgTypes.SIGNED, SuccessResponse<string>> & RequestMessage;
@@ -136,3 +137,17 @@ export type SignToPageMessage = ExtrinsicSignResponse;
 export type ToPageMessages = BgToPageMessage | SignToPageMessage;
 
 export type ToBgMessage = InitCommand | SignCommand;
+
+export type ToContentMessage = InitCommand;
+
+export enum EpicMessageOrigin {
+  PAGE = 'redirect:page',
+  CONTENT = 'redirect:content',
+  POPUP = 'redirect:popup',
+  BG = 'redirect:background'
+}
+
+export type BgEpicMessage = {
+  type: EpicMessageOrigin
+  payload: ToBgMessage
+}

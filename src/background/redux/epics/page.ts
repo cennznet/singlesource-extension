@@ -17,8 +17,8 @@
 import {Action} from 'redux-actions';
 import {ActionsObservable, ofType, StateObservable} from 'redux-observable';
 import {EMPTY, Observable} from 'rxjs';
-import {switchMap, withLatestFrom} from 'rxjs/operators';
-import {BgMsgTypes, InitCommand, InPageMsgTypes} from '../../../types';
+import {map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {BgMsgTypes, EpicMessageOrigin, InitCommand, InPageMsgTypes} from '../../../types';
 import {BackgroundState} from '../reducers';
 
 const initEpic = (
@@ -27,6 +27,8 @@ const initEpic = (
   {router}
 ): Observable<Action<any>> =>
   action$.pipe(
+    ofType(EpicMessageOrigin.PAGE),
+    map(msg => msg.payload),
     ofType<InitCommand>(InPageMsgTypes.INIT),
     withLatestFrom(state$),
     switchMap(([{origin}, state]) => {

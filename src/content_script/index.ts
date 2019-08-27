@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-import { v4 } from 'uuid';
 import { browser } from 'webextension-polyfill-ts';
-import { addOrigin } from '../streamUtils/addOrigin';
-import { MultiplexWindowMessageDuplex} from '../streamUtils/MultiplexWindowMessageDuplex';
-import { RuntimePortDuplex } from '../streamUtils/RuntimePortDuplex';
-import { InPageMsgTypes, MessageOrigin } from '../types';
+
+import { BridgeDuplex} from '../streamUtils/BridgeDuplex';
+import { MessageOrigin } from '../types';
 
 const injectScript = () => {
   try {
@@ -35,26 +33,9 @@ const injectScript = () => {
   }
 };
 
-const setupCommunication = () => {
-  const port = browser.runtime.connect(null, {
-    // TODO: change name to window.location.hostname
-    name: `${MessageOrigin.PAGE}/${v4()}`
-  });
-
-  const portStream = new RuntimePortDuplex(port);
-  const inpageWriteStream = new MultiplexWindowMessageDuplex(window,MessageOrigin.CONTENT, MessageOrigin.PAGE);
-  portStream.pipe(inpageWriteStream).pipe(addOrigin(port.name)).pipe(portStream);
-
-  return {
-    inpageWriteStream,
-    portStream
-  };
-};
-
-const init = (inpageWriteStream: RuntimePortDuplex) => {
-  inpageWriteStream.send(InPageMsgTypes.INIT, {}, MessageOrigin.BG);
+export const setupCommunication = () => {
+  const bridgeDuplex = new BridgeDuplex(window, MessageOrigin.CONTENT, MessageOrigin.CONTENT, MessageOrigin.PAGE);
 };
 
 injectScript();
-const { portStream } = setupCommunication();
-window.onload = () => init(portStream);
+setupCommunication();

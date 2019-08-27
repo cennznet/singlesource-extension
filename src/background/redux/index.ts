@@ -19,9 +19,11 @@ import {createEpicMiddleware, Epic} from 'redux-observable';
 import {persistReducer, persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {composeWithDevTools} from 'remote-redux-devtools';
-import {fromEvent} from 'rxjs';
-import {ToBgMessage} from '../../types';
+import {fromEvent, Observable} from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import {BgEpicMessage, ToBgMessage} from '../../types';
 import {PortStreams} from '../streams';
+import { getBgEpicMessage } from '../utils/getBgEpicMessage';
 import rootEpic from './epics';
 import reducers from './reducers';
 
@@ -49,7 +51,10 @@ export default (streamRouter: PortStreams) => {
   });
 
   const store = createStore(persistedReducer, composeEnhancers(applyMiddleware(epicMiddleware)) as any);
-  messages$.subscribe(store.dispatch);
+ 
+  messages$.pipe(
+    switchMap<ToBgMessage, Observable<BgEpicMessage>>(message => getBgEpicMessage(message))
+  ).subscribe(store.dispatch);
 
   epicMiddleware.run(rootEpic as Epic);
 

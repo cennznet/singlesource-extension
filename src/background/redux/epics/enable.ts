@@ -16,12 +16,12 @@
 
 import { Action } from 'redux-actions';
 import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
-import { EMPTY, Observable, of } from 'rxjs';
-import { switchMap, withLatestFrom } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { EpicDependencies } from '..';
 import {BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
-import {MessageOrigin} from '../../../types/message';
+import {EpicMessageOrigin, MessageOrigin} from '../../../types/message';
 import openPanel from '../../panel/openPanel';
 import {getPageInfoFromRouter} from '../../utils/getDomainFromRouter';
 import { BackgroundState } from '../reducers';
@@ -32,9 +32,11 @@ const enableEpic  = (
   {router}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
+    ofType(EpicMessageOrigin.PAGE),
+    map(msg => msg.payload),
     ofType<EnableCommand>(InPageMsgTypes.ENABLE),
     withLatestFrom(state$),
-    switchMap( ([enableCommand, state])=>{
+    switchMap( ([enableCommand, state])=> {
       const {origin} = enableCommand;
 
       const domain = getPageInfoFromRouter(router, origin)

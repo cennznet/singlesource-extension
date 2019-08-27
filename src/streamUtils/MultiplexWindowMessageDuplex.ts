@@ -45,9 +45,14 @@ export function untag(tag: string) {
 }
 
 export class MultiplexWindowMessageDuplex extends Duplex {
-  constructor(protected window: Window, public tag: string, public untag?: string) {
+  tag: string;
+  untag: string;
+
+  constructor(protected window: Window, tag: string, untag?: string) {
     super({ objectMode: true });
     window.addEventListener('message', this.eventHandler);
+    this.tag = tag;
+    this.untag = untag ? untag : tag;
   }
 
   send<T extends MsgTypes>(type: T, payload: PayloadOf<RuntimeMessage<T, any>>, dst: string | string[]) {
