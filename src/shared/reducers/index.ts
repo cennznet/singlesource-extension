@@ -21,6 +21,5 @@ import network from './networkReducer';
 export default {
   accounts,
   enabledDomains,
-  enabledPortName,
   network
 };
