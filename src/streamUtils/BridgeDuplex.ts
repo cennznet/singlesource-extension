@@ -14,28 +14,104 @@
  * limitations under the License.
  */
 
+import { Transform } from 'readable-stream';
+import { Duplex } from 'stream';
 import v4 from 'uuid/v4';
 import { browser } from 'webextension-polyfill-ts';
-import {
-  MessageOrigin,
-} from '../types';
-import {InPageMsgTypes} from '../types/message';
-import {addOrigin} from './addOrigin';
-import { MultiplexWindowMessageDuplex } from './MultiplexWindowMessageDuplex';
+
+import { MessageOrigin, MsgTypes, PayloadOf, RequestMessage, RequestResponse, RuntimeMessage } from '../types';
+import { InPageMsgTypes } from '../types/message';
+import { addOrigin } from './addOrigin';
 import { RuntimePortDuplex } from './RuntimePortDuplex';
+
+export function tag(tag: string) {
+  return new Transform({
+    objectMode: true,
+    transform(chunk: any, encoding: string, callback: (error?: Error, data?: any) => void): void {
+      callback(null, { [tag]: chunk });
+    }
+  });
+}
+
+export function untag(tag: string) {
+  return new Transform({
+    objectMode: true,
+    transform(chunk: any, encoding: string, callback: (error?: Error, data?: any) => void): void {
+      if (chunk[tag]) {
+        callback(null, chunk[tag]);
+      } else {
+        callback();
+      }
+    }
+  });
+}
 
 /**
  * BridgeDuplex is a bridge duplex stream using in content script for connecting background and inject
  */
-export class BridgeDuplex extends MultiplexWindowMessageDuplex {
+export class BridgeDuplex extends Duplex {
+  tag: string;
+  untag: string;
   portStream: RuntimePortDuplex;
+  
+  constructor(protected window: Window, tag: string, untag?: string) {
+    super({ objectMode: true });
+    window.addEventListener('message', this.eventHandler);
+    this.tag = tag;
+    this.untag = untag ? untag : tag;
+  }
 
-  constructor(protected window: Window, originType: MessageOrigin, tag: string, untag?: string) {
-    super(window, tag, untag);
+  send<T extends MsgTypes>(type: T, payload: PayloadOf<RuntimeMessage<T, any>>, dst: string | string[]) {
+    const message: RuntimeMessage<T, any> = {
+      origin: undefined, //origin will be added in content_script
+      dst,
+      type,
+      payload
+    };
+    this.write(message);
+  }
+
+  async sendRequest<T extends MsgTypes, U>(type: T, payload: PayloadOf<RuntimeMessage<T, any>>, dst: string | string[]): Promise<U> {
+    const uuid = v4();
+    const message: RuntimeMessage<T, any> & RequestMessage = {
+      origin: undefined, //origin will be added in content_script
+      dst,
+      type,
+      payload,
+      requestUUID: uuid
+    };
+    this.write(message);
+    return new Promise((resolve, reject) => {
+      const filter = (message: RuntimeMessage<T, RequestResponse<U>> & RequestMessage) => {
+        const { payload, requestUUID } = message;
+        if (requestUUID === uuid) {
+          if (payload.isError) {
+            reject(new Error(payload.result));
+          } else {
+            resolve(payload.result as U);
+          }
+          this.removeListener('data', filter);
+        }
+      };
+      this.on('data', filter);
+    });
+  }
+
+  _write(chunk: any, encoding: string, callback: (error?: (Error | null)) => void): void {
+    this.window.postMessage({ [this.tag]: chunk }, window.origin);
+    callback();
+  }
+
+  _read(size?: number): void {
+  }
+
+  _destroy(err: Error | null, callback: (error: (Error | null)) => void): void {
+    this.window.removeEventListener('message', this.eventHandler);
+    callback(err);
   }
 
   protected eventHandler = ({ data }: MessageEvent) => {
-    if (!this.portStream && data.type ===InPageMsgTypes.ENABLE) {
+    if (!this.portStream && data[this.untag].type ===InPageMsgTypes.ENABLE) {
       const port = browser.runtime.connect(null, {
         // TODO: change name to window.location.hostname
         name: `${MessageOrigin.PAGE}/${v4()}`

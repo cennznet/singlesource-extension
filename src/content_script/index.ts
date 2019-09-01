@@ -34,7 +34,7 @@ const injectScript = () => {
 };
 
 export const setupCommunication = () => {
-  const bridgeDuplex = new BridgeDuplex(window, MessageOrigin.CONTENT, MessageOrigin.CONTENT, MessageOrigin.PAGE);
+  const bridgeDuplex = new BridgeDuplex(window, MessageOrigin.CONTENT, MessageOrigin.PAGE);
 };
 
 injectScript();
