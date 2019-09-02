@@ -111,7 +111,7 @@ export class BridgeDuplex extends Duplex {
   }
 
   protected eventHandler = ({ data }: MessageEvent) => {
-    if (!this.portStream && data[this.untag].type ===InPageMsgTypes.ENABLE) {
+    if (!this.portStream && data[this.untag] && data[this.untag].type !== undefined && data[this.untag].type ===InPageMsgTypes.ENABLE) {
       const port = browser.runtime.connect(null, {
         // TODO: change name to window.location.hostname
         name: `${MessageOrigin.PAGE}/${v4()}`

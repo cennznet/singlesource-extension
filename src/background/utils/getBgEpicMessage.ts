@@ -36,8 +36,8 @@ export const getBgEpicMessage = (toBgMessage: ToBgMessage): Observable<BgEpicMes
       payload: toBgMessage
     });
   } else if (
-    toBgMessage.origin.startsWith(MessageOrigin.ENABLE_POPUP),
-    toBgMessage.origin.startsWith(MessageOrigin.SIGN_POPUP),
+    toBgMessage.origin.startsWith(MessageOrigin.ENABLE_POPUP) ||
+    toBgMessage.origin.startsWith(MessageOrigin.SIGN_POPUP) ||
     toBgMessage.origin.startsWith(MessageOrigin.TOOLBAR)
   ) {
     return of({
