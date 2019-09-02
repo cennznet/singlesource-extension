@@ -17,13 +17,13 @@
 import produce from 'immer';
 import {Action, handleActions} from 'redux-actions';
 import { EnableState } from '../../popup/reducers/enableReducer';
-import {PopupMsgTypes} from '../../types';
+import actions from '../actions';
 
 const initialState: string[] = [];
 
 export default handleActions(
   {
-    [PopupMsgTypes.ADD_ENABLED_DOMAIN]: produce((state: string[], {payload: domainState}: Action<EnableState>) => {
+    [actions.ENABLED_DOMAIN_ADD]: produce((state: string[], {payload: domainState}: Action<EnableState>) => {
       state.push(domainState.domain);
     })
   },

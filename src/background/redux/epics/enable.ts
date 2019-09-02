@@ -15,13 +15,14 @@
  */
 
 import { Action } from 'redux-actions';
-import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
+import { ActionsObservable, combineEpics, ofType, StateObservable } from 'redux-observable';
 import { EMPTY, Observable } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { EpicDependencies } from '..';
+import actions from '../../../shared/actions';
 import {BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
-import {EpicMessageOrigin, MessageOrigin} from '../../../types/message';
+import {EpicMessageOrigin, MessageOrigin, PopupMsgTypes} from '../../../types/message';
 import openPanel from '../../panel/openPanel';
 import {getPageInfoFromRouter} from '../../utils/getDomainFromRouter';
 import { BackgroundState } from '../reducers';
@@ -68,4 +69,16 @@ const enableEpic  = (
     })
   );
 
-export default enableEpic;
+  const enableDomainAddEpic  = (
+    action$: ActionsObservable<Action<any>>,
+    state$: StateObservable<BackgroundState>,
+    {router}: EpicDependencies
+  ): Observable<Action<any>> =>
+    action$.pipe(
+      ofType(EpicMessageOrigin.POPUP),
+      map(msg => msg.payload),
+      ofType<Action<string>>(PopupMsgTypes.ADD_ENABLED_DOMAIN),
+      map(({payload}) => ({type: actions.ENABLED_DOMAIN_ADD, payload: payload}))
+    );
+
+export default combineEpics(enableEpic, enableDomainAddEpic);

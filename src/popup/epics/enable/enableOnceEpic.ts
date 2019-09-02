@@ -23,7 +23,7 @@ import {BgMsgTypes, MessageOrigin, PopupMsgTypes} from '../../../types/message';
 import { EpicDependencies } from '../../store';
 import { State } from '../../types/state';
 
-const enableRequestEpic = (
+const enableOnceEpic = (
   action$: ActionsObservable<AnyAction>,
   state$: StateObservable<State>,
   {runtimeStream}: EpicDependencies
@@ -47,4 +47,4 @@ const enableRequestEpic = (
     })
   );
 
-export default enableRequestEpic;
+export default enableOnceEpic;
