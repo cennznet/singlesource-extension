@@ -73,8 +73,6 @@ const enabledPortRemoveEpic = (
   {router}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
-    ofType(EpicMessageOrigin.POPUP),
-    map(msg => msg.payload),
     ofType<Action<string>>(actions.ENABLED_PORT_REMOVE),
     switchMap(({payload}) => {
       router.removeEnabledPort(payload);

@@ -31,8 +31,6 @@ const peerjsInitEpic = (
   {runtimeStream}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
-    ofType(EpicMessageOrigin.PAGE),
-    map(msg => msg.payload),
     ofType(actions.PEERJS_INIT.REQUEST),
     switchMap(() => {
       runtimeStream.send(PopupMsgTypes.PEERJS_INIT, {}, MessageOrigin.BG);
