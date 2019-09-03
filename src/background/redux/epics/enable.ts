@@ -16,8 +16,8 @@
 
 import { Action } from 'redux-actions';
 import { ActionsObservable, combineEpics, ofType, StateObservable } from 'redux-observable';
-import { EMPTY, Observable } from 'rxjs';
-import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, withLatestFrom } from 'rxjs/operators';
 
 import { EpicDependencies } from '..';
 import actions from '../../../shared/actions';
@@ -37,7 +37,7 @@ const enableEpic  = (
     map(msg => msg.payload),
     ofType<EnableCommand>(InPageMsgTypes.ENABLE),
     withLatestFrom(state$),
-    switchMap( ([enableCommand, state])=> {
+    map( ([enableCommand, state])=> {
       const {origin} = enableCommand;
 
       const domain = getPageInfoFromRouter(router, origin)
@@ -52,7 +52,12 @@ const enableEpic  = (
           pageName: 'enable',
           enable: JSON.stringify(enable)
         });
+        return {
+          type: '',
+          payload: {}
+        };// TODO: using a better way to return
       } else {
+        router.addEnabledPort(origin);
         router.write({
           origin:MessageOrigin.BG, 
           dst: origin,
@@ -63,9 +68,11 @@ const enableEpic  = (
             isError: false,
           }
         })
+        return {
+          type: actions.INIT,
+          payload: {origin: enableCommand.origin}
+        }
       }
-
-      return EMPTY;
     })
   );
 
@@ -77,7 +84,7 @@ const enableEpic  = (
     action$.pipe(
       ofType(EpicMessageOrigin.POPUP),
       map(msg => msg.payload),
-      ofType<Action<string>>(PopupMsgTypes.ADD_ENABLED_DOMAIN),
+      ofType<Action<string>>(PopupMsgTypes.ENABLED_DOMAIN_ADD),
       map(({payload}) => ({type: actions.ENABLED_DOMAIN_ADD, payload: payload}))
     );
 

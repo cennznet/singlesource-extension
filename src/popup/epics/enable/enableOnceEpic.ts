@@ -41,7 +41,8 @@ const enableOnceEpic = (
           isError: false,
         }
       });
-      runtimeStream.send(PopupMsgTypes.ENABLED_PORT_ADD, runtimeStream.port.name, MessageOrigin.BG)
+      runtimeStream.send(PopupMsgTypes.ENABLED_PORT_ADD, runtimeStream.port.name, MessageOrigin.BG);
+      runtimeStream.send(PopupMsgTypes.BG_INIT, {}, MessageOrigin.BG);
       window.close();
       return EMPTY;
     })

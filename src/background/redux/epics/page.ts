@@ -15,27 +15,44 @@
  */
 
 import {Action} from 'redux-actions';
-import {ActionsObservable, ofType, StateObservable} from 'redux-observable';
+import {ActionsObservable, combineEpics, ofType, StateObservable} from 'redux-observable';
 import {EMPTY, Observable} from 'rxjs';
 import {map, switchMap, withLatestFrom} from 'rxjs/operators';
-import {BgMsgTypes, EpicMessageOrigin, InitCommand, InPageMsgTypes} from '../../../types';
+import actions from '../../../shared/actions';
+import {BgMsgTypes, EpicMessageOrigin} from '../../../types';
+import {PopupMsgTypes} from '../../../types/message';
 import {BackgroundState} from '../reducers';
 
-const initEpic = (
+const bgInitEpic = (
   action$: ActionsObservable<Action<any>>,
   state$: StateObservable<BackgroundState>,
   {router}
 ): Observable<Action<any>> =>
   action$.pipe(
-    ofType(EpicMessageOrigin.PAGE),
+    ofType(EpicMessageOrigin.POPUP),
     map(msg => msg.payload),
-    ofType<InitCommand>(InPageMsgTypes.INIT),
+    ofType<Action<any>>(PopupMsgTypes.BG_INIT),
     withLatestFrom(state$),
-    switchMap(([{origin}, state]) => {
-      router.send(BgMsgTypes.ENVIRONMENT, state.network, origin);
-      router.send(BgMsgTypes.ACCOUNTS, state.accounts, origin);
+    switchMap(([cmd, state]) => {
+      router.send(BgMsgTypes.ENVIRONMENT, state.network, cmd.payload.origin);
+      router.send(BgMsgTypes.ACCOUNTS, state.accounts, cmd.payload.origin);
       return EMPTY;
     })
   );
 
-export default initEpic;
+  const initEpic = (
+    action$: ActionsObservable<Action<any>>,
+    state$: StateObservable<BackgroundState>,
+    {router}
+  ): Observable<Action<any>> =>
+    action$.pipe(
+      ofType<Action<any>>(actions.INIT),
+      withLatestFrom(state$),
+      switchMap(([cmd, state]) => {
+        router.send(BgMsgTypes.ENVIRONMENT, state.network, cmd.payload.origin);
+        router.send(BgMsgTypes.ACCOUNTS, state.accounts, cmd.payload.origin);
+        return EMPTY;
+      })
+    );
+
+export default combineEpics(initEpic, bgInitEpic);

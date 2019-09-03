@@ -47,6 +47,7 @@ class App extends Component {
           return cennznetInjected['singleSource'].enable()
       })
       .then(SingleSource => {
+        window.SingleSource = SingleSource;
         SingleSource.network$.subscribe(environment => {
           configureApi(environment);
           this.setState({ environment });

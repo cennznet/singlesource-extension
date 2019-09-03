@@ -43,8 +43,9 @@ const enablePermanentEpic = (
           isError: false,
         }
       });
-      runtimeStream.send(PopupMsgTypes.ADD_ENABLED_DOMAIN, enable, MessageOrigin.BG);
-      runtimeStream.send(PopupMsgTypes.ENABLED_PORT_ADD, runtimeStream.port.name, MessageOrigin.BG)
+      runtimeStream.send(PopupMsgTypes.ENABLED_DOMAIN_ADD, enable, MessageOrigin.BG);
+      runtimeStream.send(PopupMsgTypes.ENABLED_PORT_ADD, runtimeStream.port.name, MessageOrigin.BG);
+      runtimeStream.send(PopupMsgTypes.BG_INIT, {origin: originPage}, MessageOrigin.BG);
       window.close();
       return EMPTY;
     })

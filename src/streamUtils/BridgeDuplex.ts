@@ -120,8 +120,6 @@ export class BridgeDuplex extends Duplex {
       this.portStream = new RuntimePortDuplex(port);
 
       this.portStream.pipe(this).pipe(addOrigin(port.name)).pipe(this.portStream);
-      
-      this.portStream.send(InPageMsgTypes.INIT, {}, MessageOrigin.BG);
     }
 
     if (data[this.untag]) {

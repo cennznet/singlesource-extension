@@ -31,10 +31,12 @@ export class PortStreams extends Duplex {
   setup(port: Runtime.Port): void {
     const portStream = new RuntimePortDuplex(port, MessageOrigin.BG);
     this.streams.push(portStream);
+    logger.debug('Streams add port: ', port.name)
     portStream.pipe(this);
   }
 
   remove(port: Runtime.Port): void {
+    logger.debug('Streams remove port: ', port.name)
     const streamIdx = this.streams.findIndex(stream => stream.port === port);
     const [stream] = this.streams.splice(streamIdx, 1);
     stream.destroy();
