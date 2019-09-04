@@ -31,11 +31,11 @@ const bgInitEpic = (
   action$.pipe(
     ofType(EpicMessageOrigin.POPUP),
     map(msg => msg.payload),
-    ofType<Action<any>>(PopupMsgTypes.BG_INIT),
+    ofType<Action<string>>(PopupMsgTypes.BG_INIT),
     withLatestFrom(state$),
-    switchMap(([cmd, state]) => {
-      router.send(BgMsgTypes.ENVIRONMENT, state.network, cmd.payload.origin);
-      router.send(BgMsgTypes.ACCOUNTS, state.accounts, cmd.payload.origin);
+    switchMap(([{payload}, state]) => {
+      router.send(BgMsgTypes.ENVIRONMENT, state.network, payload);
+      router.send(BgMsgTypes.ACCOUNTS, state.accounts, payload);
       return EMPTY;
     })
   );

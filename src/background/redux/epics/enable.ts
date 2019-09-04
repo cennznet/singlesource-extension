@@ -21,10 +21,10 @@ import { map, withLatestFrom } from 'rxjs/operators';
 
 import { EpicDependencies } from '..';
 import actions from '../../../shared/actions';
-import {BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
-import {EpicMessageOrigin, MessageOrigin, PopupMsgTypes} from '../../../types/message';
+import { BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
+import { EpicMessageOrigin, MessageOrigin, PopupMsgTypes } from '../../../types/message';
 import openPanel from '../../panel/openPanel';
-import {getPageInfoFromRouter} from '../../utils/getDomainFromRouter';
+import { getPageInfoFromRouter } from '../../utils/getDomainFromRouter';
 import { BackgroundState } from '../reducers';
 
 const enableEpic  = (

@@ -19,7 +19,8 @@ import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
 import types from '../../../shared/actions';
-import { BgMsgTypes, MessageOrigin } from '../../../types';
+import { MessageOrigin } from '../../../types';
+import { PopupMsgTypes } from '../../../types/message';
 import { EpicDependencies } from '../../store';
 import { State } from '../../types/state';
 
@@ -33,7 +34,7 @@ const onAccountsChangeEpic = (
     withLatestFrom(state$),
     switchMap(([, state]) => {
       const { accounts } = state;
-      runtimeStream.send(BgMsgTypes.ACCOUNTS, accounts, [MessageOrigin.PAGE, MessageOrigin.BG]);
+      runtimeStream.send(PopupMsgTypes.ACCOUNTS_UPDATE, accounts, [MessageOrigin.BG]);
       return EMPTY;
     })
   );

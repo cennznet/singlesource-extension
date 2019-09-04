@@ -70,7 +70,7 @@ export enum BgMsgTypes {
   RTC_DATA = 'bg:rtc-data',
   RTC_ERROR = 'bg:rtc-error',
   RTC_CLOSED = 'bg:rtc-closed',
-  ENABLE_RESPONSE = 'enable-response'
+  ENABLE_RESPONSE = 'bg:enable-response',
 }
 
 export type InitCommand = RuntimeMessage<InPageMsgTypes.INIT, never>;
@@ -111,7 +111,8 @@ export enum PopupMsgTypes {
   PEERJS_SEND = 'popup:peerjs-send',
   ENABLED_DOMAIN_ADD = 'popup:enabled-domain-add',
   ENABLED_PORT_ADD = 'popup:enabled-port-add',// TODO:
-  BG_INIT = 'popup:bg-init'
+  BG_INIT = 'popup:bg-init',
+  ACCOUNTS_UPDATE = 'popup:accounts-update'
 }
 
 export type ExtrinsicSignSuccess = RuntimeMessage<PopupMsgTypes.SIGNED, SuccessResponse<string>> & RequestMessage;
