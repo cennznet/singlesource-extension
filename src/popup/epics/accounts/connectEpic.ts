@@ -42,8 +42,6 @@ const peerjsConnectResponseEpic = (
   {runtimeStream}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
-    ofType(actions.STREAM_MSG),
-    map(msg => msg.payload),
     ofType(EpicMessageOrigin.BG),
     map(msg => msg.payload),
     ofType<PeerjsData>(BgMsgTypes.RTC_DATA),

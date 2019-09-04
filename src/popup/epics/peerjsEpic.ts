@@ -57,8 +57,6 @@ const peerjsReadyEpic = (
   {runtimeStream}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
-    ofType(actions.STREAM_MSG),
-    map(msg => msg.payload),
     ofType(EpicMessageOrigin.BG),
     map(msg => msg.payload),
     ofType<PeerjsReady>(BgMsgTypes.PEERJS_READY),
@@ -71,8 +69,6 @@ const peerjsErrorEpic = (
   {runtimeStream}: EpicDependencies
 ): Observable<AnyAction> =>
   action$.pipe(
-    ofType(actions.STREAM_MSG),
-    map(msg => msg.payload),
     ofType(EpicMessageOrigin.BG),
     map(msg => msg.payload),
     ofType<PeerjsError>(BgMsgTypes.PEERJS_ERROR),
@@ -85,8 +81,6 @@ const peerjsOpenEpic = (
   {runtimeStream}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
-    ofType(actions.STREAM_MSG),
-    map(msg => msg.payload),
     ofType(EpicMessageOrigin.BG),
     map(msg => msg.payload),
     ofType<PeerjsOpen>(BgMsgTypes.RTC_OPEN),

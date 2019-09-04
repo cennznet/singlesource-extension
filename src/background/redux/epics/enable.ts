@@ -16,8 +16,8 @@
 
 import { Action } from 'redux-actions';
 import { ActionsObservable, combineEpics, ofType, StateObservable } from 'redux-observable';
-import { Observable } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { EpicDependencies } from '..';
 import actions from '../../../shared/actions';
@@ -37,7 +37,7 @@ const enableEpic  = (
     map(msg => msg.payload),
     ofType<EnableCommand>(InPageMsgTypes.ENABLE),
     withLatestFrom(state$),
-    map( ([enableCommand, state])=> {
+    switchMap( ([enableCommand, state])=> {
       const {origin} = enableCommand;
 
       const domain = getPageInfoFromRouter(router, origin)
@@ -52,10 +52,7 @@ const enableEpic  = (
           pageName: 'enable',
           enable: JSON.stringify(enable)
         });
-        return {
-          type: '',
-          payload: {}
-        };// TODO: using a better way to return
+        return EMPTY;
       } else {
         router.addEnabledPort(origin);
         router.write({
@@ -68,10 +65,10 @@ const enableEpic  = (
             isError: false,
           }
         })
-        return {
+        return of({
           type: actions.INIT,
           payload: {origin: enableCommand.origin}
-        }
+        })
       }
     })
   );

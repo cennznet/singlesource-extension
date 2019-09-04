@@ -19,7 +19,7 @@ import { empty, Observable, of } from "rxjs";
 import { BgEpicMessage, MessageOrigin, ToBgMessage } from "../../types";
 import {EpicMessageOrigin} from '../../types/message';
 
-export const getBgEpicMessage = (toBgMessage: ToBgMessage): Observable<BgEpicMessage> => {
+export const wrapBgEpicMessage = (toBgMessage: ToBgMessage): Observable<BgEpicMessage> => {
   if (toBgMessage.origin.startsWith(MessageOrigin.BG)) {
     return of({
       type: EpicMessageOrigin.BG,

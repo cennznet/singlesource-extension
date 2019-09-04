@@ -21,7 +21,7 @@ import storage from 'redux-persist/lib/storage';
 import {composeWithDevTools} from 'remote-redux-devtools';
 import {fromEvent, Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import { getBgEpicMessage } from '../background/utils/getBgEpicMessage';
+import {wrapBgEpicMessage} from '../background/utils/wrapBgEpicMessage';
 import actions from '../shared/actions';
 import {RuntimePortDuplex} from '../streamUtils/RuntimePortDuplex';
 import {BgEpicMessage, ToBgMessage} from '../types';
@@ -54,7 +54,8 @@ persistStore(store);
 epicMiddleware.run(rootEpic);
 
 const messages$ = fromEvent(runtimeStream, 'data');
-messages$.pipe(switchMap<ToBgMessage, Observable<BgEpicMessage>>(message => getBgEpicMessage(message)))
-.pipe(map(msg => ({type: actions.STREAM_MSG, payload: msg}))).subscribe(store.dispatch);
+messages$
+  .pipe(switchMap<ToBgMessage, Observable<BgEpicMessage>>(message => wrapBgEpicMessage(message)))
+  .subscribe(store.dispatch);
 
 export default store;

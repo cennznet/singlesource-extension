@@ -23,7 +23,7 @@ import {fromEvent, Observable} from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import {BgEpicMessage, ToBgMessage} from '../../types';
 import {PortStreams} from '../streams';
-import { getBgEpicMessage } from '../utils/getBgEpicMessage';
+import { wrapBgEpicMessage } from '../utils/wrapBgEpicMessage';
 import rootEpic from './epics';
 import reducers from './reducers';
 
@@ -53,7 +53,7 @@ export default (streamRouter: PortStreams) => {
   const store = createStore(persistedReducer, composeEnhancers(applyMiddleware(epicMiddleware)) as any);
  
   messages$.pipe(
-    switchMap<ToBgMessage, Observable<BgEpicMessage>>(message => getBgEpicMessage(message))
+    switchMap<ToBgMessage, Observable<BgEpicMessage>>(wrapBgEpicMessage)
   ).subscribe(store.dispatch);
 
   epicMiddleware.run(rootEpic as Epic);
