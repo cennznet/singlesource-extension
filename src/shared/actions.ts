@@ -39,7 +39,6 @@ export default {
   GET_ACCOUNTS: asyncAction('GET_ACCOUNTS'),
 
   ENABLE: enableAction('ENABLE'),
-  ADD_ENABLED_DOMAIN: action('ADD_ENABLED_DOMAIN'),
   
   SELECT_ACCOUNT: action('SELECT_ACCOUNT'),
 
@@ -60,4 +59,8 @@ export default {
 
   PORT_CONNECT: action('PORT_CONNECT'),
   PORT_DISCONNECT: action('PORT_DISCONNECT'),
+
+  ENABLED_PORT_REMOVE: action('ENABLED_PORT_REMOVE'),
+
+  ENABLED_DOMAIN_ADD: action('ENABLED_DOMAIN_ADD')
 };

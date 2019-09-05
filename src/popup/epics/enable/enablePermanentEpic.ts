@@ -23,7 +23,7 @@ import {BgMsgTypes, MessageOrigin, PopupMsgTypes} from '../../../types/message';
 import { EpicDependencies } from '../../store';
 import {State} from '../../types/state';
 
-const enableRequestEpic = (
+const enablePermanentEpic = (
   action$: ActionsObservable<AnyAction>,
   state$: StateObservable<State>,
   {runtimeStream}: EpicDependencies
@@ -43,10 +43,12 @@ const enableRequestEpic = (
           isError: false,
         }
       });
-      runtimeStream.send(PopupMsgTypes.ADD_ENABLED_DOMAIN, enable, MessageOrigin.BG);
+      runtimeStream.send(PopupMsgTypes.ENABLED_DOMAIN_ADD, enable, MessageOrigin.BG);
+      runtimeStream.send(PopupMsgTypes.ENABLED_PORT_ADD, originPage, MessageOrigin.BG);
+      runtimeStream.send(PopupMsgTypes.BG_INIT, originPage, MessageOrigin.BG);
       window.close();
       return EMPTY;
     })
   );
 
-export default enableRequestEpic;
+export default enablePermanentEpic;

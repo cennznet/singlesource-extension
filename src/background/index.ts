@@ -27,6 +27,7 @@ browser.runtime.onConnect.addListener(port => {
   store.dispatch({type: actions.PORT_CONNECT, payload: port});
 
   port.onDisconnect.addListener(() => {
+    store.dispatch({type: actions.ENABLED_PORT_REMOVE, payload: port.name});
     store.dispatch({type: actions.PORT_DISCONNECT, payload: port});
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "single_source_extension",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "run-on-browser": "webpack-dev-server --mode development",
     "start": "webpack --watch --progress --mode development",

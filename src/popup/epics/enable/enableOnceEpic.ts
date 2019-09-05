@@ -19,11 +19,11 @@ import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
 import { EMPTY, Observable } from 'rxjs';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
 import actions from '../../../shared/actions';
-import {BgMsgTypes, MessageOrigin} from '../../../types/message';
+import {BgMsgTypes, MessageOrigin, PopupMsgTypes} from '../../../types/message';
 import { EpicDependencies } from '../../store';
 import { State } from '../../types/state';
 
-const enableRequestEpic = (
+const enableOnceEpic = (
   action$: ActionsObservable<AnyAction>,
   state$: StateObservable<State>,
   {runtimeStream}: EpicDependencies
@@ -41,9 +41,11 @@ const enableRequestEpic = (
           isError: false,
         }
       });
+      runtimeStream.send(PopupMsgTypes.ENABLED_PORT_ADD, originPage, MessageOrigin.BG);
+      runtimeStream.send(PopupMsgTypes.BG_INIT, originPage, MessageOrigin.BG);
       window.close();
       return EMPTY;
     })
   );
 
-export default enableRequestEpic;
+export default enableOnceEpic;

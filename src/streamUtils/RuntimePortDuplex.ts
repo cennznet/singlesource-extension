@@ -67,7 +67,7 @@ export class RuntimePortDuplex extends Duplex {
   }
 
   private eventHandler = (message: any, port: Runtime.Port) => {
-    logger.debug('RuntimePortDeplux', message);
+    logger.debug('RuntimePortDuplex', message);
     this.push(message);
   };
 }

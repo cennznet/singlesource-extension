@@ -18,10 +18,11 @@ import {Duplex} from 'readable-stream';
 import {Runtime} from 'webextension-polyfill-ts';
 import logger from '../logger';
 import {RuntimePortDuplex} from '../streamUtils/RuntimePortDuplex';
-import {BgMsgTypes, MessageOrigin, PayloadOf, RuntimeMessage} from '../types';
+import {BgMsgTypes, InPageMsgTypes, MessageOrigin, MsgTypes, PayloadOf, PopupMsgTypes, RuntimeMessage} from '../types';
 
 export class PortStreams extends Duplex {
   streams: RuntimePortDuplex[] = [];
+  enabledPortNames: string[] = [];
 
   constructor() {
     super({objectMode: true});
@@ -30,10 +31,12 @@ export class PortStreams extends Duplex {
   setup(port: Runtime.Port): void {
     const portStream = new RuntimePortDuplex(port, MessageOrigin.BG);
     this.streams.push(portStream);
+    logger.debug('Streams add port: ', port.name)
     portStream.pipe(this);
   }
 
   remove(port: Runtime.Port): void {
+    logger.debug('Streams remove port: ', port.name)
     const streamIdx = this.streams.findIndex(stream => stream.port === port);
     const [stream] = this.streams.splice(streamIdx, 1);
     stream.destroy();
@@ -49,13 +52,20 @@ export class PortStreams extends Duplex {
     this.write(message);
   }
 
-  _write(chunk: any, encoding: string, callback: (error?: Error | null) => void): void {
+  _write(chunk: RuntimeMessage<MsgTypes, any>, encoding: string, callback: (error?: Error | null) => void): void {
     if (isRuntimeMessage(chunk)) {
-      const handle = (dst: string) => {
+      const handle = (dst: string, type: InPageMsgTypes | BgMsgTypes | PopupMsgTypes) => {
         if (dst === MessageOrigin.BG) {
           this.push(chunk);
         } else {
-          const streams = this.streams.filter(stream => stream.port.name.startsWith(dst));
+          const streams = this.streams.filter(
+            stream => 
+              stream.port.name.startsWith(dst)
+              && (!stream.port.name.startsWith(MessageOrigin.PAGE) ||
+                this.enabledPortNames.includes(stream.port.name) ||
+                type === BgMsgTypes.ENABLE_RESPONSE
+              )
+          );
           for (const stream of streams) {
             try {
               stream.write(chunk);
@@ -66,12 +76,21 @@ export class PortStreams extends Duplex {
         }
       };
       if (chunk.dst instanceof Array) {
-        chunk.dst.forEach(dst => handle(dst));
+        chunk.dst.forEach(dst => handle(dst, chunk.type));
       } else {
-        handle(chunk.dst);
+        handle(chunk.dst, chunk.type);
       }
     }
     callback();
+  }
+
+  addEnabledPort(portName: string) {
+    // Assuming there are not two ports having same port name
+    this.enabledPortNames.push(portName);
+  }
+
+  removeEnabledPort(portName: string) {
+    this.enabledPortNames = this.enabledPortNames.filter(name => name !== portName);
   }
 
   _read(size?: number): void {}

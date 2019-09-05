@@ -21,7 +21,7 @@ import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {BackgroundState} from '../../../background/redux/reducers';
 import actions from '../../../shared/actions';
-import {BgMsgTypes, PeerjsData} from '../../../types';
+import {BgMsgTypes, EpicMessageOrigin, PeerjsData} from '../../../types';
 import {EpicDependencies} from '../../store';
 
 const connectEpic = (action$: ActionsObservable<AnyAction>) => {
@@ -42,7 +42,7 @@ const peerjsConnectResponseEpic = (
   {runtimeStream}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
-    ofType(actions.STREAM_MSG),
+    ofType(EpicMessageOrigin.BG),
     map(msg => msg.payload),
     ofType<PeerjsData>(BgMsgTypes.RTC_DATA),
     map(data => data.payload),

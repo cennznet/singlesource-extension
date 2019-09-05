@@ -1,9 +1,35 @@
 # Changelog
 
-## [Unreleased]
-### Added
-- Connect with mySingleSource mobile app
-- Check balances
-- Transactions history
-- Sign transaction
-- Switch environment
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [1.1.0] (2019-09-05)
+
+
+### Features
+
+* Adding access control ([#20](https://github.com/cennznet/singlesource-extension/issues/20))
+
+
+### Breaking changes
+
+* DApp using single-source extension now need to call enable() to get access.
+Previous:
+const singleSource = window.SingleSource
+Now:
+const singleSource = window.cennznetInjected['singleSource'].enable()
+
+
+
+
+
+## [1.0.0]
+
+
+### Features
+
+* Connect with mySingleSource mobile app
+* Check balances
+* Transactions history
+* Sign transaction
+* Switch environment

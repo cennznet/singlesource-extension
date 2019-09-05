@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { Duplex, Transform } from 'readable-stream';
+import { Transform } from 'readable-stream';
+import { Duplex } from 'stream';
 import v4 from 'uuid/v4';
-import {
-  MsgTypes, PayloadOf,
-  RequestMessage,
-  RequestResponse, RuntimeMessage
-} from '../types';
+import { browser } from 'webextension-polyfill-ts';
+
+import { MessageOrigin, MsgTypes, PayloadOf, RequestMessage, RequestResponse, RuntimeMessage } from '../types';
+import { InPageMsgTypes } from '../types/message';
+import { addOrigin } from './addOrigin';
+import { RuntimePortDuplex } from './RuntimePortDuplex';
 
 export function tag(tag: string) {
   return new Transform({
@@ -44,10 +46,14 @@ export function untag(tag: string) {
   });
 }
 
-export class MultiplexWindowMessageDuplex extends Duplex {
+/**
+ * BridgeDuplex is a bridge duplex stream using in content script for connecting background and inject
+ */
+export class BridgeDuplex extends Duplex {
   tag: string;
   untag: string;
-
+  portStream: RuntimePortDuplex;
+  
   constructor(protected window: Window, tag: string, untag?: string) {
     super({ objectMode: true });
     window.addEventListener('message', this.eventHandler);
@@ -91,29 +97,6 @@ export class MultiplexWindowMessageDuplex extends Duplex {
     });
   }
 
-  // async sendRequest<T extends RuntimeMessagePayload<InPageMsgTypes> & RequestMessage, U >(payload: T, dst: string | string[]): Promise<U> {
-  //   //origin will be added in content_script
-  //   this.write({
-  //     origin: undefined,
-  //     dst,
-  //     payload
-  //   } as RuntimeMessageOf<InPageMsgTypes>);
-  //   return new Promise((resolve, reject) => {
-  //     const filter = (message: RuntimeMessageWith<RequestResponse<U>>) => {
-  //       const {payload: {requestUUID}} = message;
-  //       if (requestUUID === payload.requestUUID) {
-  //         if (message.payload.isError) {
-  //           reject(message.payload.result);
-  //         }else{
-  //           resolve(message.payload.result as U);
-  //         }
-  //         this.removeListener('data', filter);
-  //       }
-  //     };
-  //     this.on('data', filter);
-  //   });
-  // }
-
   _write(chunk: any, encoding: string, callback: (error?: (Error | null)) => void): void {
     this.window.postMessage({ [this.tag]: chunk }, window.origin);
     callback();
@@ -128,6 +111,17 @@ export class MultiplexWindowMessageDuplex extends Duplex {
   }
 
   protected eventHandler = ({ data }: MessageEvent) => {
+    if (!this.portStream && data[this.untag] && data[this.untag].type !== undefined && data[this.untag].type ===InPageMsgTypes.ENABLE) {
+      const port = browser.runtime.connect(null, {
+        // TODO: change name to window.location.hostname
+        name: `${MessageOrigin.PAGE}/${v4()}`
+      });
+
+      this.portStream = new RuntimePortDuplex(port);
+
+      this.portStream.pipe(this).pipe(addOrigin(port.name)).pipe(this.portStream);
+    }
+
     if (data[this.untag]) {
       this.push(data[this.untag]);
     }

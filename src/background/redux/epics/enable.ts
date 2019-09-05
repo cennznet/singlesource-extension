@@ -15,15 +15,16 @@
  */
 
 import { Action } from 'redux-actions';
-import { ActionsObservable, ofType, StateObservable } from 'redux-observable';
+import { ActionsObservable, combineEpics, ofType, StateObservable } from 'redux-observable';
 import { EMPTY, Observable, of } from 'rxjs';
-import { switchMap, withLatestFrom } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { EpicDependencies } from '..';
-import {BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
-import {MessageOrigin} from '../../../types/message';
+import actions from '../../../shared/actions';
+import { BgMsgTypes, EnableCommand, InPageMsgTypes } from '../../../types';
+import { EpicMessageOrigin, MessageOrigin, PopupMsgTypes } from '../../../types/message';
 import openPanel from '../../panel/openPanel';
-import {getPageInfoFromRouter} from '../../utils/getDomainFromRouter';
+import { getPageInfoFromRouter } from '../../utils/getDomainFromRouter';
 import { BackgroundState } from '../reducers';
 
 const enableEpic  = (
@@ -32,9 +33,11 @@ const enableEpic  = (
   {router}: EpicDependencies
 ): Observable<Action<any>> =>
   action$.pipe(
+    ofType(EpicMessageOrigin.PAGE),
+    map(msg => msg.payload),
     ofType<EnableCommand>(InPageMsgTypes.ENABLE),
     withLatestFrom(state$),
-    switchMap( ([enableCommand, state])=>{
+    switchMap( ([enableCommand, state])=> {
       const {origin} = enableCommand;
 
       const domain = getPageInfoFromRouter(router, origin)
@@ -49,7 +52,9 @@ const enableEpic  = (
           pageName: 'enable',
           enable: JSON.stringify(enable)
         });
+        return EMPTY;
       } else {
+        router.addEnabledPort(origin);
         router.write({
           origin:MessageOrigin.BG, 
           dst: origin,
@@ -60,10 +65,24 @@ const enableEpic  = (
             isError: false,
           }
         })
+        return of({
+          type: actions.INIT,
+          payload: {origin: enableCommand.origin}
+        })
       }
-
-      return EMPTY;
     })
   );
 
-export default enableEpic;
+  const enableDomainAddEpic  = (
+    action$: ActionsObservable<Action<any>>,
+    state$: StateObservable<BackgroundState>,
+    {router}: EpicDependencies
+  ): Observable<Action<any>> =>
+    action$.pipe(
+      ofType(EpicMessageOrigin.POPUP),
+      map(msg => msg.payload),
+      ofType<Action<string>>(PopupMsgTypes.ENABLED_DOMAIN_ADD),
+      map(({payload}) => ({type: actions.ENABLED_DOMAIN_ADD, payload: payload}))
+    );
+
+export default combineEpics(enableEpic, enableDomainAddEpic);

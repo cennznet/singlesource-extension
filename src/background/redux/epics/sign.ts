@@ -17,8 +17,8 @@
 import {Action} from 'redux-actions';
 import {ActionsObservable, ofType, StateObservable} from 'redux-observable';
 import {EMPTY, Observable} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {InPageMsgTypes, SignCommand} from '../../../types';
+import {map, switchMap} from 'rxjs/operators';
+import {EpicMessageOrigin, InPageMsgTypes, SignCommand} from '../../../types';
 import openPanel from '../../panel/openPanel';
 import {BackgroundState} from '../reducers';
 
@@ -28,6 +28,8 @@ const signEpic = (
   {router}
 ): Observable<Action<any>> =>
   action$.pipe(
+    ofType(EpicMessageOrigin.PAGE),
+    map(msg => msg.payload),
     ofType<SignCommand>(InPageMsgTypes.SIGN),
     switchMap((message: SignCommand) => {
       openPanel({
