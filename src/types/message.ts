@@ -143,10 +143,10 @@ export type ToBgMessage = InitCommand | SignCommand;
 export type ToContentMessage = InitCommand;
 
 export enum EpicMessageOrigin {
-  PAGE = 'redirect:page',
-  CONTENT = 'redirect:content',
-  POPUP = 'redirect:popup',
-  BG = 'redirect:background'
+  PAGE = 'from:page',
+  CONTENT = 'from:content',
+  POPUP = 'from:popup',
+  BG = 'from:background'
 }
 
 export type BgEpicMessage = {
