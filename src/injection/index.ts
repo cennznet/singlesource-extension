@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Signer } from '@cennznet/api/polkadot.types';
+import {Signer} from '@cennznet/api/types';
 import { isEqual } from 'lodash';
 import { ofType } from 'redux-observable';
 import { Observable, ReplaySubject } from 'rxjs';

@@ -4,15 +4,13 @@ global.window = {};
 console.log = () => {};
 console.error = () => {};
 
-import { Api } from '@cennznet/api';
-import { WsProvider } from '@cennznet/api/polkadot';
-import { GenericAsset } from '@cennznet/crml-generic-asset';
+import { Api, WsProvider } from '@cennznet/api';
 import BigNumber from 'bignumber.js';
 import signer from '../signer';
 
 export const amountToWei = (
   amount: BigNumber,
-  decimal: BigNumber | string = '1e18'
+  decimal: BigNumber | string = '1e18',
 ): BigNumber => {
   const decimalBN = new BigNumber(decimal);
   return amount.multipliedBy(decimalBN);
@@ -25,17 +23,14 @@ let api: Api = null;
 
 describe('encode & decode extrinsic', () => {
   beforeAll(async () => {
-    const provider = new WsProvider(
-      'wss://cennznet-node-0.centrality.cloud:9944'
-    );
-    api = await Api.create({ provider });
+    api = await Api.create({ provider: 'wss://cennznet-node-0.centrality.cloud:9944' });
     api.setSigner(signer);
   }, 30000);
 
   it('should sign and inject signature', async () => {
     const value = amountToWei(new BigNumber('0.001'));
 
-    const asset = await GenericAsset.create(api);
+    const asset = api.genericAsset;
     const hash = await asset
       .transfer(16000, receiver, value.toString(10))
       .signAndSend(sender);

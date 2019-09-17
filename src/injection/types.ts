@@ -15,7 +15,7 @@ import {SingleSourceInjected} from './types';
  * limitations under the License.
  */
 
-import {Signer} from '@cennznet/api/polkadot.types';
+import {Signer} from '@cennznet/api/types';
 import {Observable} from 'rxjs';
 import {Account} from '../types';
 
