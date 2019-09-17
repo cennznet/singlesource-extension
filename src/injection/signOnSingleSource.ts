@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import {SignerPayloadJSON} from '@cennznet/types/extrinsic/SignerPayload';
 import {
   InPageMsgTypes,
-  MessageOrigin, SignPayload
+  MessageOrigin,
 } from '../types';
 import { inpageBgDuplexStream } from './messenger';
 
-const signOnSingleSource = async (payload: SignPayload): Promise<string> => {
+const signOnSingleSource = async (payload: SignerPayloadJSON): Promise<string> => {
   return inpageBgDuplexStream.sendRequest(InPageMsgTypes.SIGN, payload, MessageOrigin.BG);
 };
 

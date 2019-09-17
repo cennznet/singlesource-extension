@@ -13,40 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { Signer } from '@cennznet/api/polkadot.types';
-import { Extrinsic } from '@cennznet/types/extrinsic';
-import { SignatureOptions } from '@cennznet/types/polkadot.types';
-import { SignPayload } from '../types';
+import {Signer} from '@cennznet/api/types';
+import {SignerPayloadJSON} from '@cennznet/types/extrinsic/SignerPayload';
 import signOnSingleSource from './signOnSingleSource';
 
 let id = 0;
-
 const signer: Signer = {
-  sign: async (
-    extrinsic: Extrinsic,
-    address: string,
-    options: SignatureOptions
-  ): Promise<number> => {
-    const payload: SignPayload = {
-      extrinsic: extrinsic.toHex(),
-      method: extrinsic.method.toString(),
-      meta: extrinsic.meta.toString(),
-      address,
-      blockHash: options.blockHash.toString(),
-      era: options.era && options.era.toString(),
-      nonce: options.nonce.toString(),
-      // @ts-ignore
-      version: options.version && JSON.stringify(options.version.toJSON())
-    };
-
-    // send payload to singelsource
+  signPayload: async(payload: SignerPayloadJSON) => {
     const hexSignature = await signOnSingleSource(payload);
-
-    extrinsic.addSignature(address, hexSignature, options.nonce, options.era);
-
-    return ++id;
-  }
-};
+    return {id:++id, signature:hexSignature};
+  },
+}
 
 export default signer;
