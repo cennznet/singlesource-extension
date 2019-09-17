@@ -13,15 +13,7 @@ const vault =
 
 // @ts-ignore
 signOnSingleSource = async (payload: SignerPayloadJSON) => {
-  const { method, meta, address, blockHash, nonce, era, version } = payload;
-
-  const options = {
-    blockHash: new U8a(blockHash),
-    era: era && stringToU8a(era),
-    nonce: createType('Compact<Index>', nonce),
-    version: createType('u8',version),
-  };
-
+  const { meta } = payload;
   const metadata = new Metadata(meta);
   Call.injectMethods(fromMetadata(metadata));
 

@@ -4,7 +4,7 @@ global.window = {};
 console.log = () => {};
 console.error = () => {};
 
-import { Api, WsProvider } from '@cennznet/api';
+import { Api } from '@cennznet/api';
 import BigNumber from 'bignumber.js';
 import signer from '../signer';
 
@@ -23,7 +23,7 @@ let api: Api = null;
 
 describe('encode & decode extrinsic', () => {
   beforeAll(async () => {
-    api = await Api.create({ provider: 'wss://cennznet-node-0.centrality.cloud:9944' });
+    api = await Api.create({provider: 'wss://rimu.unfrastructure.io/public/ws'});
     api.setSigner(signer);
   }, 30000);
 

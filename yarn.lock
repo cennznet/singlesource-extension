@@ -852,15 +852,15 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@cennznet/api@^0.20.4", "@cennznet/api@^0.20.5":
-  version "0.20.5"
-  resolved "https://registry.yarnpkg.com/@cennznet/api/-/api-0.20.5.tgz#eafd8b5504d25294f3804fc6fea669b56acd8749"
-  integrity sha512-+dEE+GNZaaQncrzHJMd/BCBOhrHgX+K49rS1wWD1kTzzyC2ypqzgbbgpOqBp91hIgHVq7f20sDK63A3+0B+WyQ==
+"@cennznet/api@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@cennznet/api/-/api-0.20.6.tgz#f02e49a82fe9cb43cfbd2a8392b8ae45e4a2e7f6"
+  integrity sha512-bi2AYdVgX22+C1BhwMw07PxxrEDpgIoL7vnRIz/zEGKhvAgtREOy1t6WkcdzAHHq0ism4kjJO39UkcuUiuRvIw==
   dependencies:
-    "@cennznet/crml-attestation" "^0.20.5"
-    "@cennznet/crml-cennzx-spot" "^0.20.5"
-    "@cennznet/crml-generic-asset" "^0.20.5"
-    "@cennznet/types" "^0.20.5"
+    "@cennznet/crml-attestation" "^0.20.6"
+    "@cennznet/crml-cennzx-spot" "^0.20.6"
+    "@cennznet/crml-generic-asset" "^0.20.6"
+    "@cennznet/types" "^0.20.6"
     "@plugnet/api" "^0.90.104"
     "@plugnet/api-metadata" "^0.90.104"
     "@plugnet/rpc-core" "^0.90.104"
@@ -868,52 +868,52 @@
     "@plugnet/types" "^0.90.104"
     eventemitter3 "^4.0.0"
 
-"@cennznet/crml-attestation@^0.20.5":
-  version "0.20.5"
-  resolved "https://registry.yarnpkg.com/@cennznet/crml-attestation/-/crml-attestation-0.20.5.tgz#bd1a52d26a83371eda8913b36375c8c861369480"
-  integrity sha512-9ZwggcbysLKDMOBovJ4Qsn/Ut+Az9GkSOOsJhoA1xkB6TjfkOAzSS/knQHeNygB2DuJND7WLd9bVHxJ9Hssa3Q==
+"@cennznet/crml-attestation@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@cennznet/crml-attestation/-/crml-attestation-0.20.6.tgz#d4a34aeba60a77b4c27cee24dcf42c161d864c30"
+  integrity sha512-RlgASKvhdJ9A+uP8o0SXBBDIthdau+hWb++V9sbttRlkNCKeYCyZ5Xes5apWbiSqphgvSzolIecNJ/9IBVBBvQ==
 
-"@cennznet/crml-cennzx-spot@^0.20.5":
-  version "0.20.5"
-  resolved "https://registry.yarnpkg.com/@cennznet/crml-cennzx-spot/-/crml-cennzx-spot-0.20.5.tgz#8d8451edf9d577279f96218ce39dc361d005b112"
-  integrity sha512-Y/ImbQWL8hp3vwwr3ncONDe04uIoEpHhW3X3/5/gruV+5kemzvCfVc3y/wAFqat4qMmTfMXjpyFA+8/aZnSSTg==
+"@cennznet/crml-cennzx-spot@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@cennznet/crml-cennzx-spot/-/crml-cennzx-spot-0.20.6.tgz#7c231e5fe0117ac41297969bfc02c8af9bc35943"
+  integrity sha512-9/szgSWtYangOtH+qJ+6RjMsL4cQNL6gBvgeQMsH+fo2Qby5T/3UXdL5wCInbjLiVHI/WI3DaRB8BO8xShVHrg==
   dependencies:
-    "@cennznet/api" "^0.20.5"
-    "@cennznet/crml-generic-asset" "^0.20.5"
-    "@cennznet/types" "^0.20.5"
-    "@cennznet/util" "^0.20.5"
+    "@cennznet/api" "^0.20.6"
+    "@cennznet/crml-generic-asset" "^0.20.6"
+    "@cennznet/types" "^0.20.6"
+    "@cennznet/util" "^0.20.6"
 
-"@cennznet/crml-generic-asset@^0.20.5":
-  version "0.20.5"
-  resolved "https://registry.yarnpkg.com/@cennznet/crml-generic-asset/-/crml-generic-asset-0.20.5.tgz#28f25b99ca6beea5cafdb901e3af5b83c4c90f39"
-  integrity sha512-FxEPyHjDDlbeX/+xZccHURAQkzSfdIGgRNu52efTKI76731G2Qg0NFDGIy4C0Vvv45tNTaW4f5K9zRbLgVluSg==
+"@cennznet/crml-generic-asset@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@cennznet/crml-generic-asset/-/crml-generic-asset-0.20.6.tgz#d36e377a40db9f27bd385c141e318922a7f09a61"
+  integrity sha512-VB5EPsOY3nr3tNN0N+I/9Q9QJNTTS5xH3hPfZCEJa9Pmw5YOESwvgSF1mpY/Am3/fUCeOdLxNw1jUT3rr7IyCQ==
   dependencies:
-    "@cennznet/api" "^0.20.5"
-    "@cennznet/types" "^0.20.5"
-    "@cennznet/util" "^0.20.5"
+    "@cennznet/api" "^0.20.6"
+    "@cennznet/types" "^0.20.6"
+    "@cennznet/util" "^0.20.6"
 
-"@cennznet/types@^0.20.5":
-  version "0.20.5"
-  resolved "https://registry.yarnpkg.com/@cennznet/types/-/types-0.20.5.tgz#de635ffdbb692f35368cd8aaac9d44da285eae96"
-  integrity sha512-/Tsk5g1BtiHjfi6oG96eX0UdbksHGZe2GBKQeR40jvLZsczcyV3XokOmojwb4OdmsKzaAjNMDrspGOCPYNNGgw==
+"@cennznet/types@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@cennznet/types/-/types-0.20.6.tgz#79821ace4148fe2f94338b7c990b1c280316cc16"
+  integrity sha512-TbeXULN7wZ+ViAyWAuhbX+Za4/BNlikXahouWoLE4wtoFzKfaVCGpwyFwZljfkYcrM0QiG5V/q0B2aphyTwQqg==
   dependencies:
-    "@cennznet/util" "^0.20.5"
+    "@cennznet/util" "^0.20.6"
     "@plugnet/types" "^0.90.104"
     "@plugnet/util" "^1.1.100"
     memoizee "^0.4.14"
 
-"@cennznet/util@^0.20.5":
-  version "0.20.5"
-  resolved "https://registry.yarnpkg.com/@cennznet/util/-/util-0.20.5.tgz#846efc7fcf889d545c67d7223935356d7d07a643"
-  integrity sha512-xRBH1/rLh1SOKaESMiEtWwDiDqsXivsU75Kosw/ckX5vRBQzVHVB+hxfvwa0KQQYEGfTiGseZJggXK9RRvXGHA==
+"@cennznet/util@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@cennznet/util/-/util-0.20.6.tgz#cc85313c51c65707f5dacaae01496e9dcc839d56"
+  integrity sha512-0WbBDpief5Stt+RhGlf2hIFlkMEJQu0u5gSAY7cfD34HQyBkBwbADOVy2Kq7sFIdCuBI8z/0ynepI8p1cd0ODA==
   dependencies:
     "@plugnet/util" "^1.1.100"
     "@plugnet/util-crypto" "^1.1.100"
 
-"@cennznet/wallet@^0.20.4":
-  version "0.20.5"
-  resolved "https://registry.yarnpkg.com/@cennznet/wallet/-/wallet-0.20.5.tgz#1c58716349589b625c2cc0882f18b8b6bbd771df"
-  integrity sha512-+SNGp1kCEtMoQUOyYLUQM8YObAYzctw9JsxnX4Ew+lbeFwsvEs0+dDzUktcVXyEd+eDUnNdqPBvi41NMkWuNcg==
+"@cennznet/wallet@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@cennznet/wallet/-/wallet-0.20.6.tgz#867fd1288cb4c98edb2aa17bf323bd9ec0848053"
+  integrity sha512-OJOrDe72geQG0sS2rUSYa2AcbPLb92mLzoNjeZqS25PuCZ6kjbwUJmiaVt9CwqJmNS7PV3vSbvzk03S8dG5V7g==
   dependencies:
     "@plugnet/api" "^0.90.104"
     "@plugnet/types" "^0.90.104"
