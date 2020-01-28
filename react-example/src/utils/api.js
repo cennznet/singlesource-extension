@@ -1,5 +1,5 @@
 import { Api } from '@cennznet/api';
-import { WsProvider } from '@cennznet/api/polkadot';
+// import { WsProvider } from '@cennznet/api/polkadot';
 
 const getUrl = environment => {
   switch (environment) {
@@ -11,8 +11,8 @@ const getUrl = environment => {
 
 let apiPromise = null;
 const configureApi = (environment) => {
-  const provider = new WsProvider(getUrl(environment));
-  apiPromise = Api.create({ provider });
+  // const provider = new WsProvider(getUrl(environment));
+  apiPromise = Api.create({ provide:getUrl(environment) });
   return apiPromise;
 }
 

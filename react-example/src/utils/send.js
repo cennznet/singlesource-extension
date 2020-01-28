@@ -1,4 +1,4 @@
-import { GenericAsset } from '@cennznet/crml-generic-asset';
+// import { GenericAsset } from '@cennznet/crml-generic-asset';
 import BigNumber from 'bignumber.js'
 import getApi from './api';
 import { amountToWei } from './amount';
@@ -12,7 +12,7 @@ const send = async (sender, receiver, amount, cb) => {
   api.setSigner(SingleSource.signer);
 
   const value = amountToWei(new BigNumber(amount));
-  const asset = await GenericAsset.create(api);
+  const asset = api.genericAsset;
   const tx = asset.transfer(CENNZ_ASSET_ID, receiver, value.toString(10));
   await tx.signAndSend(sender, ({status, events}) => {
     console.log(status);

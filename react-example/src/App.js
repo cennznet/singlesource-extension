@@ -7,7 +7,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import send from './utils/send';
 import { configureApi } from './utils/api';
-import { Address } from '@cennznet/types/polkadot';
+// import { Address } from '@cennznet/types/polkadot';
+import { Address } from '@cennznet/util';
 import BigNumber from 'bignumber.js';
 import Transactions from './transactions';
 import './index.css';
@@ -65,12 +66,12 @@ class App extends Component {
   receiverChange = e => {
     const receiver = e.target.value;
     this.setState({ receiver });
-    try {
-      decodeAddress(receiver);
-      this.setState({ receiverError: null });
-    } catch (error) {
-      this.setState({ receiverError: error });
-    }
+    // try {
+    //   decodeAddress(receiver);
+    //   this.setState({ receiverError: null });
+    // } catch (error) {
+    //   this.setState({ receiverError: error });
+    // }
   };
 
   amountChange = e => {
