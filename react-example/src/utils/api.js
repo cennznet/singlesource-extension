@@ -12,7 +12,7 @@ const getUrl = environment => {
 let apiPromise = null;
 const configureApi = (environment) => {
   // const provider = new WsProvider(getUrl(environment));
-  apiPromise = Api.create({ provide:getUrl(environment) });
+  apiPromise = Api.create({ provider:getUrl(environment) });
   return apiPromise;
 }
 
